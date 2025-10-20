@@ -3,7 +3,7 @@ import React from 'react';
 
 const EarlyAccessSection: React.FC = () => {
   return (
-    <section className="py-20 bg-visara-light-surface dark:bg-visara-dark-surface">
+    <section className="py-20">
       <div className="container mx-auto px-4 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

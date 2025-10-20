@@ -22,7 +22,7 @@ const onboardingSteps = [
 
 const OnboardingSection: React.FC = () => {
   return (
-    <section className="py-20 bg-visara-light-surface dark:bg-visara-dark-surface">
+    <section className="py-20">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-visara-light-text dark:text-visara-dark-text">A Seamless Start</h2>
         <div className="flex overflow-x-auto space-x-8 pb-8">

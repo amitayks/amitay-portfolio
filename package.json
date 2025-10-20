@@ -6,19 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --apply .",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --apply .",
     "preview": "vite preview",
     "deploy": "powershell Copy-Item -Path dist/index.html -Destination dist/404.html; gh-pages -d dist",
-    "bnd": "npm run build && npm run deploy"
+    "bnd": "npm run build && npm run deploy",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@radix-ui/react-slot": "^1.1.2",
+    "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-query": "^5.67.2",
     "@tanstack/react-query-devtools": "^5.67.2",
@@ -30,9 +27,12 @@
     "marked": "^16.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.65.0",
     "react-router-dom": "^6.22.3",
-    "tailwind-merge": "^3.0.2",
-    "tailwind-variants": "^1.0.0"
+    "tailwind-merge": "^3.3.1",
+    "tailwind-variants": "^1.0.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
