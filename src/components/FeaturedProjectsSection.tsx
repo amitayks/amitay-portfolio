@@ -1,21 +1,28 @@
+import { useTheme } from "@/hooks/useTheme";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import useFeaturdItems from "../hooks/useFeaturedItems";
 import PortfolioCard from "./PortfolioCard";
 
-function FeaturedProjectsSection({ style = "" }: { style?: string }) {
+function FeaturedProjectsSection() {
   const { portfolioItems: featuredProjects } = useFeaturdItems(true);
+  const colors = useTheme();
 
   return (
-    <section className={`py-20 bg-white dark:bg-gray-900 ${style}`}>
+    <section
+      style={{
+        background: `linear-gradient(to top right, ${colors.surfaceSecondary}, ${colors.surface})`,
+      }}
+      className="py-20"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2
+            style={{ color: colors.primary }}
+            className="text-3xl lg:text-4xl font-bold mb-4"
+          >
             {"< My Favorite />"}
           </h2>
-          {/* <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            A showcase of my recent work across different disciplines
-          </p> */}
         </div>
 
         {featuredProjects.length > 0 ? (
@@ -35,13 +42,19 @@ function FeaturedProjectsSection({ style = "" }: { style?: string }) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ExternalLink className="w-12 h-12 text-gray-400" />
+            <div
+              style={{ backgroundColor: colors.surfaceSecondary }}
+              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <ExternalLink style={{ color: colors.textTertiary }} className="w-12 h-12" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+            <h3
+              style={{ color: colors.primary }}
+              className="text-xl font-semibold mb-3"
+            >
               Projects Coming Soon
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p style={{ color: colors.textSecondary }} className="mb-6">
               I'm currently working on some exciting projects. Check back soon!
             </p>
           </div>
@@ -50,7 +63,8 @@ function FeaturedProjectsSection({ style = "" }: { style?: string }) {
         <div className="text-center">
           <Link
             to="/portfolio"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl group"
+            style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+            className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl group"
           >
             View All Projects
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
