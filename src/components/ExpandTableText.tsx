@@ -1,4 +1,8 @@
 import { useTheme } from "@/hooks/useTheme";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 interface ExpandTableTextProps {
@@ -25,17 +29,23 @@ const ExpandTableText = ({
 
   if (!shouldTruncate) {
     return (
-      <div
-        style={{
-          borderColor: colors.border,
-          background: `linear-gradient(to right, ${colors.surface}, ${colors.surfaceSecondary})`,
-        }}
-        className={`p-4 rounded-lg border-2 ${className}`}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
       >
-        <p style={{ color: colors.text }} className="leading-relaxed">
-          {children}
-        </p>
-      </div>
+        <Card
+          style={{
+            borderColor: colors.border,
+            background: `linear-gradient(to right, ${colors.surface}, ${colors.surfaceSecondary})`,
+          }}
+          className={`p-4 border-2 ${className}`}
+        >
+          <p style={{ color: colors.text }} className="leading-relaxed">
+            {children}
+          </p>
+        </Card>
+      </motion.div>
     );
   }
 
@@ -47,42 +57,76 @@ const ExpandTableText = ({
   };
 
   return (
-    <div
-      onClick={handleClick}
-      style={{
-        borderColor: colors.border,
-        background: `linear-gradient(to top right, ${colors.surface}, ${colors.surfaceSecondary})`,
-      }}
-      className={`
-        cursor-pointer p-6 rounded-xl border-2 transition-all duration-300 transform 
-        hover:shadow-md
-        ${className}
-      `}
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <div className="relative">
-        <p style={{ color: colors.textSecondary }} className="leading-relaxed text-lg">
-          {truncatedText}
-          <span
-            className={`transition-all duration-500 ease-in-out ${
-              isExpanded ? "opacity-100 max-h-full" : "opacity-0 max-h-0 overflow-hidden"
-            }`}
-            style={{
-              display: isExpanded ? "inline" : "none",
-            }}
+      <Card
+        style={{
+          borderColor: colors.border,
+          background: `linear-gradient(to top right, ${colors.surface}, ${colors.surfaceSecondary})`,
+        }}
+        className="p-6 border-2 hover:shadow-lg transition-shadow duration-300"
+      >
+        <div className="relative">
+          <motion.p
+            style={{ color: colors.textSecondary }}
+            className="leading-relaxed text-lg"
+            layout
           >
-            {remainingText}
-          </span>
-          {!isExpanded && (
-            <>
-              <span>... </span>
-              <span style={{ color: colors.accent }} className="font-medium">
-                {readMoreText}
-              </span>
-            </>
-          )}
-        </p>
-      </div>
-    </div>
+            {truncatedText}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.span
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {remainingText}
+                </motion.span>
+              )}
+            </AnimatePresence>
+            {!isExpanded && <span>...</span>}
+          </motion.p>
+
+          <motion.div
+            className="mt-4 flex justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClick}
+              style={{ color: colors.accent }}
+              className="group"
+            >
+              <motion.div
+                className="flex items-center gap-1"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isExpanded ? (
+                  <>
+                    Show Less
+                    <ChevronUp className="w-4 h-4 group-hover:animate-bounce" />
+                  </>
+                ) : (
+                  <>
+                    {readMoreText}
+                    <ChevronDown className="w-4 h-4 group-hover:animate-bounce" />
+                  </>
+                )}
+              </motion.div>
+            </Button>
+          </motion.div>
+        </div>
+      </Card>
+    </motion.div>
   );
 };
 

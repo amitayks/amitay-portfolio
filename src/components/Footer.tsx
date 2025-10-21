@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/hooks/useTheme";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 import Logo from "./Logo";
@@ -9,43 +11,75 @@ const Footer = () => {
   return (
     <footer
       style={{
-        backgroundColor: colors.surface,
-        borderTop: `1px solid ${colors.border}`,
+        backgroundColor: "transparent",
       }}
       className="py-20 flex items-center justify-center"
     >
       <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center mb-6">
-          <Logo
-            width={32}
-            height={32}
-            fill={colors.primary}
-            style={{ transform: "scaleX(-1)" }}
-          />
-          <span
-            className="ml-3 text-xl font-bold aspect-"
+        <motion.div
+          className="flex items-center justify-center mb-6"
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+        >
+          {/* <motion.div
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              repeatType: "loop",
+              ease: "linear",
+            }}
+          > */}
+          <Logo width={32} height={32} fill={colors.primary} style={{ transform: "scaleX(-1)" }} />
+          {/* </motion.div> */}
+          <motion.span
+            className="ml-3 text-xl font-bold"
             style={{ color: colors.primary }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
             {PERSONAL_INFO.name}
-          </span>
-        </div>
+          </motion.span>
+        </motion.div>
 
-        <p style={{ color: colors.textSecondary }} className="mb-8 max-w-md leading-relaxed text-center">
+        <motion.p
+          style={{ color: colors.textSecondary }}
+          className="mb-8 max-w-md leading-relaxed text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
           {PERSONAL_INFO.tagline}
-        </p>
+        </motion.p>
 
-        <div className="mb-8">
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <SocialLinksComponent socialLinks={SOCIAL_LINKS} variant="outline" />
-        </div>
+        </motion.div>
 
-        <div
-          style={{ borderTop: `1px solid ${colors.border}` }}
-          className="pt-8 w-full flex justify-center"
+        <Separator className="mb-8" style={{ backgroundColor: colors.border }} />
+
+        <motion.div
+          className="w-full flex justify-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 0.5 }}
         >
           <p style={{ color: colors.textSecondary }} className="text-sm">
             &copy; {new Date().getFullYear()} {PERSONAL_INFO.name}. All rights reserved.
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

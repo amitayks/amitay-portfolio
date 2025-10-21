@@ -11,13 +11,8 @@ const About = () => {
   const colors = useTheme();
 
   return (
-    <div style={{ backgroundColor: colors.background }}>
-      <section
-        style={{
-          background: `linear-gradient(to bottom right, ${colors.surfaceSecondary}, ${colors.surface})`,
-        }}
-        className="relative overflow-hidden"
-      >
+    <div>
+      <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col">

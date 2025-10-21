@@ -1,6 +1,10 @@
 import { useTheme } from "@/hooks/useTheme";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { SKILLS } from "../utils/constants";
 
 function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }) {
@@ -19,86 +23,180 @@ function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }
     }
   };
 
+  const getLevelValue = (level: string) => {
+    switch (level) {
+      case "expert":
+        return 100;
+      case "advanced":
+        return 80;
+      case "intermediate":
+        return 60;
+      default:
+        return 40;
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section style={{ backgroundColor: colors.background }} className={`py-20  ${style}`}>
+    <section className={`py-20 ${style}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
           <h2
             style={{ color: colors.primary }}
             className="text-3xl lg:text-4xl font-bold mb-4"
           >
             {`< Skills & Expertise />`}
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SKILLS.map((skillCategory) => (
-            <div
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {SKILLS.map((skillCategory, index) => (
+            <motion.div
               key={skillCategory.category}
-              style={{
-                backgroundColor: colors.surface,
-                borderColor: colors.border,
-              }}
-              className="rounded-2xl p-8 mx-10 md:mx-5 lg:mx-0 shadow-sm hover:shadow-lg transition-all duration-200 border flex flex-col h-full"
+              variants={cardVariants}
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="mx-10 md:mx-5 lg:mx-0"
             >
-              <h3
-                style={{ color: colors.primary }}
-                className="text-xl font-semibold mb-4"
+              <Card
+                style={{
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                }}
+                className="shadow-sm hover:shadow-xl transition-shadow duration-300 border h-full flex flex-col"
               >
-                {skillCategory.category}
-              </h3>
-
-              <div className="space-y-2 flex-grow">
-                {skillCategory.skills.map((skill, i) => (
-                  <div key={skillCategory.skills[i]} className="flex items-center justify-between">
-                    <span style={{ color: colors.textSecondary }}>{skill}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-4">
-                <div className="flex items-center justify-between mb-1 ">
-                  <span
-                    style={{ color: colors.textTertiary }}
-                    className="text-sm capitalize"
+                <CardHeader>
+                  <CardTitle
+                    style={{ color: colors.primary }}
+                    className="text-xl font-semibold"
                   >
-                    {skillCategory.level}
-                  </span>
-                </div>
-                <div
-                  style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="w-full rounded-full h-2 "
-                >
-                  <div
-                    style={{
-                      backgroundColor: getLevelColor(skillCategory.level),
-                      width:
-                        skillCategory.level === "expert"
-                          ? "100%"
-                          : skillCategory.level === "advanced"
-                          ? "80%"
-                          : skillCategory.level === "intermediate"
-                          ? "60%"
-                          : "40%",
-                    }}
-                    className={`h-2 rounded-full transition-all duration-500`}
-                  />
-                </div>
-              </div>
-            </div>
+                    {skillCategory.category}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col justify-between">
+                  <motion.div
+                    className="space-y-2 mb-6"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
+                  >
+                    {skillCategory.skills.map((skill, i) => (
+                      <motion.div
+                        key={skill}
+                        className="flex items-center"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 + 0.1 * i, duration: 0.3 }}
+                      >
+                        <span
+                          style={{ color: colors.textSecondary }}
+                          className="text-sm"
+                        >
+                          • {skill}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Badge
+                        variant="secondary"
+                        style={{
+                          backgroundColor: getLevelColor(skillCategory.level),
+                          color: colors.textInverse,
+                        }}
+                        className="capitalize"
+                      >
+                        {skillCategory.level}
+                      </Badge>
+                      <motion.span
+                        style={{ color: colors.textTertiary }}
+                        className="text-sm font-medium"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: index * 0.1 + 0.5, duration: 0.3 }}
+                      >
+                        {getLevelValue(skillCategory.level)}%
+                      </motion.span>
+                    </div>
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      transition={{
+                        delay: index * 0.1 + 0.4,
+                        duration: 0.8,
+                        ease: "easeOut",
+                      }}
+                      style={{ transformOrigin: "left" }}
+                    >
+                      <Progress
+                        value={getLevelValue(skillCategory.level)}
+                        className="h-2"
+                        style={{
+                          backgroundColor: colors.surfaceSecondary,
+                        }}
+                      />
+                    </motion.div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+
         {aboutButton && (
-          <div className="flex items-center justify-center mt-10">
-            <Link
-              to="/about"
-              style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-              className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl group"
-            >
-              Learn More About Me
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
+          <motion.div
+            className="flex items-center justify-center mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                to="/about"
+                style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+                className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl group"
+              >
+                Learn More About Me
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </section>

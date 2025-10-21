@@ -18,12 +18,7 @@ function Portfolio() {
   }, [isLoading]);
 
   return (
-    <div
-      style={{
-        background: `linear-gradient(to bottom left, ${colors.surface}, ${colors.surfaceSecondary})`,
-      }}
-      className="min-h-screen"
-    >
+    <div className="min-h-screen">
       <PortfolioFilter />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

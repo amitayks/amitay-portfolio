@@ -1,3 +1,5 @@
+import { useTheme } from "@/hooks/useTheme";
+import { Button } from "@/components/ui/button";
 import {
   Facebook,
   Github,
@@ -11,6 +13,7 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Social link type definition
 export interface SocialLink {
@@ -22,7 +25,7 @@ export interface SocialLink {
 // Component props interface
 interface SocialLinksComponentProps {
   socialLinks: SocialLink[];
-  variant?: "outline" | "filled";
+  variant?: "outline" | "filled" | "default" | "ghost";
   size?: "sm" | "md" | "lg";
   orientation?: "horizontal" | "vertical";
   className?: string;
@@ -103,91 +106,116 @@ const SocialLinksComponent = ({
   iconClassName,
   linkClassName,
 }: SocialLinksComponentProps) => {
+  const colors = useTheme();
+
   // Size configurations
   const sizeConfig = {
     sm: {
       container: "gap-2",
       icon: "w-4 h-4",
-      padding: "p-2",
+      buttonSize: "icon" as const,
       text: "text-xs",
     },
     md: {
       container: "gap-3",
       icon: "w-4 h-4",
-      padding: "p-3",
+      buttonSize: "icon" as const,
       text: "text-sm",
     },
     lg: {
       container: "gap-4",
       icon: "w-6 h-6",
-      padding: "p-3",
+      buttonSize: "icon" as const,
       text: "text-base",
     },
   };
 
-  // Variant configurations
-  const variantConfig = {
-    outline: {
-      base: "text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors",
-      filled:
-        "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700",
-    },
-    filled: {
-      base: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 rounded-lg transition-all duration-200",
-      filled:
-        "bg-gray-800 text-white hover:bg-blue-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200",
-    },
-  };
-
   const config = sizeConfig[size];
-  const styles = variantConfig[variant];
 
   // Container classes based on orientation
   const containerClasses = `
-    flex ${orientation === "horizontal" ? "flex-row" : "flex-col"} 
-    ${config.container} 
+    flex ${orientation === "horizontal" ? "flex-row" : "flex-col"}
+    ${config.container}
     ${orientation === "horizontal" ? "justify-center" : "items-center"}
     ${className}
   `.trim();
 
-  // Link classes
-  const baseLinkClasses = `
-    ${config.padding} 
-    ${variant === "filled" ? styles.filled : styles.base}
-    ${linkClassName || ""}
-  `.trim();
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      },
+    },
+  };
 
   return (
-    <div className={containerClasses}>
-      {socialLinks.map((link) => {
+    <motion.div
+      className={containerClasses}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+    >
+      {socialLinks.map((link, index) => {
         const href = formatHref(link.label, link.value);
         const isExternal = href.startsWith("http");
         const iconSize = iconClassName || config.icon;
 
         return (
-          <a
+          <motion.div
             key={link.value}
-            href={href}
-            target={isExternal ? "_blank" : undefined}
-            rel={isExternal ? "noopener noreferrer" : undefined}
-            className={baseLinkClasses}
-            aria-label={link.ariaLabel || `${link.label} link`}
-            title={link.ariaLabel || link.label}
+            variants={itemVariants}
+            whileHover={{ y: -4, scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <div
-              className={`flex items-center ${
-                showLabels && orientation === "horizontal" ? "gap-2" : ""
-              } ${orientation === "vertical" ? "flex-col gap-1" : ""}`}
+            <Button
+              variant={variant as any}
+              size={showLabels ? "default" : config.buttonSize}
+              asChild
+              className={linkClassName}
             >
-              {getSocialIcon(link.label, iconSize)}
-              {showLabels && (
-                <span className={`${config.text} font-medium capitalize`}>{link.label}</span>
-              )}
-            </div>
-          </a>
+              <a
+                href={href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                aria-label={link.ariaLabel || `${link.label} link`}
+                title={link.ariaLabel || link.label}
+              >
+                <motion.div
+                  className={`flex items-center ${
+                    showLabels && orientation === "horizontal" ? "gap-2" : ""
+                  } ${orientation === "vertical" ? "flex-col gap-1" : ""}`}
+                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {getSocialIcon(link.label, iconSize)}
+                  {showLabels && (
+                    <span className={`${config.text} font-medium capitalize`}>
+                      {link.label}
+                    </span>
+                  )}
+                </motion.div>
+              </a>
+            </Button>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 };
 
