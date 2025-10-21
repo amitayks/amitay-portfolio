@@ -1,8 +1,8 @@
-import { useTheme } from "@/hooks/useTheme";
-import { Card } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { useTheme } from "@/hooks/useTheme";
 import { usePortfolioImage } from "../hooks/usePortfolioImage";
 import { PortfolioItem } from "../types/portfolio";
 
@@ -52,14 +52,6 @@ const PortfolioCard = ({
                 whileHover={{ scale: 1.05 }}
               />
             )}
-
-            {/* Overlay gradient on hover */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            />
           </div>
         </Link>
 

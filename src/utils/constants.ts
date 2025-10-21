@@ -6,7 +6,7 @@ export const HEADER_LINKS = [
   { to: "/", input: "Home", icon: Home },
   { to: "/portfolio", input: "Portfolio", icon: Briefcase },
   { to: "/about", input: "About", icon: User },
-  { to: "/contact", input: "Contact", icon: Mail },
+  { to: "/Apply", input: "Contact", icon: Mail },
 ];
 
 export const PROJECT_TYPES = [
@@ -27,7 +27,7 @@ export const PERSONAL_INFO = {
   phone: "+972-526-471-797",
   whatsapp: "https://wa.me/972526471797",
   github: "https://github.com/amitayks",
-  // linkedin: "https://linkedin.com/in/amitaykeisar",
+  linkedin: "https://linkedin.com/in/amitaykeisar",
   instagram: "https://instagram.com/amitay.ks",
   facebook: "https://www.facebook.com/profile.php?id=100086721472400&mibextid=ZbWKwL",
   x: "https://x.com/AmKeisar",
@@ -40,6 +40,7 @@ export const SOCIAL_LINKS = [
   { label: "whatsapp", value: "+972-526-471-797" },
   { label: "phone", value: "972526471797" },
   { label: "email", value: "amiteyk3@gmail.com" },
+  { label: "linkedin", value: "https://linkedin.com/in/amitaykeisar" },
 ];
 
 export const SKILLS = [
