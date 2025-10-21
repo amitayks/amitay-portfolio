@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import useFeaturdItems from "../hooks/useFeaturedItems";
 import PortfolioCard from "./PortfolioCard";
+import { PortfolioGridSkeleton } from "./PortfolioGridSkeleton";
 
 function FeaturedProjectsSection() {
-  const { portfolioItems: featuredProjects } = useFeaturdItems(true);
+  const { portfolioItems: featuredProjects, isLoading } = useFeaturdItems(true);
   const colors = useTheme();
 
   const containerVariants = {
@@ -35,7 +36,9 @@ function FeaturedProjectsSection() {
           </h2>
         </motion.div>
 
-        {featuredProjects.length > 0 ? (
+        {isLoading ? (
+          <PortfolioGridSkeleton count={3} />
+        ) : featuredProjects.length > 0 ? (
           <>
             <motion.div
               className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
