@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import emailjs from "@emailjs/browser";
 import { AlertCircle, Clock, Mail, Phone, Send } from "lucide-react";
 import React, { useState } from "react";
@@ -5,6 +6,7 @@ import SocialLinksComponent from "../components/SocialLinksComponent";
 import { EMAILJS_CONFIG, PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 
 const Contact = () => {
+  const colors = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -144,16 +146,22 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div style={{ backgroundColor: colors.background }} className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <h2
+                style={{ color: colors.primary }}
+                className="text-2xl font-bold mb-6"
+              >
                 Let's Start a Conversation
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-8">
+              <p
+                style={{ color: colors.textSecondary }}
+                className="text-lg leading-relaxed mb-8"
+              >
                 Whether you're looking for custom woodworking, web development services, or just
                 want to discuss an idea, I'm here to help. Every great project starts with a
                 conversation.
@@ -162,16 +170,20 @@ const Contact = () => {
 
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div
+                  style={{ backgroundColor: colors.surfaceSecondary }}
+                  className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                >
+                  <Mail style={{ color: colors.accent }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
                     Email
                   </h3>
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                    style={{ color: colors.accent }}
+                    className="font-medium"
                   >
                     {PERSONAL_INFO.email}
                   </a>
@@ -179,16 +191,20 @@ const Contact = () => {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div
+                  style={{ backgroundColor: colors.surfaceSecondary }}
+                  className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                >
+                  <Phone style={{ color: colors.success }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
                     Phone
                   </h3>
                   <a
                     href={`tel:${PERSONAL_INFO.phone}`}
-                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium"
+                    style={{ color: colors.success }}
+                    className="font-medium"
                   >
                     {PERSONAL_INFO.phone}
                   </a>
@@ -196,14 +212,17 @@ const Contact = () => {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                <div
+                  style={{ backgroundColor: colors.surfaceSecondary }}
+                  className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                >
+                  <Clock style={{ color: colors.warning }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
                     Response Time
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">Typically 1 to 4 hours</p>
+                  <p style={{ color: colors.textSecondary }}>Typically 1 to 4 hours</p>
                 </div>
               </div>
             </div>
@@ -216,8 +235,8 @@ const Contact = () => {
             />
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <div style={{ backgroundColor: colors.surface }} className="rounded-2xl p-8">
+            <h2 style={{ color: colors.primary }} className="text-2xl font-bold mb-6">
               Send a Message
             </h2>
 
@@ -251,7 +270,8 @@ const Contact = () => {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    style={{ color: colors.textSecondary }}
+                    className="block text-sm font-medium mb-2"
                   >
                     Name *
                   </label>
@@ -262,20 +282,26 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className={`block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      formErrors.name ? "border-red-300 dark:border-red-600" : ""
-                    }`}
+                    style={{
+                      backgroundColor: colors.surfaceSecondary,
+                      color: colors.primary,
+                      borderColor: formErrors.name ? colors.error : colors.border,
+                    }}
+                    className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                     placeholder="Your full name"
                   />
                   {formErrors.name && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{formErrors.name}</p>
+                    <p style={{ color: colors.error }} className="mt-1 text-sm">
+                      {formErrors.name}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    style={{ color: colors.textSecondary }}
+                    className="block text-sm font-medium mb-2"
                   >
                     Email *
                   </label>
@@ -286,13 +312,16 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className={`block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      formErrors.email ? "border-red-300 dark:border-red-600" : ""
-                    }`}
+                    style={{
+                      backgroundColor: colors.surfaceSecondary,
+                      color: colors.primary,
+                      borderColor: formErrors.email ? colors.error : colors.border,
+                    }}
+                    className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                     placeholder="your.email@example.com"
                   />
                   {formErrors.email && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    <p style={{ color: colors.error }} className="mt-1 text-sm">
                       {formErrors.email}
                     </p>
                   )}
@@ -303,7 +332,8 @@ const Contact = () => {
                 <div>
                   <label
                     htmlFor="projectType"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    style={{ color: colors.textSecondary }}
+                    className="block text-sm font-medium mb-2"
                   >
                     Project Type
                   </label>
@@ -313,7 +343,12 @@ const Contact = () => {
                     value={formData.projectType}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      backgroundColor: colors.surfaceSecondary,
+                      color: colors.primary,
+                      borderColor: colors.border,
+                    }}
+                    className="block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {projectTypes.map((type) => (
                       <option key={type.value} value={type.value}>
@@ -326,7 +361,8 @@ const Contact = () => {
                 <div>
                   <label
                     htmlFor="subject"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    style={{ color: colors.textSecondary }}
+                    className="block text-sm font-medium mb-2"
                   >
                     Subject
                   </label>
@@ -337,7 +373,12 @@ const Contact = () => {
                     value={formData.subject}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      backgroundColor: colors.surfaceSecondary,
+                      color: colors.primary,
+                      borderColor: colors.border,
+                    }}
+                    className="block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Brief project description"
                   />
                 </div>
@@ -346,7 +387,8 @@ const Contact = () => {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  style={{ color: colors.textSecondary }}
+                  className="block text-sm font-medium mb-2"
                 >
                   Message *
                 </label>
@@ -357,13 +399,16 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className={`block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    formErrors.message ? "border-red-300 dark:border-red-600" : ""
-                  }`}
+                  style={{
+                    backgroundColor: colors.surfaceSecondary,
+                    color: colors.primary,
+                    borderColor: formErrors.message ? colors.error : colors.border,
+                  }}
+                  className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                   placeholder="Tell me about your project, timeline, budget, and any specific requirements..."
                 />
                 {formErrors.message && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  <p style={{ color: colors.error }} className="mt-1 text-sm">
                     {formErrors.message}
                   </p>
                 )}
@@ -373,12 +418,19 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full inline-flex justify-center items-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  style={{
+                    backgroundColor: isSubmitting ? colors.buttonDisabled : colors.accent,
+                    color: isSubmitting ? colors.buttonDisabledText : colors.textInverse,
+                  }}
+                  className="w-full inline-flex justify-center items-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send className="h-5 w-5 mr-2" />
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+                <p
+                  style={{ color: colors.textTertiary }}
+                  className="mt-2 text-sm text-center"
+                >
                   * Required fields
                 </p>
               </div>

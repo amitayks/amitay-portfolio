@@ -33,7 +33,7 @@ function FeaturedProjectsSection() {
                 <PortfolioCard
                   key={featuredItem.id}
                   portfolioItem={featuredItem}
-                  style={`
+                  className={`
                     ${i >= 4 ? "hidden md:block" : ""}
                   `}
                 />

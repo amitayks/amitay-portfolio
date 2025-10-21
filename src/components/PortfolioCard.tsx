@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePortfolioImage } from "../hooks/usePortfolioImage";
@@ -5,20 +6,28 @@ import { PortfolioItem } from "../types/portfolio";
 
 const PortfolioCard = ({
   portfolioItem,
-  style,
+  className,
 }: {
   portfolioItem: PortfolioItem;
-  style?: string;
+  className?: string;
 }) => {
   const { image, isLoading: imageLoading } = usePortfolioImage(portfolioItem.image);
+  const colors = useTheme();
 
   return (
     <article
-      className={`group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-transparent ${style} `}
+      style={{
+        backgroundColor: colors.surface,
+        borderColor: colors.border,
+      }}
+      className={`group relative rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border ${className}`}
     >
       <Link to={`/portfolio/${portfolioItem.SKU}`} className="block">
         <div className="aspect-square w-full relative overflow-hidden">
-          <div className="aspect-square bg-gray-200 dark:bg-gray-700" />
+          <div
+            style={{ backgroundColor: colors.surfaceSecondary }}
+            className="aspect-square"
+          />
           {!imageLoading && image && (
             <img
               src={image}
@@ -32,12 +41,6 @@ const PortfolioCard = ({
             />
           )}
         </div>
-
-        {/* <div className="px-6 py-6">
-          <h3 className="text-lg text-center font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-blue-200 transition-colors ">
-            {portfolioItem.title}
-          </h3>
-        </div> */}
       </Link>
 
       <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
@@ -46,10 +49,11 @@ const PortfolioCard = ({
             href={portfolioItem?.githubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-colors"
+            style={{ backgroundColor: colors.surface, backdropFilter: "blur(4px)" }}
+            className="p-2 rounded-lg shadow-lg hover:opacity-90 transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
-            <Github className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <Github style={{ color: colors.text }} className="w-4 h-4" />
           </a>
         )}
         {portfolioItem?.liveLink && (
@@ -57,10 +61,11 @@ const PortfolioCard = ({
             href={portfolioItem?.liveLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-colors"
+            style={{ backgroundColor: colors.surface, backdropFilter: "blur(4px)" }}
+            className="p-2 rounded-lg shadow-lg hover:opacity-90 transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
-            <ExternalLink className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <ExternalLink style={{ color: colors.text }} className="w-4 h-4" />
           </a>
         )}
       </div>

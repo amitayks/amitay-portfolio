@@ -1,13 +1,24 @@
+import { useTheme } from "@/hooks/useTheme";
 import { Link } from "react-router-dom";
 
-function CTASection({ style }: { style: string }) {
+function CTASection() {
+  const colors = useTheme();
+
   return (
-    <section className={`py-20 ${style}`}>
+    <section
+      style={{
+        background: `linear-gradient(to bottom left, ${colors.surfaceSecondary}, ${colors.surface})`,
+      }}
+      className="py-20"
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2
+          style={{ color: colors.primary }}
+          className="text-3xl lg:text-4xl font-bold mb-6"
+        >
           Let's Create Something Amazing Together
         </h2>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-3xl mx-auto">
+        <p style={{ color: colors.textSecondary }} className="text-xl mb-8 max-w-3xl mx-auto">
           Whether you have a project in mind or just want to connect, I'm always open to discussing
           new opportunities and collaborations.
         </p>
@@ -15,13 +26,19 @@ function CTASection({ style }: { style: string }) {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/portfolio"
-            className="inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+            className="inline-flex items-center px-8 py-4 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             View My Portfolio
           </Link>
           <Link
             to="/contact"
-            className="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700"
+            style={{
+              backgroundColor: colors.surface,
+              color: colors.primary,
+              borderColor: colors.border,
+            }}
+            className="inline-flex items-center px-8 py-4 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl border"
           >
             Get In Touch
           </Link>

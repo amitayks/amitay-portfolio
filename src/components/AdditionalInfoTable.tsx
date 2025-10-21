@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { PortfolioItem } from "../types/portfolio";
 
 interface AdditionalInfoTableProps {
@@ -5,16 +6,21 @@ interface AdditionalInfoTableProps {
 }
 
 function AdditionalInfoTable({ additionalInfo }: AdditionalInfoTableProps) {
+  const colors = useTheme();
+
   return (
     <div>
       <div className="space-y-3">
         {additionalInfo.map((info, index) => (
           <div
             key={index}
-            className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-800"
+            style={{ borderBottom: `1px solid ${colors.border}` }}
+            className="flex justify-between py-2"
           >
-            <span className="font-medium text-gray-700 dark:text-gray-300">{info.label}</span>
-            <span className="text-gray-600 dark:text-gray-400">{info.value}</span>
+            <span style={{ color: colors.textSecondary }} className="font-medium">
+              {info.label}
+            </span>
+            <span style={{ color: colors.text }}>{info.value}</span>
           </div>
         ))}
       </div>

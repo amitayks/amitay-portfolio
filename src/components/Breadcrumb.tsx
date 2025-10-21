@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PortfolioItem } from "../types/portfolio";
@@ -10,21 +11,32 @@ interface BreadcrumbProps {
 
 function Breadcrumb({ projectType }: BreadcrumbProps) {
   const navigate = useNavigate();
+  const colors = useTheme();
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    <div
+      style={{
+        backgroundColor: colors.surfaceSecondary,
+        borderBottom: `1px solid ${colors.border}`,
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            style={{ color: colors.textSecondary }}
+            className="inline-flex items-center hover:opacity-80 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Go Back
           </button>
           <div className="">
             <span
-              className={`px-3 py-2 rounded-full text-sm font-medium ${PROJECT_TYPE_COLOR[projectType]}`}
+              style={{
+                backgroundColor: colors.surface,
+                color: colors.text,
+              }}
+              className={`px-3 py-2 rounded-full text-sm font-medium`}
             >
               {projectType?.replace("-", " ")}
             </span>

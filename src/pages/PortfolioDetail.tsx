@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { ExternalLink, Github } from "lucide-react";
 import AdditionalInfoTable from "../components/AdditionalInfoTable";
 import Breadcrumb from "../components/Breadcrumb";
@@ -18,6 +19,7 @@ const PortfolioDetail = () => {
     isLoadingImagePack,
     error,
   } = usePortfolioItem();
+  const colors = useTheme();
 
   if (isLoadingPortfolio) {
     return <PortfolioDetailSkeleton />;
@@ -40,7 +42,7 @@ const PortfolioDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div style={{ backgroundColor: colors.background }} className="min-h-screen">
       <Breadcrumb projectType={portfolioItem?.projectType} status={portfolioItem.status} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" dir="rtl">
@@ -56,7 +58,10 @@ const PortfolioDetail = () => {
 
           <div className="space-y-8" dir={portfolioItem.settings.dir}>
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              <h1
+                style={{ color: colors.primary }}
+                className="text-4xl font-bold mb-4"
+              >
                 {portfolioItem.title}
               </h1>
             </div>
@@ -66,7 +71,11 @@ const PortfolioDetail = () => {
                 {portfolioItem?.technologies?.map((tech) => (
                   <span
                     key={portfolioItem.SKU}
-                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium "
+                    style={{
+                      backgroundColor: colors.surfaceSecondary,
+                      color: colors.textSecondary,
+                    }}
+                    className="px-4 py-2 rounded-lg text-sm font-medium "
                   >
                     {tech}
                   </span>
@@ -75,7 +84,7 @@ const PortfolioDetail = () => {
             </div>
 
             <div>
-              <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p style={{ color: colors.textSecondary }} className="text-xl leading-relaxed">
                 {portfolioItem.description}
               </p>
             </div>
@@ -87,7 +96,8 @@ const PortfolioDetail = () => {
                     href={portfolioItem?.githubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+                    style={{ backgroundColor: colors.surface, color: colors.primary }}
+                    className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-colors"
                   >
                     <Github className="w-5 h-5 mr-2" />
                     View Code
@@ -98,7 +108,8 @@ const PortfolioDetail = () => {
                     href={portfolioItem?.liveLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                    style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+                    className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-colors"
                   >
                     <ExternalLink className="w-5 h-5 mr-2" />
                     View Live
@@ -108,11 +119,11 @@ const PortfolioDetail = () => {
             )}
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-4">
                 {portfolioItem.settings.dir === "rtl" ? "על הפרוייקט" : "About The Project"}
               </h3>
               <div className="prose prose-gray dark:prose-invert max-w-none">
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p style={{ color: colors.textSecondary }} className="leading-relaxed">
                   <ExpandTableText
                     readMoreText={portfolioItem.settings.dir === "rtl" ? "קרא עוד" : "Read More"}
                     maxLength={100}

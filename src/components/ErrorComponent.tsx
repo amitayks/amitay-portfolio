@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ErrorComponentProps } from "../types/error";
@@ -14,6 +15,7 @@ const ErrorComponent = ({
   fullPage = false,
 }: ErrorComponentProps) => {
   const navigate = useNavigate();
+  const colors = useTheme();
 
   const handleGoHome = () => navigate("/");
   const handleGoBack = () => navigate(-1);
@@ -45,30 +47,47 @@ const ErrorComponent = ({
   const config = sizeConfig[size];
 
   const containerClasses = fullPage
-    ? `min-h-screen flex items-center justify-center bg-white dark:bg-gray-900`
+    ? `min-h-screen flex items-center justify-center`
     : `flex items-center justify-center ${config.container}`;
 
   return (
-    <div className={containerClasses}>
+    <div
+      style={{ backgroundColor: fullPage ? colors.background : "transparent" }}
+      className={containerClasses}
+    >
       <div className="text-center max-w-md mx-auto">
         <div className="flex justify-center mb-4">
-          <div className="inline-flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 p-3">
+          <div
+            style={{ backgroundColor: colors.error }}
+            className="inline-flex items-center justify-center rounded-full p-3"
+          >
             <AlertTriangle
-              className={`${config.icon} text-red-600 dark:text-red-400`}
+              style={{ color: colors.textInverse }}
+              className={`${config.icon}`}
               aria-hidden="true"
             />
           </div>
         </div>
 
-        <h3 className={`${config.title} font-semibold text-zinc-900 dark:text-stone-200 mb-2`}>
+        <h3
+          style={{ color: colors.primary }}
+          className={`${config.title} font-semibold mb-2`}
+        >
           Error
         </h3>
 
-        <p className={`${config.message} text-stone-600 dark:text-stone-400 mb-4`}>{message}</p>
+        <p style={{ color: colors.textSecondary }} className={`${config.message} mb-4`}>
+          {message}
+        </p>
 
         {details && (
-          <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-md p-3 mb-4">
-            <p className="text-sm text-red-700 dark:text-red-300 font-mono">{details}</p>
+          <div
+            style={{ backgroundColor: colors.surfaceSecondary, borderColor: colors.border }}
+            className="border rounded-md p-3 mb-4"
+          >
+            <p style={{ color: colors.error }} className="text-sm font-mono">
+              {details}
+            </p>
           </div>
         )}
 
@@ -76,7 +95,8 @@ const ErrorComponent = ({
           {showRetry && onRetry && (
             <button
               onClick={onRetry}
-              className={`${config.button} inline-flex items-center justify-center bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors`}
+              style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+              className={`${config.button} inline-flex items-center justify-center rounded-md font-medium hover:opacity-90 transition-colors`}
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
@@ -86,7 +106,8 @@ const ErrorComponent = ({
           {actionText && onAction && (
             <button
               onClick={onAction}
-              className={`${config.button} inline-flex items-center justify-center bg-stone-600 text-white rounded-md font-medium hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 transition-colors`}
+              style={{ backgroundColor: colors.surface, color: colors.primary }}
+              className={`${config.button} inline-flex items-center justify-center rounded-md font-medium hover:opacity-90 transition-colors`}
             >
               {actionText}
             </button>
@@ -96,7 +117,12 @@ const ErrorComponent = ({
             <>
               <button
                 onClick={handleGoBack}
-                className={`${config.button} inline-flex items-center justify-center bg-stone-100 text-stone-800 border border-stone-300 rounded-md font-medium hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 transition-colors dark:bg-zinc-800 dark:text-stone-200 dark:border-zinc-700 dark:hover:bg-zinc-700`}
+                style={{
+                  backgroundColor: colors.surface,
+                  color: colors.primary,
+                  borderColor: colors.border,
+                }}
+                className={`${config.button} inline-flex items-center justify-center border rounded-md font-medium hover:opacity-90 transition-colors`}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Go Back
@@ -104,7 +130,12 @@ const ErrorComponent = ({
 
               <button
                 onClick={handleGoHome}
-                className={`${config.button} inline-flex items-center justify-center bg-stone-100 text-stone-800 border border-stone-300 rounded-md font-medium hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 transition-colors dark:bg-zinc-800 dark:text-stone-200 dark:border-zinc-700 dark:hover:bg-zinc-700`}
+                style={{
+                  backgroundColor: colors.surface,
+                  color: colors.primary,
+                  borderColor: colors.border,
+                }}
+                className={`${config.button} inline-flex items-center justify-center border rounded-md font-medium hover:opacity-90 transition-colors`}
               >
                 <Home className="h-4 w-4 mr-2" />
                 Go Home
@@ -114,11 +145,12 @@ const ErrorComponent = ({
         </div>
 
         {fullPage && (
-          <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">
+          <p style={{ color: colors.textSecondary }} className={`mt-6 text-sm`}>
             If this problem persists, please{" "}
             <a
               href="/contact"
-              className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium"
+              style={{ color: colors.accent }}
+              className="font-medium hover:opacity-80"
             >
               contact support
             </a>

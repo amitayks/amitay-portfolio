@@ -1,14 +1,17 @@
+import { useTheme } from "@/hooks/useTheme";
 import { motion } from 'framer-motion';
 import React from 'react';
 
 const AnimatedShapes = () => {
   const shapes = Array.from({ length: 5 });
+  const colors = useTheme();
   return (
     <div className="absolute inset-0 overflow-hidden">
       {shapes.map((_, i) => (
         <motion.div
           key={i}
-          className="absolute bg-visara-light-accent/10 dark:bg-visara-dark-accent/10 rounded-full"
+          style={{ backgroundColor: colors.accent + '10' }}
+          className="absolute rounded-full"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: [0, 1, 0], scale: [0.5, 1.2, 0.5] }}
           transition={{
@@ -21,6 +24,7 @@ const AnimatedShapes = () => {
             height: Math.random() * 150 + 50,
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
+            backgroundColor: colors.accent + '10',
           }}
         />
       ))}
@@ -29,9 +33,16 @@ const AnimatedShapes = () => {
 };
 
 const HeroSection: React.FC = () => {
+  const colors = useTheme();
+
   return (
     <section className="relative flex flex-col items-center justify-center w-full h-screen overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-visara-light-background to-visara-light-surface dark:from-visara-dark-background dark:to-visara-dark-surface" />
+      <div
+        style={{
+          background: `linear-gradient(to bottom, ${colors.background}, ${colors.surface})`,
+        }}
+        className="absolute inset-0"
+      />
       <AnimatedShapes />
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         <motion.img
@@ -46,7 +57,8 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-5xl md:text-7xl font-extrabold text-visara-light-text dark:text-visara-dark-text tracking-tighter mb-4"
+          style={{ color: colors.primary }}
+          className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4"
         >
           Meet Visara
         </motion.h1>
@@ -54,7 +66,8 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="max-w-2xl mx-auto text-lg md:text-xl text-visara-light-textSecondary dark:text-visara-dark-textSecondary mb-8"
+          style={{ color: colors.textSecondary }}
+          className="max-w-2xl mx-auto text-lg md:text-xl mb-8"
         >
           The intelligent gallery that understands your photos as well as you do. Search, organize, and relive your moments—all with absolute privacy.
         </motion.p>
@@ -63,7 +76,10 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
-          <button className="px-8 py-3 font-semibold text-white bg-visara-light-accent dark:bg-visara-dark-accent rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300">
+          <button
+            style={{ backgroundColor: colors.accent, color: colors.textInverse }}
+            className="px-8 py-3 font-semibold rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300"
+          >
             Join Early Access
           </button>
         </motion.div>

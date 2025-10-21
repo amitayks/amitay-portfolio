@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { useEffect, useState } from "react";
 import { PortfolioItem } from "../types/portfolio";
 import { Skeleton } from "./Skeleton";
@@ -25,6 +26,7 @@ function PortfolioImage({
   isLoadingImagePack,
 }: ImageProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const colors = useTheme();
 
   useEffect(() => {
     if (image) {
@@ -76,9 +78,12 @@ function PortfolioImage({
               return (
                 <div
                   key={imageItem.url}
-                  className={`aspect-square cursor-pointer rounded-md overflow-hidden ${
-                    selectedImage === imageItem.url ? "ring-2 ring-indigo-500" : ""
-                  }`}
+                  style={{
+                    outlineColor: selectedImage === imageItem.url ? colors.accent : "transparent",
+                    outlineWidth: "2px",
+                    outlineStyle: "solid",
+                  }}
+                  className={`aspect-square cursor-pointer rounded-md overflow-hidden`}
                   onClick={() => imageItem.url && setSelectedImage(imageItem.url)}
                 >
                   {imageItem.isLoading ? (

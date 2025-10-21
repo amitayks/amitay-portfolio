@@ -10,7 +10,7 @@ function Home() {
     <div style={{ backgroundColor: colors.background }} className="min-h-screen">
       <BannerSection />
 
-      <FeaturedProjectsSection style="bg-gradient-to-tr from-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800" />
+      <FeaturedProjectsSection />
       <Skills aboutButton={true} />
     </div>
   );
