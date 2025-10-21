@@ -111,7 +111,7 @@ function NavigationBar() {
               >
                 {HEADER_LINKS.map((link, i) => (
                   <motion.div
-                    key={i}
+                    key={`${link.input}-${i}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 * i, duration: 0.3 }}
@@ -199,7 +199,11 @@ function NavigationBar() {
                   <div className="pb-10 pt-4">
                     <motion.div className="space-y-3 flex flex-col items-center">
                       {HEADER_LINKS.map((link, i) => (
-                        <motion.div key={i} variants={itemVariants} className="max-w-sm w-full">
+                        <motion.div
+                          key={`${link.input}-${i}`}
+                          variants={itemVariants}
+                          className="max-w-sm w-full"
+                        >
                           <HeaderTab
                             to={link.to}
                             input={link.input}
