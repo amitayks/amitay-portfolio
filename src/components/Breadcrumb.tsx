@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useTheme } from "@/hooks/useTheme";
+import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 import { PortfolioItem } from "../types/portfolio";
 
 interface BreadcrumbProps {
@@ -19,7 +19,6 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
     <motion.div
       style={{
         backgroundColor: "transparent",
-        borderBottom: `1px solid ${colors.border}`,
       }}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}

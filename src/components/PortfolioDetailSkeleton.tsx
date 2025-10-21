@@ -5,30 +5,25 @@ export const PortfolioDetailSkeleton = () => {
 
   return (
     <div style={{ backgroundColor: colors.background }} className="min-h-screen">
-      {/* Breadcrumb */}
-      <div
-        style={{
-          backgroundColor: colors.surfaceSecondary,
-          borderBottom: `1px solid ${colors.border}`,
-        }}
-      >
+      {/* Breadcrumb Skeleton */}
+      <div style={{ backgroundColor: "transparent" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <nav className="flex items-center justify-between">
-            {/* Back to Portfolio link */}
-            <div className="flex items-center">
+            {/* Back button skeleton */}
+            <div className="inline-flex items-center">
               <div
                 style={{ backgroundColor: colors.surfaceSecondary }}
                 className="w-5 h-5 rounded animate-pulse mr-2"
               />
               <div
                 style={{ backgroundColor: colors.surfaceSecondary }}
-                className="h-5 w-32 rounded animate-pulse"
+                className="h-5 w-24 rounded animate-pulse"
               />
             </div>
-            {/* Project type badge */}
+            {/* Project type badge skeleton */}
             <div
               style={{ backgroundColor: colors.surfaceSecondary }}
-              className="h-8 w-24 rounded-full animate-pulse"
+              className="h-8 w-28 rounded-full animate-pulse"
             />
           </nav>
         </div>
@@ -36,7 +31,7 @@ export const PortfolioDetailSkeleton = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" dir="rtl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Images Section */}
+          {/* Image Section Skeleton */}
           <div className="space-y-6">
             {/* Main Image */}
             <div className="aspect-square w-full relative overflow-hidden rounded-lg">
@@ -61,74 +56,77 @@ export const PortfolioDetailSkeleton = () => {
             </div>
           </div>
 
-          {/* Project Info Section */}
+          {/* Project Info Section Skeleton */}
           <div className="space-y-8">
-            {/* Title */}
+            {/* Title Skeleton */}
             <div>
               <div
                 style={{ backgroundColor: colors.surfaceSecondary }}
-                className="h-12 w-4/5 rounded animate-pulse mb-4"
+                className="h-12 w-3/4 rounded animate-pulse mb-4"
               />
             </div>
 
-            {/* Technologies */}
+            {/* Technologies Badges Skeleton */}
             <div className="flex">
               <div className="flex flex-wrap gap-3">
-                {Array(4)
+                {Array(3)
                   .fill(0)
                   .map((_, i) => (
                     <div
                       key={i}
                       style={{ backgroundColor: colors.surfaceSecondary }}
-                      className="h-8 w-20 rounded-lg animate-pulse"
+                      className="h-10 w-24 rounded-lg animate-pulse"
                     />
                   ))}
               </div>
             </div>
 
-            {/* Description */}
+            {/* Description Skeleton */}
             <div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div
                   style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="h-6 w-full rounded animate-pulse"
+                  className="h-7 w-full rounded animate-pulse"
                 />
                 <div
                   style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="h-6 w-5/6 rounded animate-pulse"
+                  className="h-7 w-5/6 rounded animate-pulse"
                 />
                 <div
                   style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="h-6 w-3/4 rounded animate-pulse"
+                  className="h-7 w-4/5 rounded animate-pulse"
                 />
               </div>
             </div>
 
-            {/* External Links */}
+            {/* External Links Skeleton */}
             <div className="flex gap-4">
+              <div
+                style={{ backgroundColor: colors.surfaceSecondary }}
+                className="h-12 w-36 rounded-xl animate-pulse"
+              />
               <div
                 style={{ backgroundColor: colors.surfaceSecondary }}
                 className="h-12 w-32 rounded-xl animate-pulse"
               />
-              <div
-                style={{ backgroundColor: colors.surfaceSecondary }}
-                className="h-12 w-28 rounded-xl animate-pulse"
-              />
             </div>
 
-            {/* About The Project Section */}
+            {/* About The Project Section Skeleton */}
             <div>
+              {/* Section Title */}
               <div
                 style={{ backgroundColor: colors.surfaceSecondary }}
-                className="h-6 w-40 rounded animate-pulse mb-4"
+                className="h-6 w-48 rounded animate-pulse mb-4"
               />
+
+              {/* ExpandTableText Card Skeleton */}
               <div className="prose prose-gray dark:prose-invert max-w-none">
                 <div
                   style={{
                     borderColor: colors.border,
-                    background: `linear-gradient(to right, ${colors.surface}, ${colors.surfaceSecondary})`,
+                    background: `linear-gradient(to top right, ${colors.surface}, ${colors.surfaceSecondary})`,
                   }}
-                  className="p-6 rounded-xl border-2"
+                  className="p-6 border-2 rounded-lg"
                 >
                   <div className="space-y-3">
                     <div
@@ -137,7 +135,7 @@ export const PortfolioDetailSkeleton = () => {
                     />
                     <div
                       style={{ backgroundColor: colors.surfaceSecondary }}
-                      className="h-5 w-4/5 rounded animate-pulse"
+                      className="h-5 w-11/12 rounded animate-pulse"
                     />
                     <div
                       style={{ backgroundColor: colors.surfaceSecondary }}
@@ -145,18 +143,22 @@ export const PortfolioDetailSkeleton = () => {
                     />
                     <div
                       style={{ backgroundColor: colors.surfaceSecondary }}
-                      className="h-5 w-3/4 rounded animate-pulse"
+                      className="h-5 w-4/5 rounded animate-pulse"
                     />
+                  </div>
+
+                  {/* Read More Button Skeleton */}
+                  <div className="mt-4 flex justify-end">
                     <div
                       style={{ backgroundColor: colors.surfaceSecondary }}
-                      className="h-5 w-2/3 rounded animate-pulse"
+                      className="h-8 w-28 rounded animate-pulse"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Additional Info Table */}
+            {/* Additional Info Table Skeleton */}
             <div>
               <div className="space-y-3">
                 {Array(4)
@@ -165,15 +167,15 @@ export const PortfolioDetailSkeleton = () => {
                     <div
                       key={index}
                       style={{ borderBottom: `1px solid ${colors.border}` }}
-                      className="flex justify-between py-2"
+                      className="flex justify-between py-3"
                     >
                       <div
                         style={{ backgroundColor: colors.surfaceSecondary }}
-                        className="h-5 w-24 rounded animate-pulse"
+                        className="h-5 w-32 rounded animate-pulse"
                       />
                       <div
                         style={{ backgroundColor: colors.surfaceSecondary }}
-                        className="h-5 w-32 rounded animate-pulse"
+                        className="h-5 w-40 rounded animate-pulse"
                       />
                     </div>
                   ))}
