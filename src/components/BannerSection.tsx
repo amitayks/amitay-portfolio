@@ -8,8 +8,13 @@ import { useSiteImage } from "../hooks/useSiteImages";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 import SocialLinksComponent from "./SocialLinksComponent";
 
-function BannerSection() {
-  const { image } = useSiteImage(PERSONAL_INFO.profileImage2);
+interface BannerSectionProps {
+  imageKey?: string;
+  showAvailabilityBadge?: boolean;
+}
+
+function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSectionProps = {}) {
+  const { image } = useSiteImage(imageKey || PERSONAL_INFO.profileImage2);
   const colors = useTheme();
 
   return (
@@ -19,29 +24,31 @@ function BannerSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="text-center lg:text-left px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Badge
-                variant="secondary"
-                style={{ backgroundColor: colors.surfaceSecondary, color: colors.accent }}
-                className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-6"
+            {showAvailabilityBadge && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
               >
-                <motion.span
-                  style={{ backgroundColor: colors.success }}
-                  className="w-2 h-2 rounded-full mr-2"
-                  animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                  }}
-                />
-                Available for new projects
-              </Badge>
-            </motion.div>
+                <Badge
+                  variant="secondary"
+                  style={{ backgroundColor: colors.surfaceSecondary, color: colors.accent }}
+                  className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-6"
+                >
+                  <motion.span
+                    style={{ backgroundColor: colors.success }}
+                    className="w-2 h-2 rounded-full mr-2"
+                    animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "loop",
+                    }}
+                  />
+                  Available for new projects
+                </Badge>
+              </motion.div>
+            )}
 
             <motion.h1
               style={{ color: colors.primary }}

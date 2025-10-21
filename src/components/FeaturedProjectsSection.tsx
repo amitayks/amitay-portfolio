@@ -1,8 +1,8 @@
-import { useTheme } from "@/hooks/useTheme";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 import useFeaturdItems from "../hooks/useFeaturedItems";
 import PortfolioCard from "./PortfolioCard";
 
@@ -30,11 +30,8 @@ function FeaturedProjectsSection() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
         >
-          <h2
-            style={{ color: colors.primary }}
-            className="text-3xl lg:text-4xl font-bold mb-4"
-          >
-            {"< My Favorite />"}
+          <h2 style={{ color: colors.primary }} className="text-3xl lg:text-4xl font-bold mb-4">
+            {"< KEISAR CLUB />"}
           </h2>
         </motion.div>
 
@@ -49,12 +46,12 @@ function FeaturedProjectsSection() {
               viewport={{ once: true, amount: 0.1 }}
             >
               {featuredProjects.map((featuredItem, i) => {
-                if (i >= 6) return null;
+                // if (i >= 6) return null;
                 return (
                   <PortfolioCard
                     key={featuredItem.id}
                     portfolioItem={featuredItem}
-                    className={`${i >= 4 ? "hidden md:block" : ""}`}
+                    // className={`${i >= 4 ? "hidden md:block" : ""}`}
                   />
                 );
               })}

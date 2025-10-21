@@ -1,17 +1,13 @@
-import { useTheme } from "@/hooks/useTheme";
-import BannerSection from "../components/BannerSection";
 import FeaturedProjectsSection from "../components/FeaturedProjectsSection";
-import Skills from "../components/Skills";
 
 function Home() {
-  const colors = useTheme();
-
   return (
-    <div style={{ backgroundColor: colors.background }} className="min-h-screen">
-      <BannerSection />
-
+    <div className="min-h-screen">
       <FeaturedProjectsSection />
-      <Skills aboutButton={true} />
+
+      {/* <BannerSection /> */}
+
+      {/* <Skills aboutButton={true} /> */}
     </div>
   );
 }
