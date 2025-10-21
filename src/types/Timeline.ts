@@ -11,7 +11,6 @@ export type TimelineType = "education" | "experience";
 export interface TimelineSectionProps {
   title: string;
   icon: IconType;
-  iconColor: string;
   items: TimelineItem[];
   type?: TimelineType;
 }

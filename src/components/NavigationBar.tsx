@@ -43,7 +43,6 @@ function NavigationBar() {
       y: -20,
       transition: {
         duration: 0.3,
-        ease: "easeInOut",
       },
     },
     open: {
@@ -51,7 +50,6 @@ function NavigationBar() {
       y: 0,
       transition: {
         duration: 0.4,
-        ease: "easeOut",
         staggerChildren: 0.1,
         delayChildren: 0.1,
       },

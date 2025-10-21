@@ -9,7 +9,6 @@ import { PortfolioItem } from "../types/portfolio";
 function Portfolio() {
   const { portfolioItems, isLoading } = usePortfolioItems();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const colors = useTheme();
 
   useEffect(() => {
     if (!isLoading) {

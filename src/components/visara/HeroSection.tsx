@@ -11,7 +11,6 @@ const AnimatedShapes = () => {
       {shapes.map((_, i) => (
         <motion.div
           key={i}
-          style={{ backgroundColor: colors.accent + '10' }}
           className="absolute rounded-full"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: [0, 1, 0], scale: [0.5, 1.2, 0.5] }}

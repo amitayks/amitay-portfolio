@@ -3,7 +3,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableRow,
 } from "@/components/ui/table";
 import { motion } from "framer-motion";
 import { PortfolioItem } from "../types/portfolio";

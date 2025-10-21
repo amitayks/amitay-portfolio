@@ -1,4 +1,3 @@
-import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
 import {
   Facebook,
@@ -106,8 +105,6 @@ const SocialLinksComponent = ({
   iconClassName,
   linkClassName,
 }: SocialLinksComponentProps) => {
-  const colors = useTheme();
-
   // Size configurations
   const sizeConfig = {
     sm: {
@@ -156,7 +153,6 @@ const SocialLinksComponent = ({
       opacity: 1,
       scale: 1,
       transition: {
-        type: "spring",
         stiffness: 300,
         damping: 20,
       },
@@ -171,7 +167,7 @@ const SocialLinksComponent = ({
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
     >
-      {socialLinks.map((link, index) => {
+      {socialLinks.map((link) => {
         const href = formatHref(link.label, link.value);
         const isExternal = href.startsWith("http");
         const iconSize = iconClassName || config.icon;

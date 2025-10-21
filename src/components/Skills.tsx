@@ -53,7 +53,6 @@ function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
       },
     },
   };

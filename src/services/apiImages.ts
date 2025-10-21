@@ -7,9 +7,7 @@ export const getSiteImage = async (imageName: string) => {
 
   if (error) throw error;
 
-  if (data) {
-    return data?.signedUrl;
-  }
+  return data?.signedUrl ?? null;
 };
 
 export const getPortfolioImage = async (imageName: string) => {
