@@ -45,15 +45,8 @@ function FeaturedProjectsSection() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.1 }}
             >
-              {featuredProjects.map((featuredItem, i) => {
-                // if (i >= 6) return null;
-                return (
-                  <PortfolioCard
-                    key={featuredItem.id}
-                    portfolioItem={featuredItem}
-                    // className={`${i >= 4 ? "hidden md:block" : ""}`}
-                  />
-                );
+              {featuredProjects.map((featuredItem) => {
+                return <PortfolioCard key={featuredItem.id} portfolioItem={featuredItem} />;
               })}
             </motion.div>
 

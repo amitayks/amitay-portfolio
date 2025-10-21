@@ -1,6 +1,7 @@
-import { useTheme } from "@/hooks/useTheme";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { useTheme } from "@/hooks/useTheme";
 import PortfolioCard from "../components/PortfolioCard";
 import PortfolioFilter from "../components/PortfolioFilter";
 import usePortfolioItems from "../hooks/usePortfolioItems";
@@ -45,48 +46,44 @@ const PortfolioGridSkeleton = () => {
       {Array(6)
         .fill(0)
         .map((_, index) => (
-          <article
-            key={index}
-            style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-            className="group relative rounded-2xl shadow-sm overflow-hidden border animate-pulse"
-          >
-            <div className="aspect-square w-full relative overflow-hidden">
-              <div
-                style={{ backgroundColor: colors.surfaceSecondary }}
-                className="aspect-square"
-              />
-            </div>
+          <div key={index} className="animate-pulse">
+            <Card
+              style={{
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+              }}
+              className="group relative overflow-hidden border hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="aspect-square w-full relative overflow-hidden">
+                <div
+                  style={{ backgroundColor: colors.surfaceSecondary }}
+                  className="aspect-square absolute inset-0"
+                />
+              </div>
 
-            <div className="px-6 py-6">
-              <div className="flex items-center justify-center ">
+              {/* Action buttons skeleton */}
+              <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
                 <div
-                  style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="h-6 w-3/4 rounded"
-                />
-              </div>
-            </div>
-
-            <div className="absolute top-4 right-4 flex gap-2 md:opacity-0">
-              <div
-                style={{ backgroundColor: colors.surface, backdropFilter: "blur(4px)" }}
-                className="w-8 h-8 rounded-lg shadow-lg"
-              >
+                  style={{ backgroundColor: colors.surface }}
+                  className="p-2 rounded-lg shadow-lg backdrop-blur-sm w-8 h-8"
+                >
+                  <div
+                    style={{ backgroundColor: colors.surfaceSecondary }}
+                    className="w-4 h-4 rounded"
+                  />
+                </div>
                 <div
-                  style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="w-4 h-4 rounded m-2"
-                />
+                  style={{ backgroundColor: colors.surface }}
+                  className="p-2 rounded-lg shadow-lg backdrop-blur-sm w-8 h-8"
+                >
+                  <div
+                    style={{ backgroundColor: colors.surfaceSecondary }}
+                    className="w-4 h-4 rounded"
+                  />
+                </div>
               </div>
-              <div
-                style={{ backgroundColor: colors.surface, backdropFilter: "blur(4px)" }}
-                className="w-8 h-8 rounded-lg shadow-lg"
-              >
-                <div
-                  style={{ backgroundColor: colors.surfaceSecondary }}
-                  className="w-4 h-4 rounded m-2"
-                />
-              </div>
-            </div>
-          </article>
+            </Card>
+          </div>
         ))}
     </div>
   );
