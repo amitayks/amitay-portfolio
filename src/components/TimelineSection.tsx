@@ -1,16 +1,11 @@
-import { useTheme } from "@/hooks/useTheme";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Briefcase, Calendar, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
+import { Briefcase, Calendar, GraduationCap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTheme } from "@/hooks/useTheme";
 import { TimelineSectionProps } from "../types/Timeline";
 
-const TimelineSection = ({
-  title,
-  icon,
-  items,
-  type = "education",
-}: TimelineSectionProps) => {
+const TimelineSection = ({ title, icon, items, type = "education" }: TimelineSectionProps) => {
   const colors = useTheme();
 
   const getIconComponent = () => {
@@ -60,10 +55,10 @@ const TimelineSection = ({
         transition={{ duration: 0.6 }}
       >
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          whileInView={{ scale: 1, rotate: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
         >
           {getIconComponent()}
         </motion.div>
@@ -120,10 +115,7 @@ const TimelineSection = ({
               >
                 <CardHeader>
                   <div className="flex flex-wrap items-start justify-between gap-2">
-                    <CardTitle
-                      style={{ color: colors.primary }}
-                      className="text-xl font-semibold"
-                    >
+                    <CardTitle style={{ color: colors.primary }} className="text-xl font-semibold">
                       {item.title}
                     </CardTitle>
                     <Badge
