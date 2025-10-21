@@ -56,6 +56,40 @@ const ExpandTableText = ({
     setIsExpanded(!isExpanded);
   };
 
+  // Split remaining text into words for smoother animation
+  const words = remainingText.split(" ");
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.015, // Delay between each word
+        delayChildren: 0.05,
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
+
+  const wordVariants = {
+    hidden: {
+      opacity: 0,
+      y: 5,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.1,
+      },
+    },
+  };
+
   return (
     <motion.div
       className={className}
@@ -71,26 +105,31 @@ const ExpandTableText = ({
         className="p-6 border-2 hover:shadow-lg transition-shadow duration-300"
       >
         <div className="relative">
-          <motion.p
-            style={{ color: colors.textSecondary }}
-            className="leading-relaxed text-lg"
-            layout
-          >
+          <p style={{ color: colors.textSecondary }} className="leading-relaxed text-lg">
             {truncatedText}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               {isExpanded && (
                 <motion.span
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  style={{ display: "inline" }}
                 >
-                  {remainingText}
+                  {words.map((word, index) => (
+                    <motion.span
+                      key={index}
+                      variants={wordVariants}
+                      style={{ display: "inline-block", marginRight: "0.25em" }}
+                    >
+                      {word}
+                    </motion.span>
+                  ))}
                 </motion.span>
               )}
             </AnimatePresence>
             {!isExpanded && <span>...</span>}
-          </motion.p>
+          </p>
 
           <motion.div
             className="mt-4 flex justify-end"
