@@ -1,7 +1,10 @@
-import { useTheme } from "@/hooks/useTheme";
 import emailjs from "@emailjs/browser";
 import { AlertCircle, Clock, Mail, Phone, Send } from "lucide-react";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useTheme } from "@/hooks/useTheme";
 import SocialLinksComponent from "../components/SocialLinksComponent";
 import { EMAILJS_CONFIG, PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 
@@ -152,16 +155,10 @@ const Contact = () => {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2
-                style={{ color: colors.primary }}
-                className="text-2xl font-bold mb-6"
-              >
+              <h2 style={{ color: colors.primary }} className="text-2xl font-bold mb-6">
                 Let's Start a Conversation
               </h2>
-              <p
-                style={{ color: colors.textSecondary }}
-                className="text-lg leading-relaxed mb-8"
-              >
+              <p style={{ color: colors.textSecondary }} className="text-lg leading-relaxed mb-8">
                 Whether you're looking for custom woodworking, web development services, or just
                 want to discuss an idea, I'm here to help. Every great project starts with a
                 conversation.
@@ -275,8 +272,7 @@ const Contact = () => {
                   >
                     Name *
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     id="name"
                     name="name"
                     value={formData.name}
@@ -287,7 +283,6 @@ const Contact = () => {
                       color: colors.primary,
                       borderColor: formErrors.name ? colors.error : colors.border,
                     }}
-                    className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                     placeholder="Your full name"
                   />
                   {formErrors.name && (
@@ -305,8 +300,7 @@ const Contact = () => {
                   >
                     Email *
                   </label>
-                  <input
-                    type="email"
+                  <Input
                     id="email"
                     name="email"
                     value={formData.email}
@@ -317,7 +311,6 @@ const Contact = () => {
                       color: colors.primary,
                       borderColor: formErrors.email ? colors.error : colors.border,
                     }}
-                    className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                     placeholder="your.email@example.com"
                   />
                   {formErrors.email && (
@@ -366,8 +359,7 @@ const Contact = () => {
                   >
                     Subject
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     id="subject"
                     name="subject"
                     value={formData.subject}
@@ -378,7 +370,6 @@ const Contact = () => {
                       color: colors.primary,
                       borderColor: colors.border,
                     }}
-                    className="block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Brief project description"
                   />
                 </div>
@@ -392,7 +383,7 @@ const Contact = () => {
                 >
                   Message *
                 </label>
-                <textarea
+                <Textarea
                   id="message"
                   name="message"
                   rows={6}
@@ -404,7 +395,6 @@ const Contact = () => {
                     color: colors.primary,
                     borderColor: formErrors.message ? colors.error : colors.border,
                   }}
-                  className={`block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 pl-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                   placeholder="Tell me about your project, timeline, budget, and any specific requirements..."
                 />
                 {formErrors.message && (
@@ -415,22 +405,11 @@ const Contact = () => {
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  style={{
-                    backgroundColor: isSubmitting ? colors.buttonDisabled : colors.accent,
-                    color: isSubmitting ? colors.buttonDisabledText : colors.textInverse,
-                  }}
-                  className="w-full inline-flex justify-center items-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
+                <Button type="submit" disabled={isSubmitting} className="w-full">
                   <Send className="h-5 w-5 mr-2" />
                   {isSubmitting ? "Sending..." : "Send Message"}
-                </button>
-                <p
-                  style={{ color: colors.textTertiary }}
-                  className="mt-2 text-sm text-center"
-                >
+                </Button>
+                <p style={{ color: colors.textTertiary }} className="mt-2 text-sm text-center">
                   * Required fields
                 </p>
               </div>

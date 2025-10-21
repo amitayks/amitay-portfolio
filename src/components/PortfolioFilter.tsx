@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { Filter } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -25,17 +26,13 @@ function PortfolioFilter() {
             <Filter style={{ color: colors.textTertiary }} className="h-5 w-5 flex-shrink-0" />
             <div className="flex gap-2 ">
               {PROJECT_TYPES.map((type) => (
-                <button
+                <Button
                   key={type.value}
+                  variant={currentFilter === type.value ? "default" : "secondary"}
                   onClick={() => handleFilterChange(type.value)}
-                  style={{
-                    backgroundColor: currentFilter === type.value ? colors.accent : colors.surface,
-                    color: currentFilter === type.value ? colors.textInverse : colors.text,
-                  }}
-                  className={`px-4 py-2 text-sm rounded-lg whitespace-nowrap transition-colors font-medium`}
                 >
                   {type.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

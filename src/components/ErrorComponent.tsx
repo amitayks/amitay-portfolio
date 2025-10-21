@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -93,53 +94,29 @@ const ErrorComponent = ({
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           {showRetry && onRetry && (
-            <button
-              onClick={onRetry}
-              style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-              className={`${config.button} inline-flex items-center justify-center rounded-md font-medium hover:opacity-90 transition-colors`}
-            >
+            <Button onClick={onRetry}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
-            </button>
+            </Button>
           )}
 
           {actionText && onAction && (
-            <button
-              onClick={onAction}
-              style={{ backgroundColor: colors.surface, color: colors.primary }}
-              className={`${config.button} inline-flex items-center justify-center rounded-md font-medium hover:opacity-90 transition-colors`}
-            >
+            <Button variant="secondary" onClick={onAction}>
               {actionText}
-            </button>
+            </Button>
           )}
 
           {showNavigation && (
             <>
-              <button
-                onClick={handleGoBack}
-                style={{
-                  backgroundColor: colors.surface,
-                  color: colors.primary,
-                  borderColor: colors.border,
-                }}
-                className={`${config.button} inline-flex items-center justify-center border rounded-md font-medium hover:opacity-90 transition-colors`}
-              >
+              <Button variant="outline" onClick={handleGoBack}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Go Back
-              </button>
+              </Button>
 
-              <button
-                onClick={handleGoHome}
-                style={{
-                  backgroundColor: colors.surface,
-                  color: colors.primary,
-                  borderColor: colors.border,
-                }}
-                className={`${config.button} inline-flex items-center justify-center border rounded-md font-medium hover:opacity-90 transition-colors`}
-              >
+              <Button variant="outline" onClick={handleGoHome}>
                 <Home className="h-4 w-4 mr-2" />
                 Go Home
-              </button>
+              </Button>
             </>
           )}
         </div>

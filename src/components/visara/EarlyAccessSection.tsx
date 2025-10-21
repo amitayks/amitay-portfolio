@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useTheme } from "@/hooks/useTheme";
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -35,23 +37,8 @@ const EarlyAccessSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row max-w-md mx-auto gap-4"
         >
-          <input
-            type="email"
-            placeholder="Enter your email"
-            style={{
-              backgroundColor: colors.surface,
-              borderColor: colors.border,
-              color: colors.text,
-            }}
-            className="flex-grow px-4 py-3 rounded-full border focus:outline-none focus:ring-2"
-          />
-          <button
-            type="submit"
-            style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-            className="px-8 py-3 font-semibold rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300"
-          >
-            Join Waitlist
-          </button>
+          <Input type="email" placeholder="Enter your email" />
+          <Button type="submit">Join Waitlist</Button>
         </motion.form>
       </div>
     </section>

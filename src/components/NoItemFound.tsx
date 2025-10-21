@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -18,14 +19,10 @@ function NoItemFound() {
         <p style={{ color: colors.textSecondary }} className="mb-6">
           The project you're looking for doesn't exist or has been removed.
         </p>
-        <button
-          onClick={() => navigate("/portfolio")}
-          style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-          className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-colors"
-        >
+        <Button onClick={() => navigate("/portfolio")}>
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Portfolio
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -76,12 +77,7 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
-          <button
-            style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-            className="px-8 py-3 font-semibold rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300"
-          >
-            Join Early Access
-          </button>
+          <Button>Join Early Access</Button>
         </motion.div>
       </div>
     </section>

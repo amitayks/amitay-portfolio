@@ -1,8 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PortfolioItem } from "../types/portfolio";
-import { PROJECT_TYPE_COLOR } from "../utils/constants";
 
 interface BreadcrumbProps {
   projectType: PortfolioItem["projectType"];
@@ -22,14 +22,10 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="flex items-center justify-between">
-          <button
-            onClick={() => navigate(-1)}
-            style={{ color: colors.textSecondary }}
-            className="inline-flex items-center hover:opacity-80 transition-colors"
-          >
+          <Button variant="ghost" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-5 h-5 mr-2" />
             Go Back
-          </button>
+          </Button>
           <div className="">
             <span
               style={{
