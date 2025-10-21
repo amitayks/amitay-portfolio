@@ -18,7 +18,7 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
   return (
     <motion.div
       style={{
-        backgroundColor: colors.surfaceSecondary,
+        backgroundColor: "transparent",
         borderBottom: `1px solid ${colors.border}`,
       }}
       initial={{ opacity: 0, y: -20 }}
@@ -36,6 +36,7 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
               variant="ghost"
               onClick={() => navigate(-1)}
               className="group"
+              style={{ color: colors.textSecondary }}
             >
               <motion.div
                 className="flex items-center"
@@ -56,8 +57,8 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
             <Badge
               variant="secondary"
               style={{
-                backgroundColor: colors.surface,
-                color: colors.text,
+                backgroundColor: colors.surfaceSecondary,
+                color: colors.accent,
                 borderColor: colors.border,
               }}
               className="px-4 py-2 text-sm font-medium capitalize border"

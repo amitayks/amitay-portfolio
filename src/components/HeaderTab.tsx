@@ -1,11 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-
-const styles = {
-  default:
-    "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg font-medium transition-colors relative",
-  mobile:
-    "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 px-20 py-4 rounded-lg font-medium transition-colors block flex justify-center",
-};
+import { useTheme } from "@/hooks/useTheme";
 
 function HeaderTab({
   to,
@@ -16,26 +10,55 @@ function HeaderTab({
 }: {
   to: string;
   input?: string;
-  className: keyof typeof styles;
+  className: "default" | "mobile";
   onClick?: () => void;
   icon?: React.ElementType;
 }) {
   const location = useLocation();
+  const colors = useTheme();
   const isActive = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
+
+  const baseStyles = "px-3 py-2 rounded-lg font-medium transition-all duration-200";
+  const mobileStyles =
+    "px-20 py-4 rounded-lg font-medium transition-all duration-200 block flex justify-center";
 
   return (
     <Link
       to={to}
-      className={`${styles[className]} ${isActive ? "text-blue-600 dark:text-blue-400" : ""}`}
+      className={`${className === "default" ? baseStyles : mobileStyles} relative`}
+      style={{
+        color: isActive ? colors.accent : colors.textSecondary,
+        backgroundColor:
+          className === "mobile" && isActive ? colors.surfaceSecondary : "transparent",
+      }}
+      onMouseEnter={(e) => {
+        if (!isActive) {
+          e.currentTarget.style.color = colors.primary;
+        }
+        if (className === "mobile") {
+          e.currentTarget.style.backgroundColor = colors.surfaceSecondary;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isActive) {
+          e.currentTarget.style.color = colors.textSecondary;
+        }
+        if (className === "mobile" && !isActive) {
+          e.currentTarget.style.backgroundColor = "transparent";
+        }
+      }}
       onClick={onClick}
     >
       <div className="flex items-center">
         {Icon && <Icon className="h-5 w-5 mr-3" />}
         {input}
-        {isActive && className === "default" && (
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full" />
-        )}
       </div>
+      {/* {isActive && className === "default" && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+          style={{ backgroundColor: colors.accent, bottom: "4px" }}
+        />
+      )} */}
     </Link>
   );
 }

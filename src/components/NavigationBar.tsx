@@ -63,6 +63,7 @@ function NavigationBar() {
 
   return (
     <motion.nav
+      className="relative z-50"
       style={{
         backgroundColor: "transparent",
         backdropFilter: "blur(10px)",
@@ -184,12 +185,12 @@ function NavigationBar() {
             {isOpen && (
               <>
                 <motion.div
-                  className="fixed left-0 right-0 shadow-2xl z-50"
+                  className="fixed left-0 right-0 shadow-2xl z-[100]"
                   style={{
                     top: "64px",
                     borderBottomLeftRadius: "20px",
                     borderBottomRightRadius: "20px",
-                    backgroundColor: colors.surface,
+                    backgroundColor: colors.background,
                   }}
                   variants={menuVariants}
                   initial="closed"
@@ -241,7 +242,7 @@ function NavigationBar() {
                 </motion.div>
 
                 <motion.div
-                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90]"
                   style={{ top: "64px" }}
                   onClick={() => setIsOpen(false)}
                   initial={{ opacity: 0 }}
