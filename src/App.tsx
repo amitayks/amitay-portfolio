@@ -6,14 +6,15 @@ import AppLayout from "./components/AppLayout";
 import Favicon from "./components/Favicon";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
+import Apply from "./pages/Apply";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Portfolio from "./pages/Portfolio";
 import PortfolioDetail from "./pages/PortfolioDetail";
 import VisaraPrivacyPolicy from "./pages/VIsaraPrivacyPolicy";
+
 // import VisaraPage from "./pages/Visara";
-import Apply from "./pages/Apply";
 
 const queryClient = new QueryClient({
   defaultOptions: {

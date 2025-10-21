@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { motion } from 'framer-motion';
 import React from 'react';
 import PhoneMockup from './PhoneMockup';
@@ -26,6 +27,8 @@ const features = [
 ];
 
 const FeaturesSection: React.FC = () => {
+  const colors = useTheme();
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
@@ -37,8 +40,8 @@ const FeaturesSection: React.FC = () => {
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.8 }}
               className={`lg:order-${index % 2 === 0 ? 1 : 2}`}>
-              <h3 className="text-3xl font-bold mb-4 text-visara-light-text dark:text-visara-dark-text">{feature.title}</h3>
-              <p className="text-lg text-visara-light-textSecondary dark:text-visara-dark-textSecondary">{feature.description}</p>
+              <h3 style={{ color: colors.primary }} className="text-3xl font-bold mb-4">{feature.title}</h3>
+              <p style={{ color: colors.textSecondary }} className="text-lg">{feature.description}</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}

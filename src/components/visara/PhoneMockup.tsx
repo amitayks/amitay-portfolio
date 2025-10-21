@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import { motion } from 'framer-motion';
 import React from 'react';
 
@@ -6,10 +7,18 @@ interface PhoneMockupProps {
 }
 
 const PhoneMockup: React.FC<PhoneMockupProps> = ({ image }) => {
+  const colors = useTheme();
+
   return (
-    <div className="mx-auto w-[300px] h-[600px] bg-visara-dark-surface rounded-[40px] shadow-2xl border-4 border-visara-dark-tertiary overflow-hidden">
+    <div
+      style={{ backgroundColor: colors.surface, borderColor: colors.tertiary }}
+      className="mx-auto w-[300px] h-[600px] rounded-[40px] shadow-2xl border-4 overflow-hidden"
+    >
       <div className="absolute top-0 left-0 w-full h-full p-4">
-        <div className="w-full h-full bg-visara-dark-background rounded-[30px] overflow-hidden">
+        <div
+          style={{ backgroundColor: colors.background }}
+          className="w-full h-full rounded-[30px] overflow-hidden"
+        >
           <motion.img
             src={image}
             alt="feature image"
