@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Moon, Sun, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Menu, Moon, Settings, Sun, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,10 +9,13 @@ import { toggleTheme } from "../hooks/darkTheme";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { HEADER_LINKS } from "../utils/constants";
 import HeaderTab from "./HeaderTab";
+import LanguageSwitcher from "./LanguageSwitcher";
 import Logo from "./Logo";
 
 function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
   const colors = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -32,6 +35,23 @@ function NavigationBar() {
       setIsOpen(false);
     }
   }, [isMobile, isOpen]);
+
+  // Close settings dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+        setIsSettingsOpen(false);
+      }
+    };
+
+    if (isSettingsOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSettingsOpen]);
 
   const handleThemeToggle = () => {
     toggleTheme();
@@ -59,6 +79,23 @@ function NavigationBar() {
   const itemVariants = {
     closed: { opacity: 0, x: -20 },
     open: { opacity: 1, x: 0 },
+  };
+
+  const settingsDropdownVariants = {
+    closed: {
+      opacity: 0,
+      x: 60,
+      transition: {
+        duration: 0.3,
+      },
+    },
+    open: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.4,
+      },
+    },
   };
 
   return (
@@ -122,21 +159,54 @@ function NavigationBar() {
                 ))}
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, duration: 0.3 }}
-                whileHover={{ scale: 1.1, rotate: 15 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Button variant="ghost" size="icon" onClick={handleThemeToggle}>
-                  {colors.background === "#000000" ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
+              <div className="relative flex items-center" ref={settingsRef}>
+                <AnimatePresence>
+                  {isSettingsOpen && (
+                    <motion.div
+                      className="absolute right-full flex items-center gap-2 mr-2"
+                      variants={settingsDropdownVariants}
+                      initial="closed"
+                      animate="open"
+                      exit="closed"
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleThemeToggle}
+                        style={{ color: colors.textSecondary }}
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 15 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          {colors.background === "#000000" ? (
+                            <Sun className="h-5 w-5" />
+                          ) : (
+                            <Moon className="h-5 w-5" />
+                          )}
+                        </motion.div>
+                      </Button>
+                      <LanguageSwitcher />
+                    </motion.div>
                   )}
+                </AnimatePresence>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, duration: 0.3 }}
+                    whileHover={{ scale: 1.1, rotate: 15 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Settings className="h-5 w-5" />
+                  </motion.div>
                 </Button>
-              </motion.div>
+              </div>
             </>
           )}
 
@@ -184,6 +254,23 @@ function NavigationBar() {
           <AnimatePresence>
             {isOpen && (
               <>
+                {/* Backdrop - render first so it appears behind the menu */}
+                <motion.div
+                  className="fixed inset-0 z-[90]"
+                  style={{
+                    top: "64px",
+                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    backdropFilter: "blur(8px)",
+                    WebkitBackdropFilter: "blur(8px)",
+                  }}
+                  onClick={() => setIsOpen(false)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                {/* Menu Panel */}
                 <motion.div
                   className="fixed left-0 right-0 shadow-2xl z-[100]"
                   style={{
@@ -219,37 +306,32 @@ function NavigationBar() {
                   <Separator style={{ backgroundColor: colors.border }} />
 
                   <motion.div className="px-6 py-6 rounded-b-2xl" variants={itemVariants}>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap-3">
                       <Button
-                        variant="secondary"
+                        variant="ghost"
                         onClick={handleThemeToggle}
                         className="flex items-center px-6 py-3 rounded-lg transition-all duration-200"
+                        style={{
+                          backgroundColor: colors.surfaceSecondary,
+                          color: colors.textSecondary,
+                        }}
                       >
                         {colors.background === "#000000" ? (
                           <>
                             <Sun className="h-5 w-5 mr-3" />
-                            <span className="font-medium">Light Mode</span>
+                            <span className="font-medium">Light</span>
                           </>
                         ) : (
                           <>
                             <Moon className="h-5 w-5 mr-3" />
-                            <span className="font-medium">Dark Mode</span>
+                            <span className="font-medium">Dark</span>
                           </>
                         )}
                       </Button>
+                      <LanguageSwitcher variant="mobile" />
                     </div>
                   </motion.div>
                 </motion.div>
-
-                <motion.div
-                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90]"
-                  style={{ top: "64px" }}
-                  onClick={() => setIsOpen(false)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
               </>
             )}
           </AnimatePresence>

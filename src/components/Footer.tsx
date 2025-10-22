@@ -23,15 +23,6 @@ const Footer = () => {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
         >
-          {/* <motion.div
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 20,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatType: "loop",
-              ease: "linear",
-            }}
-          > */}
           <Logo width={32} height={32} fill={colors.primary} style={{ transform: "scaleX(-1)" }} />
           {/* </motion.div> */}
           <motion.span

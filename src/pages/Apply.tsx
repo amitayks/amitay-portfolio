@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Lightbulb, Rocket, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,26 +21,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTheme } from "@/hooks/useTheme";
 import { EMAILJS_CONFIG } from "@/utils/constants";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  project: z.string().min(10, {
-    message: "Please tell us more about your project (at least 10 characters).",
-  }),
-  phone: z.string().optional(),
-});
+const createFormSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().min(2, {
+      message: t("validation.nameMin"),
+    }),
+    email: z.string().email({
+      message: t("validation.emailInvalid"),
+    }),
+    project: z.string().min(10, {
+      message: t("validation.projectMin"),
+    }),
+    phone: z.string().optional(),
+  });
 
 const Apply = () => {
+  const { t, i18n } = useTranslation("apply");
   const colors = useTheme();
+  const isRTL = i18n.language === "he";
   const [formStatus, setFormStatus] = useState({
     submitted: false,
     success: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const formSchema = createFormSchema(t);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -131,14 +137,14 @@ const Apply = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              Stop Dreaming,{" "}
+              {t("hero.headline")}{" "}
               <span
                 className="bg-gradient-to-r bg-clip-text text-transparent"
                 style={{
                   backgroundImage: `linear-gradient(to right, ${colors.accent}, ${colors.info})`,
                 }}
               >
-                Start Building
+                {t("hero.headlineAccent")}
               </span>
             </motion.h1>
 
@@ -149,7 +155,7 @@ const Apply = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              High-End Apps Without the High-End Price Tag
+              {t("hero.subHeadline")}
             </motion.h2>
 
             {/* Sub-headline */}
@@ -160,8 +166,7 @@ const Apply = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              We help businesses like yours launch powerful, custom applications faster and more
-              affordably by leveraging the latest in artificial intelligence.
+              {t("hero.description")}
             </motion.p>
 
             {/* CTA Button */}
@@ -180,8 +185,10 @@ const Apply = () => {
                   }}
                   className="text-lg px-8 py-6 shadow-2xl hover:shadow-3xl group"
                 >
-                  Get a Free Quote
-                  <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                  {t("hero.cta")}
+                  <ArrowRight
+                    className={`h-6 w-6 group-hover:translate-x-1 transition-transform ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
+                  />
                 </Button>
               </motion.div>
             </motion.div>
@@ -203,10 +210,10 @@ const Apply = () => {
               className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4"
               style={{ color: colors.primary }}
             >
-              How It Works
+              {t("howItWorks.title")}
             </h2>
             <p className="text-lg sm:text-xl" style={{ color: colors.textSecondary }}>
-              Three simple steps to bring your vision to life
+              {t("howItWorks.subtitle")}
             </p>
           </motion.div>
 
@@ -242,11 +249,10 @@ const Apply = () => {
                   className="text-2xl font-bold text-center mb-4"
                   style={{ color: colors.primary }}
                 >
-                  Share Your Vision
+                  {t("howItWorks.step1.title")}
                 </h3>
                 <p className="text-center leading-relaxed" style={{ color: colors.textSecondary }}>
-                  Tell us about the app you want to build. What problems will it solve? Who is it
-                  for? We're here to listen and understand your unique needs.
+                  {t("howItWorks.step1.description")}
                 </p>
               </Card>
             </motion.div>
@@ -276,11 +282,10 @@ const Apply = () => {
                   className="text-2xl font-bold text-center mb-4"
                   style={{ color: colors.primary }}
                 >
-                  AI-Powered Development
+                  {t("howItWorks.step2.title")}
                 </h3>
                 <p className="text-center leading-relaxed" style={{ color: colors.textSecondary }}>
-                  Our expert team, assisted by powerful AI tools, builds, tests, and refines your
-                  application with incredible speed and precision.
+                  {t("howItWorks.step2.description")}
                 </p>
               </Card>
             </motion.div>
@@ -310,11 +315,10 @@ const Apply = () => {
                   className="text-2xl font-bold text-center mb-4"
                   style={{ color: colors.primary }}
                 >
-                  Launch & Impress
+                  {t("howItWorks.step3.title")}
                 </h3>
                 <p className="text-center leading-relaxed" style={{ color: colors.textSecondary }}>
-                  Receive a polished, high-quality app that's ready to wow your customers,
-                  streamline your operations, and grow your business.
+                  {t("howItWorks.step3.description")}
                 </p>
               </Card>
             </motion.div>
@@ -359,13 +363,13 @@ const Apply = () => {
                     </div>
                   </motion.div>
                   <h3 className="text-3xl font-bold mb-4" style={{ color: colors.primary }}>
-                    Thank You!
+                    {t("contactForm.success.title")}
                   </h3>
                   <p className="text-xl mb-2" style={{ color: colors.textSecondary }}>
-                    We've received your request and will get back to you within 24 hours.
+                    {t("contactForm.success.message")}
                   </p>
                   <p className="text-lg" style={{ color: colors.textTertiary }}>
-                    Check your email for a confirmation message.
+                    {t("contactForm.success.emailMessage")}
                   </p>
                   <motion.div className="mt-8" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
@@ -379,7 +383,7 @@ const Apply = () => {
                         color: colors.primary,
                       }}
                     >
-                      Submit Another Request
+                      {t("contactForm.buttons.submitAnother")}
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -390,10 +394,10 @@ const Apply = () => {
                       className="text-3xl sm:text-4xl font-bold mb-4"
                       style={{ color: colors.primary }}
                     >
-                      Ready to Build Something Amazing?
+                      {t("contactForm.title")}
                     </h2>
                     <p className="text-lg" style={{ color: colors.textSecondary }}>
-                      Let's talk about your project and bring your vision to life.
+                      {t("contactForm.subtitle")}
                     </p>
                   </div>
 
@@ -408,8 +412,7 @@ const Apply = () => {
                       animate={{ opacity: 1, y: 0 }}
                     >
                       <p style={{ color: colors.error }} className="text-center">
-                        Sorry, there was an error sending your request. Please try again or contact
-                        us directly.
+                        {t("contactForm.error.message")}
                       </p>
                     </motion.div>
                   )}
@@ -422,11 +425,11 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              Name <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.name")} <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="John Doe"
+                                placeholder={t("contactForm.placeholders.name")}
                                 {...field}
                                 disabled={isSubmitting}
                                 style={{
@@ -448,11 +451,11 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              Email <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.email")} <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="john@example.com"
+                                placeholder={t("contactForm.placeholders.email")}
                                 type="email"
                                 {...field}
                                 disabled={isSubmitting}
@@ -475,11 +478,11 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              Tell us about your project <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.project")} <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Textarea
-                                placeholder="I need an app that helps my customers manage their appointments and bookings. It should have a mobile app and web dashboard..."
+                                placeholder={t("contactForm.placeholders.project")}
                                 {...field}
                                 disabled={isSubmitting}
                                 rows={6}
@@ -502,12 +505,12 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              Phone Number{" "}
-                              <span style={{ color: colors.textTertiary }}>(Optional)</span>
+                              {t("contactForm.labels.phone")}{" "}
+                              <span style={{ color: colors.textTertiary }}>{t("contactForm.labels.optional")}</span>
                             </FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="+1 (555) 123-4567"
+                                placeholder={t("contactForm.placeholders.phone")}
                                 type="tel"
                                 {...field}
                                 disabled={isSubmitting}
@@ -539,12 +542,14 @@ const Apply = () => {
                               animate={{ opacity: [1, 0.5, 1] }}
                               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                             >
-                              Sending Your Request...
+                              {t("contactForm.buttons.submitting")}
                             </motion.span>
                           ) : (
                             <>
-                              Send My Request
-                              <ArrowRight className="ml-2 h-5 w-5" />
+                              {t("contactForm.buttons.submit")}
+                              <ArrowRight
+                                className={`h-5 w-5 ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
+                              />
                             </>
                           )}
                         </Button>
@@ -554,7 +559,7 @@ const Apply = () => {
                         className="text-sm text-center mt-4"
                         style={{ color: colors.textTertiary }}
                       >
-                        <span style={{ color: colors.error }}>*</span> Required fields
+                        <span style={{ color: colors.error }}>*</span> {t("contactForm.labels.required")}
                       </p>
                     </form>
                   </Form>

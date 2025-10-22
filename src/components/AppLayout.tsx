@@ -1,10 +1,13 @@
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import NavigationBar from "./NavigationBar";
 
 function AppLayout() {
   const colors = useTheme();
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === "he";
 
   return (
     <div
@@ -14,7 +17,7 @@ function AppLayout() {
       }}
     >
       <NavigationBar />
-      <main className="flex-grow">
+      <main className="flex-grow" dir={isRTL ? "rtl" : "ltr"}>
         <Outlet />
       </main>
       <Footer />

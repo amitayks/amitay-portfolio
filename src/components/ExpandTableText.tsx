@@ -1,9 +1,9 @@
-import { useTheme } from "@/hooks/useTheme";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 
 interface ExpandTableTextProps {
   maxLength?: number;
@@ -102,7 +102,7 @@ const ExpandTableText = ({
           borderColor: colors.border,
           background: `linear-gradient(to top right, ${colors.surface}, ${colors.surfaceSecondary})`,
         }}
-        className="p-6 border-2 hover:shadow-lg transition-shadow duration-300"
+        className="p-6 hover:shadow-lg transition-shadow duration-300"
       >
         <div className="relative">
           <p style={{ color: colors.textSecondary }} className="leading-relaxed text-lg">
@@ -152,12 +152,12 @@ const ExpandTableText = ({
                 {isExpanded ? (
                   <>
                     Show Less
-                    <ChevronUp className="w-4 h-4 group-hover:animate-bounce" />
+                    <ChevronUp className="w-4 h-4 " />
                   </>
                 ) : (
                   <>
                     {readMoreText}
-                    <ChevronDown className="w-4 h-4 group-hover:animate-bounce" />
+                    <ChevronDown className="w-4 h-4 " />
                   </>
                 )}
               </motion.div>

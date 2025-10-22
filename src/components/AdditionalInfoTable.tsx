@@ -1,10 +1,6 @@
-import { useTheme } from "@/hooks/useTheme";
-import {
-  Table,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
 import { motion } from "framer-motion";
+import { Table, TableBody, TableCell } from "@/components/ui/table";
+import { useTheme } from "@/hooks/useTheme";
 import { PortfolioItem } from "../types/portfolio";
 
 interface AdditionalInfoTableProps {
@@ -48,20 +44,14 @@ function AdditionalInfoTable({ additionalInfo }: AdditionalInfoTableProps) {
             <motion.tr
               key={index}
               variants={rowVariants}
-              whileHover={{ x: 4, backgroundColor: colors.surfaceSecondary }}
+              whileHover={{ x: 4, backgroundColor: colors.surface + "80" }}
               transition={{ duration: 0.2 }}
-              style={{ borderBottom: `1px solid ${colors.border}` }}
+              // style={{ borderBottom: `1px solid ${colors.buttonDisabled}` }}
             >
-              <TableCell
-                style={{ color: colors.textSecondary }}
-                className="font-medium py-4"
-              >
+              <TableCell style={{ color: colors.textSecondary }} className="font-medium py-4 ">
                 {info.label}
               </TableCell>
-              <TableCell
-                style={{ color: colors.text }}
-                className="text-right py-4 font-medium"
-              >
+              <TableCell style={{ color: colors.text }} className="text-right py-4 font-medium">
                 {info.value}
               </TableCell>
             </motion.tr>

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -15,7 +15,9 @@ interface BannerSectionProps {
 }
 
 function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSectionProps = {}) {
-  const { image, isLoading: isLoadingImage } = useSiteImage(imageKey || PERSONAL_INFO.profileImage2);
+  const { image, isLoading: isLoadingImage } = useSiteImage(
+    imageKey || PERSONAL_INFO.profileImage2
+  );
   const colors = useTheme();
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -139,7 +141,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
 
           {/* Image Section */}
           <motion.div
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-end"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.8, type: "spring", stiffness: 100 }}
@@ -238,7 +240,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
 
             {/* Social Links */}
             <motion.div
-              className="absolute -right-[-0rem] top-1/5 -translate-y-1/2 md:-right-[-10rem] lg:-right-[1rem]"
+              className="absolute -right-[-3rem] top-1/5 -translate-y-1/2 md:-right-[-10rem] lg:-left-[25rem]"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}

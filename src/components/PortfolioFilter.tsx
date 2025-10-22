@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/hooks/useTheme";
 import { Filter } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 import { PROJECT_TYPES } from "../utils/constants";
 
 function PortfolioFilter() {
@@ -15,7 +15,7 @@ function PortfolioFilter() {
   }
 
   return (
-    <div>
+    <div dir="ltr">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-center">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
