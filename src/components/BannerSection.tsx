@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,8 @@ interface BannerSectionProps {
 }
 
 function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSectionProps = {}) {
+  const { t, i18n } = useTranslation("home");
+  const isRTL = i18n.language === "he";
   const { image, isLoading: isLoadingImage } = useSiteImage(
     imageKey || PERSONAL_INFO.profileImage2
   );
@@ -22,12 +25,12 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
-          <div className="text-center lg:text-left px-6">
+          <div className={`text-center  px-6 ${isRTL ? "lg:text-right" : "lg:text-left"}`}>
             {showAvailabilityBadge && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -49,7 +52,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                       repeatType: "loop",
                     }}
                   />
-                  Available for new projects
+                  {t("banner.availableBadge")}
                 </Badge>
               </motion.div>
             )}
@@ -61,7 +64,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              Hi, I'm{" "}
+              {t("banner.greeting")}{" "}
             </motion.h1>
 
             <motion.h1
@@ -77,7 +80,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                   backgroundImage: `linear-gradient(to right, ${colors.accent}, ${colors.info})`,
                 }}
               >
-                {PERSONAL_INFO.name}
+                {t("banner.name")}
               </span>
             </motion.h1>
 
@@ -88,7 +91,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              {PERSONAL_INFO.title}
+              {t("banner.title")}
             </motion.p>
 
             <motion.p
@@ -98,11 +101,11 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
-              {PERSONAL_INFO.bio}
+              {t("banner.bio")}
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start `}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
@@ -115,8 +118,10 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                   className="shadow-lg hover:shadow-xl group"
                 >
                   <Link to="/portfolio">
-                    View My Work
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    {t("banner.buttons.viewWork")}
+                    <ArrowRight
+                      className={`h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
+                    />
                   </Link>
                 </Button>
               </motion.div>
@@ -133,7 +138,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                   }}
                   className="shadow-lg hover:shadow-xl"
                 >
-                  <Link to="/contact">Get In Touch</Link>
+                  <Link to="/contact">{t("banner.buttons.getInTouch")}</Link>
                 </Button>
               </motion.div>
             </motion.div>
@@ -141,7 +146,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
 
           {/* Image Section */}
           <motion.div
-            className="relative flex items-center justify-end"
+            className="relative flex items-center justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.8, type: "spring", stiffness: 100 }}
@@ -238,32 +243,40 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               )}
             </div>
 
-            {/* Social Links */}
+            {/* Social Links - Mobile (horizontal below image) */}
             <motion.div
-              className="absolute -right-[-3rem] top-1/5 -translate-y-1/2 md:-right-[-10rem] lg:-left-[25rem]"
-              initial={{ opacity: 0, x: 20 }}
+              className="md:hidden absolute -bottom-16 -translate-x-1/2 w-full flex justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <SocialLinksComponent
+                socialLinks={SOCIAL_LINKS}
+                variant="filled"
+                orientation="horizontal"
+                size="md"
+                className="flex flex-row gap-2"
+              />
+            </motion.div>
+
+            {/* Social Links - Desktop (vertical beside image) */}
+            <motion.div
+              className={`hidden md:block absolute top-1/5 -translate-y-1/2 ${
+                isRTL
+                  ? "md:-left-[-10rem] lg:-right-[30rem]"
+                  : "md:-right-[-10rem] lg:-left-[25rem]"
+              }`}
+              initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <div className="md:hidden">
-                <SocialLinksComponent
-                  socialLinks={SOCIAL_LINKS}
-                  variant="filled"
-                  orientation="vertical"
-                  size="md"
-                  className="flex flex-col gap-2"
-                />
-              </div>
-
-              <div className="hidden md:block">
-                <SocialLinksComponent
-                  socialLinks={SOCIAL_LINKS}
-                  variant="filled"
-                  orientation="vertical"
-                  size="lg"
-                  className="flex flex-col gap-4"
-                />
-              </div>
+              <SocialLinksComponent
+                socialLinks={SOCIAL_LINKS}
+                variant="filled"
+                orientation="vertical"
+                size="lg"
+                className="flex flex-col gap-4"
+              />
             </motion.div>
           </motion.div>
         </div>

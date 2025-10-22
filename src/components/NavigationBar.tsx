@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Moon, Settings, Sun, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +14,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import Logo from "./Logo";
 
 function NavigationBar() {
+  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -149,12 +151,12 @@ function NavigationBar() {
               >
                 {HEADER_LINKS.map((link, i) => (
                   <motion.div
-                    key={`${link.input}-${i}`}
+                    key={`${link.translationKey}-${i}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 * i, duration: 0.3 }}
                   >
-                    <HeaderTab to={link.to} input={link.input} className="default" />
+                    <HeaderTab to={link.to} input={t(link.translationKey)} className="default" />
                   </motion.div>
                 ))}
               </motion.div>
@@ -288,13 +290,13 @@ function NavigationBar() {
                     <motion.div className="space-y-3 flex flex-col items-center">
                       {HEADER_LINKS.map((link, i) => (
                         <motion.div
-                          key={`${link.input}-${i}`}
+                          key={`${link.translationKey}-${i}`}
                           variants={itemVariants}
                           className="max-w-sm w-full"
                         >
                           <HeaderTab
                             to={link.to}
-                            input={link.input}
+                            input={t(link.translationKey)}
                             onClick={() => setIsOpen(false)}
                             className="mobile"
                           />
@@ -319,12 +321,12 @@ function NavigationBar() {
                         {colors.background === "#000000" ? (
                           <>
                             <Sun className="h-5 w-5 mr-3" />
-                            <span className="font-medium">Light</span>
+                            <span className="font-medium">{t("theme.light")}</span>
                           </>
                         ) : (
                           <>
                             <Moon className="h-5 w-5 mr-3" />
-                            <span className="font-medium">Dark</span>
+                            <span className="font-medium">{t("theme.dark")}</span>
                           </>
                         )}
                       </Button>

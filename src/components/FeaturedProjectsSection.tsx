@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
@@ -8,6 +9,8 @@ import PortfolioCard from "./PortfolioCard";
 import { PortfolioGridSkeleton } from "./PortfolioGridSkeleton";
 
 function FeaturedProjectsSection() {
+  const { t, i18n } = useTranslation("home");
+  const isRTL = i18n.language === "he";
   const { portfolioItems: featuredProjects, isLoading } = useFeaturdItems(true);
   const colors = useTheme();
 
@@ -32,7 +35,7 @@ function FeaturedProjectsSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 style={{ color: colors.primary }} className="text-3xl lg:text-4xl font-bold mb-4">
-            {"< KEISAR CLUB />"}
+            {t("featured.title")}
           </h2>
         </motion.div>
 
@@ -68,8 +71,10 @@ function FeaturedProjectsSection() {
                   className="shadow-lg hover:shadow-xl group"
                 >
                   <Link to="/portfolio">
-                    View All Projects
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    {t("featured.viewAll")}
+                    <ArrowRight
+                      className={`h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
+                    />
                   </Link>
                 </Button>
               </motion.div>
@@ -99,10 +104,10 @@ function FeaturedProjectsSection() {
               <ExternalLink style={{ color: colors.textTertiary }} className="w-12 h-12" />
             </motion.div>
             <h3 style={{ color: colors.primary }} className="text-xl font-semibold mb-3">
-              Projects Coming Soon
+              {t("featured.comingSoon.title")}
             </h3>
             <p style={{ color: colors.textSecondary }} className="mb-6">
-              I'm currently working on some exciting projects. Check back soon!
+              {t("featured.comingSoon.description")}
             </p>
           </motion.div>
         )}

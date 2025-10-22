@@ -3,17 +3,17 @@ import { Briefcase, Home, Mail, User } from "lucide-react";
 export const PAGE_SIZE = 6;
 
 export const HEADER_LINKS = [
-  { to: "/", input: "Home", icon: Home },
-  { to: "/portfolio", input: "Portfolio", icon: Briefcase },
-  { to: "/about", input: "About", icon: User },
-  { to: "/Apply", input: "Contact", icon: Mail },
+  { to: "/", translationKey: "nav.home", icon: Home },
+  { to: "/portfolio", translationKey: "nav.portfolio", icon: Briefcase },
+  { to: "/about", translationKey: "nav.about", icon: User },
+  { to: "/Apply", translationKey: "nav.contact", icon: Mail },
 ];
 
 export const PROJECT_TYPES = [
-  { value: "all", label: "All" },
-  { value: "Wood-Working", label: "Wood Working" },
-  { value: "Web-Development", label: "Web Dev" },
-  // { value: "Design", label: "Design" },
+  { value: "all", translationKey: "portfolio.filter.all" },
+  { value: "Wood-Working", translationKey: "portfolio.filter.woodWorking" },
+  { value: "Web-Development", translationKey: "portfolio.filter.webDevelopment" },
+  // { value: "Design", translationKey: "portfolio.filter.design" },
 ];
 
 export const PERSONAL_INFO = {

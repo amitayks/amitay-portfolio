@@ -1,10 +1,12 @@
 import { Filter } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { PROJECT_TYPES } from "../utils/constants";
 
 function PortfolioFilter() {
+  const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const currentFilter = searchParams.get("type") || PROJECT_TYPES?.[0]?.value;
   const colors = useTheme();
@@ -27,7 +29,7 @@ function PortfolioFilter() {
                   variant={currentFilter === type.value ? "default" : "secondary"}
                   onClick={() => handleFilterChange(type.value)}
                 >
-                  {type.label}
+                  {t(type.translationKey)}
                 </Button>
               ))}
             </div>
