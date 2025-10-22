@@ -138,7 +138,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                   }}
                   className="shadow-lg hover:shadow-xl"
                 >
-                  <Link to="/contact">{t("banner.buttons.getInTouch")}</Link>
+                  <Link to="/apply">{t("banner.buttons.getInTouch")}</Link>
                 </Button>
               </motion.div>
             </motion.div>
