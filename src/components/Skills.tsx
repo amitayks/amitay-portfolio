@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { SKILLS } from "../utils/constants";
 
 function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }) {
+  const { t } = useTranslation("about");
   const colors = useTheme();
 
   const getLevelColor = (level: string) => {
@@ -71,7 +73,7 @@ function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }
             style={{ color: colors.primary }}
             className="text-3xl lg:text-4xl font-bold mb-4"
           >
-            {`< Skills & Expertise />`}
+            {t("skills.title")}
           </h2>
         </motion.div>
 
@@ -140,7 +142,7 @@ function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }
                         }}
                         className="capitalize"
                       >
-                        {skillCategory.level}
+                        {t(`skills.levels.${skillCategory.level}`)}
                       </Badge>
                       <motion.span
                         style={{ color: colors.textTertiary }}
@@ -191,7 +193,7 @@ function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }
                 style={{ backgroundColor: colors.accent, color: colors.textInverse }}
                 className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl group"
               >
-                Learn More About Me
+                {t("skills.learnMore")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>

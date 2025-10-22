@@ -3,9 +3,11 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 // Import translation files
+import enAbout from "./locales/en/about.json";
 import enApply from "./locales/en/apply.json";
 import enCommon from "./locales/en/common.json";
 import enHome from "./locales/en/home.json";
+import heAbout from "./locales/he/about.json";
 import heApply from "./locales/he/apply.json";
 import heCommon from "./locales/he/common.json";
 import heHome from "./locales/he/home.json";
@@ -14,11 +16,13 @@ const resources = {
   en: {
     common: enCommon,
     home: enHome,
+    about: enAbout,
     apply: enApply,
   },
   he: {
     common: heCommon,
     home: heHome,
+    about: heAbout,
     apply: heApply,
   },
 };
