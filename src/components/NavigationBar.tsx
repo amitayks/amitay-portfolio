@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Moon, Settings, Sun, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -79,8 +80,8 @@ function NavigationBar() {
   };
 
   const itemVariants = {
-    closed: { opacity: 0, x: -20 },
-    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, y: -10 },
+    open: { opacity: 1, y: 0 },
   };
 
   const settingsDropdownVariants = {
@@ -250,20 +251,21 @@ function NavigationBar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobile && (
-        <div className="mobile-menu-content">
+      {/* Mobile Menu - Using Portal */}
+      {isMobile &&
+        createPortal(
           <AnimatePresence>
             {isOpen && (
               <>
-                {/* Backdrop - render first so it appears behind the menu */}
+                {/* Backdrop */}
                 <motion.div
-                  className="fixed inset-0 z-[90]"
+                  className="fixed inset-0"
                   style={{
                     top: "64px",
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
                     backdropFilter: "blur(8px)",
                     WebkitBackdropFilter: "blur(8px)",
+                    zIndex: 40,
                   }}
                   onClick={() => setIsOpen(false)}
                   initial={{ opacity: 0 }}
@@ -274,12 +276,13 @@ function NavigationBar() {
 
                 {/* Menu Panel */}
                 <motion.div
-                  className="fixed left-0 right-0 shadow-2xl z-[100]"
+                  className="fixed left-0 right-0 shadow-2xl"
                   style={{
                     top: "64px",
                     borderBottomLeftRadius: "20px",
                     borderBottomRightRadius: "20px",
                     backgroundColor: colors.background,
+                    zIndex: 50,
                   }}
                   variants={menuVariants}
                   initial="closed"
@@ -336,9 +339,9 @@ function NavigationBar() {
                 </motion.div>
               </>
             )}
-          </AnimatePresence>
-        </div>
-      )}
+          </AnimatePresence>,
+          document.body
+        )}
     </motion.nav>
   );
 }
