@@ -32,7 +32,7 @@ const LanguageSwitcher = ({ variant = "default" }: LanguageSwitcherProps) => {
           variant="ghost"
           className="flex items-center px-6 py-3 rounded-lg transition-all duration-200"
           style={{
-            backgroundColor: colors.surfaceSecondary,
+            backgroundColor: colors.surface,
             color: colors.textSecondary,
           }}
         >

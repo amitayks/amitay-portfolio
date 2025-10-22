@@ -28,23 +28,22 @@ function HeaderTab({
       className={`${className === "default" ? baseStyles : mobileStyles} relative`}
       style={{
         color: isActive ? colors.accent : colors.textSecondary,
-        backgroundColor:
-          className === "mobile" && isActive ? colors.surfaceSecondary : "transparent",
+        // backgroundColor: className === "mobile" && isActive ? colors.surface : "transparent",
       }}
       onMouseEnter={(e) => {
+        if (isActive) {
+          e.currentTarget.style.color = colors.info;
+        }
         if (!isActive) {
           e.currentTarget.style.color = colors.primary;
         }
-        if (className === "mobile") {
-          e.currentTarget.style.backgroundColor = colors.surfaceSecondary;
-        }
       }}
       onMouseLeave={(e) => {
+        if (isActive) {
+          e.currentTarget.style.color = colors.accent;
+        }
         if (!isActive) {
           e.currentTarget.style.color = colors.textSecondary;
-        }
-        if (className === "mobile" && !isActive) {
-          e.currentTarget.style.backgroundColor = "transparent";
         }
       }}
       onClick={onClick}
@@ -53,12 +52,6 @@ function HeaderTab({
         {Icon && <Icon className="h-5 w-5 mr-3" />}
         {input}
       </div>
-      {/* {isActive && className === "default" && (
-        <div
-          className="absolute left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-          style={{ backgroundColor: colors.accent, bottom: "4px" }}
-        />
-      )} */}
     </Link>
   );
 }

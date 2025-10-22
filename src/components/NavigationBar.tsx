@@ -300,7 +300,11 @@ function NavigationBar() {
                           <HeaderTab
                             to={link.to}
                             input={t(link.translationKey)}
-                            onClick={() => setIsOpen(false)}
+                            onClick={() =>
+                              setTimeout(() => {
+                                setIsOpen(false);
+                              }, 700)
+                            }
                             className="mobile"
                           />
                         </motion.div>
@@ -308,7 +312,7 @@ function NavigationBar() {
                     </motion.div>
                   </div>
 
-                  <Separator style={{ backgroundColor: colors.border }} />
+                  {/* <Separator style={{ backgroundColor: colors.border }} /> */}
 
                   <motion.div className="px-6 py-6 rounded-b-2xl" variants={itemVariants}>
                     <div className="flex justify-center gap-3">
@@ -317,7 +321,7 @@ function NavigationBar() {
                         onClick={handleThemeToggle}
                         className="flex items-center px-6 py-3 rounded-lg transition-all duration-200"
                         style={{
-                          backgroundColor: colors.surfaceSecondary,
+                          backgroundColor: colors.surface,
                           color: colors.textSecondary,
                         }}
                       >
