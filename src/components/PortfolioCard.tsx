@@ -88,7 +88,7 @@ const PortfolioCard = ({
               rotateX: isWindActive ? 2.2 : 0.5,
               rotateZ: isWindActive ? 1.8 : -0.3,
             },
-            transitionConfig,
+            transitionConfig
           );
 
           // Phase 2: Return to base position
@@ -101,7 +101,7 @@ const PortfolioCard = ({
               rotateX: 1,
               rotateZ: 0.3,
             },
-            transitionConfig,
+            transitionConfig
           );
         }
       } catch (error) {
@@ -191,6 +191,13 @@ const PortfolioCard = ({
               <Github style={{ color: colors.text }} className="w-6 h-6" />
             </motion.a>
           )}
+        </motion.div>
+        <motion.div
+          className="absolute bottom-4 left-4 flex flex-col gap-2 z-20"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+        >
           {portfolioItem.liveSite && (
             <motion.a
               href={portfolioItem.liveSite.link}
