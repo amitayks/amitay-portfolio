@@ -122,7 +122,7 @@ const Apply = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
@@ -148,7 +148,7 @@ const Apply = () => {
               </span>
             </motion.h1>
 
-            <motion.h2
+            {/* <motion.h2
               className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8"
               style={{ color: colors.primary }}
               initial={{ opacity: 0, y: 20 }}
@@ -156,10 +156,10 @@ const Apply = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
             >
               {t("hero.subHeadline")}
-            </motion.h2>
+            </motion.h2> */}
 
             {/* Sub-headline */}
-            <motion.p
+            {/* <motion.p
               className="text-lg sm:text-xl lg:text-2xl leading-relaxed mb-10 max-w-3xl mx-auto"
               style={{ color: colors.textSecondary }}
               initial={{ opacity: 0, y: 20 }}
@@ -167,10 +167,10 @@ const Apply = () => {
               transition={{ delay: 0.4, duration: 0.8 }}
             >
               {t("hero.description")}
-            </motion.p>
+            </motion.p> */}
 
             {/* CTA Button */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
@@ -191,13 +191,13 @@ const Apply = () => {
                   />
                 </Button>
               </motion.div>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 lg:py-32">
+      {/* <section className="py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -224,7 +224,6 @@ const Apply = () => {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {/* Step 1 */}
             <motion.div variants={itemVariants}>
               <Card
                 style={{
@@ -257,7 +256,6 @@ const Apply = () => {
               </Card>
             </motion.div>
 
-            {/* Step 2 */}
             <motion.div variants={itemVariants}>
               <Card
                 style={{
@@ -290,7 +288,6 @@ const Apply = () => {
               </Card>
             </motion.div>
 
-            {/* Step 3 */}
             <motion.div variants={itemVariants}>
               <Card
                 style={{
@@ -324,10 +321,10 @@ const Apply = () => {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Contact Form Section */}
-      <section id="contact-form" className="py-20 lg:py-32">
+      <section id="contact-form">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -371,7 +368,11 @@ const Apply = () => {
                   <p className="text-lg" style={{ color: colors.textTertiary }}>
                     {t("contactForm.success.emailMessage")}
                   </p>
-                  <motion.div className="mt-8" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <motion.div
+                    className="mt-8"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     <Button
                       onClick={() => {
                         setFormStatus({ submitted: false, success: false });
@@ -390,15 +391,15 @@ const Apply = () => {
               ) : (
                 <>
                   <div className="text-center mb-8">
-                    <h2
+                    {/* <h2
                       className="text-3xl sm:text-4xl font-bold mb-4"
                       style={{ color: colors.primary }}
                     >
                       {t("contactForm.title")}
-                    </h2>
-                    <p className="text-lg" style={{ color: colors.textSecondary }}>
+                    </h2> */}
+                    <h2 className="text-lg font-bold" style={{ color: colors.primary }}>
                       {t("contactForm.subtitle")}
-                    </p>
+                    </h2>
                   </div>
 
                   {formStatus.submitted && !formStatus.success && (
@@ -425,7 +426,8 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.name")} <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.name")}{" "}
+                              <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
@@ -451,7 +453,8 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.email")} <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.email")}{" "}
+                              <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
@@ -478,7 +481,8 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.project")} <span style={{ color: colors.error }}>*</span>
+                              {t("contactForm.labels.project")}{" "}
+                              <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
                               <Textarea
@@ -506,7 +510,9 @@ const Apply = () => {
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
                               {t("contactForm.labels.phone")}{" "}
-                              <span style={{ color: colors.textTertiary }}>{t("contactForm.labels.optional")}</span>
+                              <span style={{ color: colors.textTertiary }}>
+                                {t("contactForm.labels.optional")}
+                              </span>
                             </FormLabel>
                             <FormControl>
                               <Input
@@ -559,7 +565,8 @@ const Apply = () => {
                         className="text-sm text-center mt-4"
                         style={{ color: colors.textTertiary }}
                       >
-                        <span style={{ color: colors.error }}>*</span> {t("contactForm.labels.required")}
+                        <span style={{ color: colors.error }}>*</span>{" "}
+                        {t("contactForm.labels.required")}
                       </p>
                     </form>
                   </Form>
