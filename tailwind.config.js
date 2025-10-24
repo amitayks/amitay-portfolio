@@ -106,7 +106,8 @@ export default {
   			slideInLeft: 'slideInLeft 0.5s ease-in-out',
   			slideInUp: 'slideInUp 0.5s ease-in-out',
   			slideInDown: 'slideInDown 0.5s ease-in-out',
-  			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+  			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  			cloudFloat: 'cloudFloat 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite'
   		},
   		keyframes: {
   			fadeIn: {
@@ -163,6 +164,20 @@ export default {
   				},
   				'50%': {
   					opacity: '0.5'
+  				}
+  			},
+  			cloudFloat: {
+  				'0%, 100%': {
+  					transform: 'translateY(0px) translateX(0px) scale(1)',
+  				},
+  				'25%': {
+  					transform: 'translateY(-6px) translateX(2px) scale(1.01)',
+  				},
+  				'50%': {
+  					transform: 'translateY(-10px) translateX(0px) scale(1.015)',
+  				},
+  				'75%': {
+  					transform: 'translateY(-6px) translateX(-2px) scale(1.01)',
   				}
   			}
   		},

@@ -1,14 +1,14 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { useTheme } from "@/hooks/useTheme";
 import { usePortfolioImage } from "../hooks/usePortfolioImage";
-import { PortfolioItem } from "../types/portfolio";
-import { getPortfolioById } from "../services/apiPortfolio";
-import { getPortfolioImage } from "../services/apiImages";
 import { queryKeys } from "../lib/queryKeys";
+import { getPortfolioImage } from "../services/apiImages";
+import { getPortfolioById } from "../services/apiPortfolio";
+import { PortfolioItem } from "../types/portfolio";
 
 const PortfolioCard = ({
   portfolioItem,
@@ -46,16 +46,51 @@ const PortfolioCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
-      whileHover={{ y: -8 }}
+      whileHover={{
+        y: -12,
+        scale: 1.02,
+        rotateX: 2,
+        rotateZ: 0.5,
+        transition: {
+          duration: 0.8,
+          ease: [0.34, 1.56, 0.64, 1],
+          y: {
+            duration: 2.5,
+            ease: [0.45, 0.05, 0.55, 0.95],
+            repeat: Number.POSITIVE_INFINITY,
+            repeatType: "reverse",
+          },
+          scale: {
+            duration: 3,
+            ease: [0.45, 0.05, 0.55, 0.95],
+            repeat: Number.POSITIVE_INFINITY,
+            repeatType: "reverse",
+          },
+          rotateX: {
+            duration: 3.5,
+            ease: [0.45, 0.05, 0.55, 0.95],
+            repeat: Number.POSITIVE_INFINITY,
+            repeatType: "reverse",
+          },
+          rotateZ: {
+            duration: 4,
+            ease: [0.45, 0.05, 0.55, 0.95],
+            repeat: Number.POSITIVE_INFINITY,
+            repeatType: "reverse",
+          },
+        },
+      }}
       onMouseEnter={handleMouseEnter}
       className={className}
+      style={{ perspective: "1000px" }}
     >
       <Card
         style={{
           backgroundColor: colors.surface,
           borderColor: colors.border,
+          transformStyle: "preserve-3d",
         }}
-        className="group relative overflow-hidden border hover:shadow-xl transition-shadow duration-300"
+        className="group relative overflow-hidden border hover:shadow-2xl transition-shadow duration-700"
       >
         <Link to={`/portfolio/${portfolioItem.SKU}`} className="block">
           <div className="aspect-square w-full relative overflow-hidden">
@@ -99,7 +134,7 @@ const PortfolioCard = ({
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <Github style={{ color: colors.text }} className="w-4 h-4" />
+              <Github style={{ color: colors.text }} className="w-6 h-6" />
             </motion.a>
           )}
           {portfolioItem.liveSite && (
@@ -114,7 +149,7 @@ const PortfolioCard = ({
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <ExternalLink style={{ color: colors.text }} className="w-4 h-4" />
+              <ExternalLink style={{ color: colors.text }} className="w-6 h-6" />
             </motion.a>
           )}
         </motion.div>
