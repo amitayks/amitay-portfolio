@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import SocialLinksComponent from "./SocialLinksComponent";
 
 const Footer = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <footer

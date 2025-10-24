@@ -20,7 +20,21 @@ export interface PortfolioItem {
   }>;
   priority?: number;
   completionDate?: string;
-  liveLink?: string;
-  githubLink?: string;
+  liveSite?: {
+    link: string;
+    subHeader: string;
+    previewImage?: {
+      dark: string;
+      light: string;
+    };
+  };
+  github?: {
+    link: string;
+    subHeader: string;
+    previewImage?: {
+      dark: string;
+      light: string;
+    };
+  };
   status?: "completed" | "in-progress" | "concept";
 }

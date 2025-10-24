@@ -5,8 +5,8 @@ interface PortfolioGridSkeletonProps {
   count?: number;
 }
 
-export const PortfolioGridSkeleton = ({ count = 6 }: PortfolioGridSkeletonProps) => {
-  const colors = useTheme();
+export const PortfolioGridSkeleton = ({ count = 12 }: PortfolioGridSkeletonProps) => {
+  const { colors } = useTheme();
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8" dir="rtl">

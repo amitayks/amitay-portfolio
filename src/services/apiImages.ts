@@ -15,7 +15,7 @@ export const getPortfolioImage = async (imageName: string) => {
     .from("products-image")
     .createSignedUrl(imageName, 100 * 60 * 60 * 24);
 
-  if (error) throw error;
+  if (error) return null;
 
   return data?.signedUrl ?? null;
 };

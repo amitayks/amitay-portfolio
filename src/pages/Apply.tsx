@@ -37,7 +37,7 @@ const createFormSchema = (t: (key: string) => string) =>
 
 const Apply = () => {
   const { t, i18n } = useTranslation("apply");
-  const colors = useTheme();
+  const { colors } = useTheme();
   const isRTL = i18n.language === "he";
   const [formStatus, setFormStatus] = useState({
     submitted: false,

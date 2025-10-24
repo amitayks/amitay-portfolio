@@ -21,7 +21,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
   const { image, isLoading: isLoadingImage } = useSiteImage(
     imageKey || PERSONAL_INFO.profileImage2
   );
-  const colors = useTheme();
+  const { colors } = useTheme();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (

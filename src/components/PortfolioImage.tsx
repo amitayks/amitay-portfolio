@@ -26,7 +26,7 @@ function PortfolioImage({
   isLoadingImagePack,
 }: ImageProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (image) {

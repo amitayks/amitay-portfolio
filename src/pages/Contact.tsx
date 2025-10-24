@@ -9,7 +9,7 @@ import SocialLinksComponent from "../components/SocialLinksComponent";
 import { EMAILJS_CONFIG, PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 
 const Contact = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     email: "",

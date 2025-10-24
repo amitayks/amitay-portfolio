@@ -22,7 +22,7 @@ const onboardingSteps = [
 ];
 
 const OnboardingSection: React.FC = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <section className="py-20">

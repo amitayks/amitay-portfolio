@@ -7,7 +7,7 @@ interface PhoneMockupProps {
 }
 
 const PhoneMockup: React.FC<PhoneMockupProps> = ({ image }) => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div

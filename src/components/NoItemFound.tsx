@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function NoItemFound() {
   const navigate = useNavigate();
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div

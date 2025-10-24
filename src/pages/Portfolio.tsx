@@ -40,7 +40,7 @@ function Portfolio() {
 
 
 const NoProjectsFound = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center max-w-md mx-auto">

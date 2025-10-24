@@ -15,7 +15,7 @@ function HeaderTab({
   icon?: React.ElementType;
 }) {
   const location = useLocation();
-  const colors = useTheme();
+  const { colors } = useTheme();
   const isActive = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
 
   const baseStyles = "px-3 py-2 rounded-lg font-medium transition-all duration-200";

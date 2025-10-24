@@ -1,7 +1,7 @@
 import { useTheme } from "@/hooks/useTheme";
 
 export const PortfolioDetailSkeleton = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div style={{ backgroundColor: colors.background }} className="min-h-screen">

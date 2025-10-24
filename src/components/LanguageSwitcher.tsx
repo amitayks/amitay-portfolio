@@ -11,7 +11,7 @@ interface LanguageSwitcherProps {
 
 const LanguageSwitcher = ({ variant = "default" }: LanguageSwitcherProps) => {
   const { i18n } = useTranslation();
-  const colors = useTheme();
+  const { colors } = useTheme();
   const currentLang = i18n.language;
 
   const toggleLanguage = () => {

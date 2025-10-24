@@ -242,3 +242,7 @@ export const AnimationTimings = {
 
 export type ColorScheme = typeof Colors.light;
 export type ThemeMode = "light" | "dark" | "system";
+export type ThemeResult = {
+  colors: ColorScheme;
+  isDark: boolean;
+};

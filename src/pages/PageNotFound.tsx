@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function PageNotFound() {
   const navigate = useNavigate();
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div

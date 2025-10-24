@@ -16,7 +16,7 @@ const ErrorComponent = ({
   fullPage = false,
 }: ErrorComponentProps) => {
   const navigate = useNavigate();
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   const handleGoHome = () => navigate("/");
   const handleGoBack = () => navigate(-1);

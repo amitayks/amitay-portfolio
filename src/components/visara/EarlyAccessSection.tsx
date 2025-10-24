@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 
 const EarlyAccessSection: React.FC = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <section className="py-20">

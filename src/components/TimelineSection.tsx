@@ -6,7 +6,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { TimelineSectionProps } from "../types/Timeline";
 
 const TimelineSection = ({ title, icon, items, type = "education" }: TimelineSectionProps) => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   const getIconComponent = () => {
     const iconColor = type === "education" ? colors.info : colors.accent;

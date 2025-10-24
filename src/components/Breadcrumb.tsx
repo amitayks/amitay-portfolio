@@ -13,7 +13,7 @@ interface BreadcrumbProps {
 
 function Breadcrumb({ projectType }: BreadcrumbProps) {
   const navigate = useNavigate();
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <motion.div
@@ -23,6 +23,7 @@ function Breadcrumb({ projectType }: BreadcrumbProps) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      dir="ltr"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="flex items-center justify-between">

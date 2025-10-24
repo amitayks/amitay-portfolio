@@ -8,7 +8,7 @@ interface AdditionalInfoTableProps {
 }
 
 function AdditionalInfoTable({ additionalInfo }: AdditionalInfoTableProps) {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   const containerVariants = {
     hidden: { opacity: 0 },

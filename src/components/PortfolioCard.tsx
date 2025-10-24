@@ -14,7 +14,7 @@ const PortfolioCard = ({
   className?: string;
 }) => {
   const { image, isLoading: imageLoading } = usePortfolioImage(portfolioItem.image);
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <motion.div
@@ -62,9 +62,9 @@ const PortfolioCard = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
         >
-          {portfolioItem.githubLink && (
+          {portfolioItem.github && (
             <motion.a
-              href={portfolioItem.githubLink}
+              href={portfolioItem.github.link}
               target="_blank"
               rel="noopener noreferrer"
               style={{ backgroundColor: colors.surface }}
@@ -77,9 +77,9 @@ const PortfolioCard = ({
               <Github style={{ color: colors.text }} className="w-4 h-4" />
             </motion.a>
           )}
-          {portfolioItem.liveLink && (
+          {portfolioItem.liveSite && (
             <motion.a
-              href={portfolioItem.liveLink}
+              href={portfolioItem.liveSite.link}
               target="_blank"
               rel="noopener noreferrer"
               style={{ backgroundColor: colors.surface }}

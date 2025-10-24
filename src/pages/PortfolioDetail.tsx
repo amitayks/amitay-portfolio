@@ -1,9 +1,9 @@
 import { useTheme } from "@/hooks/useTheme";
-import { ExternalLink, Github } from "lucide-react";
 import AdditionalInfoTable from "../components/AdditionalInfoTable";
 import Breadcrumb from "../components/Breadcrumb";
 import ErrorComponent from "../components/ErrorComponent";
 import ExpandTableText from "../components/ExpandTableText";
+import LinkPreviewCard from "../components/LinkPreviewCard";
 import NoItemFound from "../components/NoItemFound";
 import { PortfolioDetailSkeleton } from "../components/PortfolioDetailSkeleton";
 import PortfolioImage from "../components/PortfolioImage";
@@ -14,12 +14,14 @@ const PortfolioDetail = () => {
     portfolioItem,
     image,
     imagePack,
+    githubPreviewImages,
+    liveSitePreviewImages,
     isLoadingPortfolio,
     isLoadingImage,
     isLoadingImagePack,
     error,
   } = usePortfolioItem();
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   if (isLoadingPortfolio) {
     return <PortfolioDetailSkeleton />;
@@ -58,10 +60,7 @@ const PortfolioDetail = () => {
 
           <div className="space-y-8" dir={portfolioItem.settings.dir}>
             <div>
-              <h1
-                style={{ color: colors.primary }}
-                className="text-4xl font-bold mb-4"
-              >
+              <h1 style={{ color: colors.primary }} className="text-4xl font-bold mb-4">
                 {portfolioItem.title}
               </h1>
             </div>
@@ -89,31 +88,27 @@ const PortfolioDetail = () => {
               </p>
             </div>
 
-            {(portfolioItem?.githubLink || portfolioItem?.liveLink) && (
-              <div className="flex gap-4">
-                {portfolioItem.githubLink && (
-                  <a
-                    href={portfolioItem?.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ backgroundColor: colors.surface, color: colors.primary }}
-                    className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-colors"
-                  >
-                    <Github className="w-5 h-5 mr-2" />
-                    View Code
-                  </a>
+            {(portfolioItem?.github || portfolioItem?.liveSite) && (
+              <div className="grid grid-cols-2 gap-4">
+                {portfolioItem.github && (
+                  <LinkPreviewCard
+                    title="GitHub"
+                    subtitle={portfolioItem.github.subHeader}
+                    previewImage={githubPreviewImages}
+                    link={portfolioItem.github.link}
+                    type="github"
+                    index={0}
+                  />
                 )}
-                {portfolioItem?.liveLink && (
-                  <a
-                    href={portfolioItem?.liveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ backgroundColor: colors.accent, color: colors.textInverse }}
-                    className="inline-flex items-center px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-colors"
-                  >
-                    <ExternalLink className="w-5 h-5 mr-2" />
-                    View Live
-                  </a>
+                {portfolioItem.liveSite && (
+                  <LinkPreviewCard
+                    title="Live Site"
+                    subtitle={portfolioItem.liveSite.subHeader}
+                    previewImage={liveSitePreviewImages}
+                    link={portfolioItem.liveSite.link}
+                    type="live"
+                    index={1}
+                  />
                 )}
               </div>
             )}

@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { privacyPolicy } from "../constants/VISARA_PRIVACY_POLICY";
 
 function VIsaraPrivacyPolicy() {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     document.title = "Visara Privacy Policy | Keisar Club";

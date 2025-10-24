@@ -12,7 +12,7 @@ function FeaturedProjectsSection() {
   const { t, i18n } = useTranslation("home");
   const isRTL = i18n.language === "he";
   const { portfolioItems: featuredProjects, isLoading } = useFeaturdItems(true);
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   const containerVariants = {
     hidden: { opacity: 0 },

@@ -10,7 +10,7 @@ import { SKILLS } from "../utils/constants";
 
 function Skills({ style, aboutButton }: { style?: string; aboutButton: boolean }) {
   const { t } = useTranslation("about");
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   const getLevelColor = (level: string) => {
     switch (level) {

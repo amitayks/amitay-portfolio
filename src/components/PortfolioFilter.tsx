@@ -9,7 +9,7 @@ function PortfolioFilter() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const currentFilter = searchParams.get("type") || PROJECT_TYPES?.[0]?.value;
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   function handleFilterChange(value: string) {
     searchParams.set("type", value);

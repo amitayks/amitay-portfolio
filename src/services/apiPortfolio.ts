@@ -23,7 +23,7 @@ export const getPortfolioById = async (SKU: string) => {
   const { data, error } = await supabase
     .from("portfolio")
     .select(
-      "id, SKU, title, description, longDescription, technologies, projectType, image, imagePack, additionalInfo, featured, settings, priority"
+      "id, SKU, title, description, longDescription, technologies, projectType, image, imagePack, additionalInfo, featured, settings, priority, liveSite, github"
     )
     .eq("SKU", SKU)
     .eq("publish", true)

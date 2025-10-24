@@ -5,7 +5,7 @@ import React from 'react';
 
 const AnimatedShapes = () => {
   const shapes = Array.from({ length: 5 });
-  const colors = useTheme();
+  const { colors } = useTheme();
   return (
     <div className="absolute inset-0 overflow-hidden">
       {shapes.map((_, i) => (
@@ -33,7 +33,7 @@ const AnimatedShapes = () => {
 };
 
 const HeroSection: React.FC = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <section className="relative flex flex-col items-center justify-center w-full h-screen overflow-hidden">

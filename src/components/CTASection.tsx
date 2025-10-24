@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 function CTASection() {
-  const colors = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation("about");
 
   return (

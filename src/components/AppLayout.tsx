@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import NavigationBar from "./NavigationBar";
 
 function AppLayout() {
-  const colors = useTheme();
+  const { colors } = useTheme();
   const { i18n } = useTranslation();
   const isRTL = i18n.language === "he";
 

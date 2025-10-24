@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Colors, ColorScheme } from "../../colors";
+import { Colors, ThemeResult } from "../../colors";
 
-export const useTheme = (): ColorScheme => {
-  const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains("dark")
-  );
+export const useTheme = (): ThemeResult => {
+  const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains("dark"));
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -19,5 +17,7 @@ export const useTheme = (): ColorScheme => {
     return () => observer.disconnect();
   }, []);
 
-  return isDarkMode ? Colors.dark : Colors.light;
+  const colors = isDarkMode ? Colors.dark : Colors.light;
+
+  return { colors, isDark: isDarkMode };
 };

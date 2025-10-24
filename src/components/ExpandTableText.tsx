@@ -19,7 +19,7 @@ const ExpandTableText = ({
   readMoreText = "Read More",
 }: ExpandTableTextProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   if (typeof children !== "string") {
     return <div className={className}>{children}</div>;

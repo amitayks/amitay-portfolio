@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/hooks/useTheme";
 import { toggleTheme } from "../hooks/darkTheme";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -19,7 +18,7 @@ function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
-  const colors = useTheme();
+  const { colors } = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {

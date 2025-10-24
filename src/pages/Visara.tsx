@@ -8,7 +8,7 @@ import HeroSection from '../components/visara/HeroSection';
 import OnboardingSection from '../components/visara/OnboardingSection';
 
 const VisaraPage: React.FC = () => {
-  const colors = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div style={{ backgroundColor: colors.background, color: colors.text }} className="min-h-screen">
