@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { ExternalLink, Github } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -23,6 +24,19 @@ const LinkPreviewCard = ({ title, subtitle, previewImage, link, type, index = 0 
 
   const Icon = type === "github" ? Github : ExternalLink;
   const imageUrl = previewImage ? (isDark ? previewImage.dark : previewImage.light) : null;
+
+  // Preload both dark and light images for instant theme switching
+  useEffect(() => {
+    if (previewImage?.dark && previewImage?.light) {
+      // Only preload if they're different images
+      if (previewImage.dark !== previewImage.light) {
+        const darkImg = new Image();
+        const lightImg = new Image();
+        darkImg.src = previewImage.dark;
+        lightImg.src = previewImage.light;
+      }
+    }
+  }, [previewImage]);
 
   return (
     <motion.div

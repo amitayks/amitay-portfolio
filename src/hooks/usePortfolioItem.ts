@@ -41,7 +41,19 @@ const usePortfolioItem = () => {
 
   const isLoadingImagePack = imagePackQueries.some((query) => query.isLoading);
 
-  // Fetch GitHub preview images (dark and light)
+  // Check if GitHub dark and light images are different
+  const githubHasDifferentImages =
+    portfolioItem?.github?.previewImage?.dark &&
+    portfolioItem?.github?.previewImage?.light &&
+    portfolioItem.github.previewImage.dark !== portfolioItem.github.previewImage.light;
+
+  // Check if LiveSite dark and light images are different
+  const liveSiteHasDifferentImages =
+    portfolioItem?.liveSite?.previewImage?.dark &&
+    portfolioItem?.liveSite?.previewImage?.light &&
+    portfolioItem.liveSite.previewImage.dark !== portfolioItem.liveSite.previewImage.light;
+
+  // Fetch GitHub preview images (always fetch both for smooth theme transitions)
   const { data: githubPreviewDark, isLoading: isLoadingGithubDark } = useQuery<
     string | null,
     Error
@@ -51,8 +63,11 @@ const usePortfolioItem = () => {
       portfolioItem?.github?.previewImage?.dark
         ? getPortfolioImage(portfolioItem.github.previewImage.dark)
         : Promise.resolve(null),
-    enabled: !!portfolioItem?.github?.previewImage?.dark && portfolioItem.github.previewImage.dark.trim() !== '',
+    enabled:
+      !!portfolioItem?.github?.previewImage?.dark &&
+      portfolioItem.github.previewImage.dark.trim() !== "",
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
   });
 
   const { data: githubPreviewLight, isLoading: isLoadingGithubLight } = useQuery<
@@ -64,11 +79,17 @@ const usePortfolioItem = () => {
       portfolioItem?.github?.previewImage?.light
         ? getPortfolioImage(portfolioItem.github.previewImage.light)
         : Promise.resolve(null),
-    enabled: !!portfolioItem?.github?.previewImage?.light && portfolioItem.github.previewImage.light.trim() !== '',
+    // Only fetch if different from dark, otherwise use dark image
+    enabled: Boolean(
+      portfolioItem?.github?.previewImage?.light &&
+        portfolioItem.github.previewImage.light.trim() &&
+        githubHasDifferentImages
+    ),
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
   });
 
-  // Fetch Live Site preview images (dark and light)
+  // Fetch Live Site preview images (always fetch both for smooth theme transitions)
   const { data: liveSitePreviewDark, isLoading: isLoadingLiveDark } = useQuery<
     string | null,
     Error
@@ -78,8 +99,11 @@ const usePortfolioItem = () => {
       portfolioItem?.liveSite?.previewImage?.dark
         ? getPortfolioImage(portfolioItem.liveSite.previewImage.dark)
         : Promise.resolve(null),
-    enabled: !!portfolioItem?.liveSite?.previewImage?.dark && portfolioItem.liveSite.previewImage.dark.trim() !== '',
+    enabled:
+      !!portfolioItem?.liveSite?.previewImage?.dark &&
+      portfolioItem.liveSite.previewImage.dark.trim() !== "",
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
   });
 
   const { data: liveSitePreviewLight, isLoading: isLoadingLiveLight } = useQuery<
@@ -91,18 +115,41 @@ const usePortfolioItem = () => {
       portfolioItem?.liveSite?.previewImage?.light
         ? getPortfolioImage(portfolioItem.liveSite.previewImage.light)
         : Promise.resolve(null),
-    enabled: !!portfolioItem?.liveSite?.previewImage?.light && portfolioItem.liveSite.previewImage.light.trim() !== '',
+    // Only fetch if different from dark, otherwise use dark image
+    enabled: Boolean(
+      portfolioItem?.liveSite?.previewImage?.light &&
+        portfolioItem.liveSite.previewImage.light.trim() &&
+        liveSiteHasDifferentImages
+    ),
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
   });
 
-  const githubPreviewImages =
-    githubPreviewDark && githubPreviewLight
-      ? { dark: githubPreviewDark, light: githubPreviewLight }
+  // Use same image for both if they're identical
+  const githubPreviewImages:
+    | {
+        dark: string;
+        light: string;
+      }
+    | undefined =
+    githubPreviewDark || githubPreviewLight
+      ? {
+          dark: (githubPreviewDark || githubPreviewLight)!,
+          light: (githubPreviewLight || githubPreviewDark)!,
+        }
       : undefined;
 
-  const liveSitePreviewImages =
-    liveSitePreviewDark && liveSitePreviewLight
-      ? { dark: liveSitePreviewDark, light: liveSitePreviewLight }
+  const liveSitePreviewImages:
+    | {
+        dark: string;
+        light: string;
+      }
+    | undefined =
+    liveSitePreviewDark || liveSitePreviewLight
+      ? {
+          dark: (liveSitePreviewDark || liveSitePreviewLight)!,
+          light: (liveSitePreviewLight || liveSitePreviewDark)!,
+        }
       : undefined;
 
   return {
