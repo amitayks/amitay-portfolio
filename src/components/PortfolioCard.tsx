@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { useWind } from "@/contexts";
 import { useTheme } from "@/hooks/useTheme";
 import { usePortfolioImage } from "../hooks/usePortfolioImage";
 import { queryKeys } from "../lib/queryKeys";
@@ -13,13 +14,19 @@ import { PortfolioItem } from "../types/portfolio";
 const PortfolioCard = ({
   portfolioItem,
   className,
+  index: _index = 0,
 }: {
   portfolioItem: PortfolioItem;
   className?: string;
+  index?: number;
 }) => {
   const { image, isLoading: imageLoading } = usePortfolioImage(portfolioItem.image);
   const { colors } = useTheme();
   const queryClient = useQueryClient();
+  const { isWindActive } = useWind();
+
+  // Sequential wave effect - each card responds slightly after the previous, like wind through grass
+  const staggerDelay = _index * 0.08; // 80ms between cards creates a gentle wave
 
   // Prefetch portfolio item details on hover for instant navigation
   const handleMouseEnter = () => {
@@ -40,45 +47,76 @@ const PortfolioCard = ({
     }
   };
 
+  // Animation variants - gentle and organic, like leaves on a branch
+  // IMPORTANT: All animations must start and end at the SAME values to avoid jumps
+  const calmFloating = {
+    y: [-8, -4, -8], // Starts at -8, loops back to -8
+    x: [0, 0, 0], // No horizontal drift during calm
+    scale: [1.01, 1.005, 1.01], // Starts at 1.01, loops back to 1.01
+    rotateX: [1, 0.5, 1], // Starts at 1, loops back to 1
+    rotateZ: [0.3, -0.3, 0.3], // Starts at 0.3, loops back to 0.3
+  };
+
+  const gentleBreeze = {
+    // Start at calm position [-8, 0, 1.01, 1, 0.3] and return to it at the end
+    y: [-8, -12, -15, -10, -8], // Now ends at -8 (matches calm start)
+    x: [0, 8, 12, 6, 0], // Ends at 0 (matches calm)
+    scale: [1.01, 1.015, 1.02, 1.012, 1.01], // Ends at 1.01 (matches calm start)
+    rotateX: [1, 2, 2.5, 1.5, 1], // Ends at 1 (matches calm start)
+    rotateZ: [0.3, 1.5, 2, 1, 0.3], // Ends at 0.3 (matches calm start)
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      animate={{
-        y: [-12, -6, -12],
-        scale: [1.02, 1.01, 1.02],
-        rotateX: [2, 1, 2],
-        rotateZ: [0.5, -0.5, 0.5],
-      }}
-      transition={{
-        y: {
-          duration: 2.5,
-          ease: [0.45, 0.05, 0.55, 0.95],
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "loop",
-        },
-        scale: {
-          duration: 3,
-          ease: [0.45, 0.05, 0.55, 0.95],
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "loop",
-        },
-        rotateX: {
-          duration: 3.5,
-          ease: [0.45, 0.05, 0.55, 0.95],
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "loop",
-        },
-        rotateZ: {
-          duration: 4,
-          ease: [0.45, 0.05, 0.55, 0.95],
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "loop",
-        },
-      }}
+      animate={isWindActive ? gentleBreeze : calmFloating}
+      transition={
+        isWindActive
+          ? {
+              // Main gentle breeze motion with sequential wave
+              duration: 2.0, // Smooth, relaxed movement
+              delay: staggerDelay, // Sequential wave effect
+              ease: [0.25, 0.46, 0.45, 0.94], // EaseOutQuad - natural deceleration
+            }
+          : {
+              // Calm floating - very smooth and peaceful infinite loop
+              y: {
+                duration: 2.5,
+                ease: [0.45, 0.05, 0.55, 0.95], // Smooth sine wave
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
+              },
+              x: {
+                duration: 2.5,
+                ease: [0.45, 0.05, 0.55, 0.95],
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
+              },
+              scale: {
+                duration: 3,
+                ease: [0.45, 0.05, 0.55, 0.95],
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
+              },
+              rotateX: {
+                duration: 3.5,
+                ease: [0.45, 0.05, 0.55, 0.95],
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
+              },
+              rotateZ: {
+                duration: 4,
+                ease: [0.45, 0.05, 0.55, 0.95],
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
+              },
+            }
+      }
       whileHover={{
         y: 0,
+        x: 0,
         scale: 1,
         rotateX: 0,
         rotateZ: 0,

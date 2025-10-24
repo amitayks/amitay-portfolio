@@ -107,7 +107,8 @@ export default {
   			slideInUp: 'slideInUp 0.5s ease-in-out',
   			slideInDown: 'slideInDown 0.5s ease-in-out',
   			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-  			cloudFloat: 'cloudFloat 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite'
+  			cloudFloat: 'cloudFloat 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite',
+  			windGust: 'windGust 1.8s cubic-bezier(0.34, 0.61, 0.55, 1)'
   		},
   		keyframes: {
   			fadeIn: {
@@ -178,6 +179,20 @@ export default {
   				},
   				'75%': {
   					transform: 'translateY(-6px) translateX(-2px) scale(1.01)',
+  				}
+  			},
+  			windGust: {
+  				'0%': {
+  					transform: 'translateY(0px) translateX(0px) rotateZ(0deg) scale(1)',
+  				},
+  				'30%': {
+  					transform: 'translateY(-8px) translateX(18px) rotateZ(2.5deg) scale(1.025)',
+  				},
+  				'60%': {
+  					transform: 'translateY(-18px) translateX(25px) rotateZ(3deg) scale(1.03)',
+  				},
+  				'100%': {
+  					transform: 'translateY(0px) translateX(0px) rotateZ(0deg) scale(1)',
   				}
   			}
   		},

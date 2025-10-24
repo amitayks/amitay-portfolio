@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { WindProvider } from "@/contexts";
 import { useTheme } from "@/hooks/useTheme";
 import PortfolioCard from "../components/PortfolioCard";
 import PortfolioFilter from "../components/PortfolioFilter";
@@ -27,11 +28,17 @@ function Portfolio() {
         ) : portfolioItems.length === 0 ? (
           <NoProjectsFound />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {portfolioItems.map((portfolioItem: PortfolioItem) => (
-              <PortfolioCard key={portfolioItem.id} portfolioItem={portfolioItem} />
-            ))}
-          </div>
+          <WindProvider>
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {portfolioItems.map((portfolioItem: PortfolioItem, index) => (
+                <PortfolioCard
+                  key={portfolioItem.id}
+                  portfolioItem={portfolioItem}
+                  index={index}
+                />
+              ))}
+            </div>
+          </WindProvider>
         )}
       </div>
     </div>

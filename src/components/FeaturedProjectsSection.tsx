@@ -3,6 +3,7 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { WindProvider } from "@/contexts";
 import { useTheme } from "@/hooks/useTheme";
 import useFeaturdItems from "../hooks/useFeaturedItems";
 import PortfolioCard from "./PortfolioCard";
@@ -43,18 +44,26 @@ function FeaturedProjectsSection() {
           <PortfolioGridSkeleton count={3} />
         ) : featuredProjects.length > 0 ? (
           <>
-            <motion.div
-              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-              dir="rtl"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-            >
-              {featuredProjects.map((featuredItem) => {
-                return <PortfolioCard key={featuredItem.id} portfolioItem={featuredItem} />;
-              })}
-            </motion.div>
+            <WindProvider>
+              <motion.div
+                className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+                dir="rtl"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+              >
+                {featuredProjects.map((featuredItem, index) => {
+                  return (
+                    <PortfolioCard
+                      key={featuredItem.id}
+                      portfolioItem={featuredItem}
+                      index={index}
+                    />
+                  );
+                })}
+              </motion.div>
+            </WindProvider>
 
             <motion.div
               className="text-center"
