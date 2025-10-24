@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, useAnimate } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { useWind } from "@/contexts";
@@ -24,20 +25,20 @@ const PortfolioCard = ({
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const { isWindActive } = useWind();
+  const [scope, animate] = useAnimate();
+  const animationRef = useRef<AbortController | null>(null);
 
-  // Sequential wave effect - each card responds slightly after the previous, like wind through grass
+  // Sequential wave effect - each card responds slightly after the previous
   const staggerDelay = _index * 0.08; // 80ms between cards creates a gentle wave
 
   // Prefetch portfolio item details on hover for instant navigation
   const handleMouseEnter = () => {
-    // Prefetch portfolio item data
     queryClient.prefetchQuery({
       queryKey: queryKeys.portfolioItem(portfolioItem.SKU),
       queryFn: () => getPortfolioById(portfolioItem.SKU),
       staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    // Prefetch main image if not already cached
     if (portfolioItem.image) {
       queryClient.prefetchQuery({
         queryKey: queryKeys.portfolioImage(portfolioItem.image),
@@ -47,73 +48,81 @@ const PortfolioCard = ({
     }
   };
 
-  // Animation variants - gentle and organic, like leaves on a branch
-  // IMPORTANT: All animations must start and end at the SAME values to avoid jumps
-  const calmFloating = {
-    y: [-8, -4, -8], // Starts at -8, loops back to -8
-    x: [0, 0, 0], // No horizontal drift during calm
-    scale: [1.01, 1.005, 1.01], // Starts at 1.01, loops back to 1.01
-    rotateX: [1, 0.5, 1], // Starts at 1, loops back to 1
-    rotateZ: [0.3, -0.3, 0.3], // Starts at 0.3, loops back to 0.3
-  };
+  // Spring-based continuous animation - smoothly transitions when wind state changes
+  useEffect(() => {
+    // Cancel previous animation
+    if (animationRef.current) {
+      animationRef.current.abort();
+    }
 
-  const gentleBreeze = {
-    // Start at calm position [-8, 0, 1.01, 1, 0.3] and return to it at the end
-    y: [-8, -12, -15, -10, -8], // Now ends at -8 (matches calm start)
-    x: [0, 8, 12, 6, 0], // Ends at 0 (matches calm)
-    scale: [1.01, 1.015, 1.02, 1.012, 1.01], // Ends at 1.01 (matches calm start)
-    rotateX: [1, 2, 2.5, 1.5, 1], // Ends at 1 (matches calm start)
-    rotateZ: [0.3, 1.5, 2, 1, 0.3], // Ends at 0.3 (matches calm start)
-  };
+    const controller = new AbortController();
+    animationRef.current = controller;
+
+    const runAnimation = async () => {
+      // Springs only support 2 keyframes, so we create a sequence
+      // Animate down/right, then up/left, continuously for organic motion
+      const transitionConfig = isWindActive
+        ? {
+            type: "spring" as const,
+            stiffness: 60, // More energetic for wind
+            damping: 15,
+            mass: 1,
+            delay: staggerDelay,
+          }
+        : {
+            type: "spring" as const,
+            stiffness: 100, // Gentle and calm
+            damping: 25,
+            mass: 1,
+          };
+
+      try {
+        while (!controller.signal.aborted) {
+          // Phase 1: Move to peak position
+          await animate(
+            scope.current,
+            {
+              y: isWindActive ? -16 : -3,
+              x: isWindActive ? 12 : 0,
+              scale: isWindActive ? 1.02 : 1.005,
+              rotateX: isWindActive ? 2.2 : 0.5,
+              rotateZ: isWindActive ? 1.8 : -0.3,
+            },
+            transitionConfig,
+          );
+
+          // Phase 2: Return to base position
+          await animate(
+            scope.current,
+            {
+              y: isWindActive ? -10 : -6,
+              x: 0,
+              scale: 1.01,
+              rotateX: 1,
+              rotateZ: 0.3,
+            },
+            transitionConfig,
+          );
+        }
+      } catch (error) {
+        // Animation was cancelled, which is expected
+      }
+    };
+
+    runAnimation();
+
+    return () => {
+      controller.abort();
+      animationRef.current = null;
+    };
+  }, [isWindActive, animate, staggerDelay]);
 
   return (
     <motion.div
+      ref={scope}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      animate={isWindActive ? gentleBreeze : calmFloating}
-      transition={
-        isWindActive
-          ? {
-              // Main gentle breeze motion with sequential wave
-              duration: 2.0, // Smooth, relaxed movement
-              delay: staggerDelay, // Sequential wave effect
-              ease: [0.25, 0.46, 0.45, 0.94], // EaseOutQuad - natural deceleration
-            }
-          : {
-              // Calm floating - very smooth and peaceful infinite loop
-              y: {
-                duration: 2.5,
-                ease: [0.45, 0.05, 0.55, 0.95], // Smooth sine wave
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-              },
-              x: {
-                duration: 2.5,
-                ease: [0.45, 0.05, 0.55, 0.95],
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-              },
-              scale: {
-                duration: 3,
-                ease: [0.45, 0.05, 0.55, 0.95],
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-              },
-              rotateX: {
-                duration: 3.5,
-                ease: [0.45, 0.05, 0.55, 0.95],
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-              },
-              rotateZ: {
-                duration: 4,
-                ease: [0.45, 0.05, 0.55, 0.95],
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-              },
-            }
-      }
       whileHover={{
         y: 0,
         x: 0,
