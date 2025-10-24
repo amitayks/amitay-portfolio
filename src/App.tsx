@@ -1,10 +1,12 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import AppLayout from "./components/AppLayout";
 import Favicon from "./components/Favicon";
 import ScrollToTop from "./components/ScrollToTop";
+import { queryPersister } from "./lib/queryPersister";
 import About from "./pages/About";
 import Apply from "./pages/Apply";
 import Contact from "./pages/Contact";
@@ -19,15 +21,24 @@ import VisaraPrivacyPolicy from "./pages/VIsaraPrivacyPolicy";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 60 * 24, // 24 hours
+      gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days garbage collection
       retry: 2,
+      refetchOnWindowFocus: false, // Don't refetch on tab switch
+      refetchOnReconnect: "always", // DO refetch when internet reconnects
     },
   },
 });
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister: queryPersister,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      }}
+    >
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <ScrollToTop />
@@ -46,7 +57,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 

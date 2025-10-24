@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPortfolioImage } from "../services/apiImages";
+import { queryKeys } from "../lib/queryKeys";
 
 const usePortfolioImage = (imageName: string) => {
   const {
@@ -7,10 +8,9 @@ const usePortfolioImage = (imageName: string) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["portfolioImage", imageName],
+    queryKey: queryKeys.portfolioImage(imageName),
     queryFn: () => getPortfolioImage(imageName),
-    staleTime: 1000 * 60 * 60 * 24, // 5 minutes
-    retry: 1,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days
   });
 
   return { image, isLoading, error };

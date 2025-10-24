@@ -2,6 +2,7 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getPortfolioImage } from "../services/apiImages";
 import { getPortfolioById } from "../services/apiPortfolio";
+import { queryKeys } from "../lib/queryKeys";
 import { PortfolioItem } from "../types/portfolio";
 
 const usePortfolioItem = () => {
@@ -12,24 +13,25 @@ const usePortfolioItem = () => {
     error: portfolioError,
     isLoading: isLoadingPortfolio,
   } = useQuery<PortfolioItem, Error>({
-    queryKey: ["portfolioItem", SKU],
+    queryKey: queryKeys.portfolioItem(SKU || ""),
     queryFn: () => getPortfolioById(SKU || ""),
     enabled: !!SKU,
-    retry: 1,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   const { data: image, isLoading: isLoadingImage } = useQuery<string | null, Error>({
-    queryKey: ["portfolioImage", portfolioItem?.image],
+    queryKey: portfolioItem?.image ? queryKeys.portfolioImage(portfolioItem.image) : ["portfolioImage", ""],
     queryFn: () =>
       portfolioItem?.image ? getPortfolioImage(portfolioItem.image) : Promise.resolve(null),
     enabled: !!portfolioItem?.image,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days
   });
 
   const imagePackQueries = useQueries({
     queries: (portfolioItem?.imagePack?.slice(0, 4) || []).map((image: string) => ({
-      queryKey: ["portfolioImage", image],
+      queryKey: queryKeys.portfolioImage(image),
       queryFn: () => getPortfolioImage(image),
+      staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days
     })),
   });
 
@@ -58,7 +60,9 @@ const usePortfolioItem = () => {
     string | null,
     Error
   >({
-    queryKey: ["portfolioImage", portfolioItem?.github?.previewImage?.dark],
+    queryKey: portfolioItem?.github?.previewImage?.dark
+      ? queryKeys.portfolioImage(portfolioItem.github.previewImage.dark)
+      : ["portfolioImage", ""],
     queryFn: () =>
       portfolioItem?.github?.previewImage?.dark
         ? getPortfolioImage(portfolioItem.github.previewImage.dark)
@@ -74,7 +78,9 @@ const usePortfolioItem = () => {
     string | null,
     Error
   >({
-    queryKey: ["portfolioImage", portfolioItem?.github?.previewImage?.light],
+    queryKey: portfolioItem?.github?.previewImage?.light
+      ? queryKeys.portfolioImage(portfolioItem.github.previewImage.light)
+      : ["portfolioImage", ""],
     queryFn: () =>
       portfolioItem?.github?.previewImage?.light
         ? getPortfolioImage(portfolioItem.github.previewImage.light)
@@ -94,7 +100,9 @@ const usePortfolioItem = () => {
     string | null,
     Error
   >({
-    queryKey: ["portfolioImage", portfolioItem?.liveSite?.previewImage?.dark],
+    queryKey: portfolioItem?.liveSite?.previewImage?.dark
+      ? queryKeys.portfolioImage(portfolioItem.liveSite.previewImage.dark)
+      : ["portfolioImage", ""],
     queryFn: () =>
       portfolioItem?.liveSite?.previewImage?.dark
         ? getPortfolioImage(portfolioItem.liveSite.previewImage.dark)
@@ -110,7 +118,9 @@ const usePortfolioItem = () => {
     string | null,
     Error
   >({
-    queryKey: ["portfolioImage", portfolioItem?.liveSite?.previewImage?.light],
+    queryKey: portfolioItem?.liveSite?.previewImage?.light
+      ? queryKeys.portfolioImage(portfolioItem.liveSite.previewImage.light)
+      : ["portfolioImage", ""],
     queryFn: () =>
       portfolioItem?.liveSite?.previewImage?.light
         ? getPortfolioImage(portfolioItem.liveSite.previewImage.light)

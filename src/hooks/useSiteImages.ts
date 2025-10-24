@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSiteImage } from "../services/apiImages";
+import { queryKeys } from "../lib/queryKeys";
 
 const useSiteImage = (imageName: string) => {
   const {
@@ -7,9 +8,9 @@ const useSiteImage = (imageName: string) => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["image", imageName],
+    queryKey: queryKeys.siteImage(imageName),
     queryFn: () => getSiteImage(imageName),
-    staleTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days
   });
 
   return { image, error, isLoading };

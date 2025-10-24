@@ -1,10 +1,14 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { useTheme } from "@/hooks/useTheme";
 import { usePortfolioImage } from "../hooks/usePortfolioImage";
 import { PortfolioItem } from "../types/portfolio";
+import { getPortfolioById } from "../services/apiPortfolio";
+import { getPortfolioImage } from "../services/apiImages";
+import { queryKeys } from "../lib/queryKeys";
 
 const PortfolioCard = ({
   portfolioItem,
@@ -15,6 +19,26 @@ const PortfolioCard = ({
 }) => {
   const { image, isLoading: imageLoading } = usePortfolioImage(portfolioItem.image);
   const { colors } = useTheme();
+  const queryClient = useQueryClient();
+
+  // Prefetch portfolio item details on hover for instant navigation
+  const handleMouseEnter = () => {
+    // Prefetch portfolio item data
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.portfolioItem(portfolioItem.SKU),
+      queryFn: () => getPortfolioById(portfolioItem.SKU),
+      staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    // Prefetch main image if not already cached
+    if (portfolioItem.image) {
+      queryClient.prefetchQuery({
+        queryKey: queryKeys.portfolioImage(portfolioItem.image),
+        queryFn: () => getPortfolioImage(portfolioItem.image),
+        staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days
+      });
+    }
+  };
 
   return (
     <motion.div
@@ -23,6 +47,7 @@ const PortfolioCard = ({
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -8 }}
+      onMouseEnter={handleMouseEnter}
       className={className}
     >
       <Card

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { getPortfolio } from "../services/apiPortfolio";
+import { queryKeys } from "../lib/queryKeys";
 import { PortfolioItem } from "../types/portfolio";
 
 export default function usePortfolioItems() {
@@ -20,10 +21,9 @@ export default function usePortfolioItems() {
     error: portfolioError,
     isLoading,
   } = useQuery<PortfolioItem[], Error>({
-    queryKey: ["portfolioItems", filterValue],
+    queryKey: queryKeys.portfolioItems(filterValue),
     queryFn: () => getPortfolio({ filter }),
-    retry: 1,
-    staleTime: 1000 * 60 * 60 * 24, // 1 day
+    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   return { portfolioError, portfolioItems, isLoading };
