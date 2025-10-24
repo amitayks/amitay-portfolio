@@ -45,39 +45,46 @@ const PortfolioCard = ({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5 }}
+      animate={{
+        y: [-12, -6, -12],
+        scale: [1.02, 1.01, 1.02],
+        rotateX: [2, 1, 2],
+        rotateZ: [0.5, -0.5, 0.5],
+      }}
+      transition={{
+        y: {
+          duration: 2.5,
+          ease: [0.45, 0.05, 0.55, 0.95],
+          repeat: Number.POSITIVE_INFINITY,
+          repeatType: "loop",
+        },
+        scale: {
+          duration: 3,
+          ease: [0.45, 0.05, 0.55, 0.95],
+          repeat: Number.POSITIVE_INFINITY,
+          repeatType: "loop",
+        },
+        rotateX: {
+          duration: 3.5,
+          ease: [0.45, 0.05, 0.55, 0.95],
+          repeat: Number.POSITIVE_INFINITY,
+          repeatType: "loop",
+        },
+        rotateZ: {
+          duration: 4,
+          ease: [0.45, 0.05, 0.55, 0.95],
+          repeat: Number.POSITIVE_INFINITY,
+          repeatType: "loop",
+        },
+      }}
       whileHover={{
-        y: -12,
-        scale: 1.02,
-        rotateX: 2,
-        rotateZ: 0.5,
+        y: 0,
+        scale: 1,
+        rotateX: 0,
+        rotateZ: 0,
         transition: {
-          duration: 0.8,
+          duration: 0.6,
           ease: [0.34, 1.56, 0.64, 1],
-          y: {
-            duration: 2.5,
-            ease: [0.45, 0.05, 0.55, 0.95],
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          },
-          scale: {
-            duration: 3,
-            ease: [0.45, 0.05, 0.55, 0.95],
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          },
-          rotateX: {
-            duration: 3.5,
-            ease: [0.45, 0.05, 0.55, 0.95],
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          },
-          rotateZ: {
-            duration: 4,
-            ease: [0.45, 0.05, 0.55, 0.95],
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-          },
         },
       }}
       onMouseEnter={handleMouseEnter}
