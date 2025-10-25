@@ -2,10 +2,11 @@ import emailjs from "@emailjs/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { Colors } from "../../colors";
 import { RandomFontText } from "@/components/RandomFontText";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useTheme } from "@/hooks/useTheme";
+import { setTheme } from "@/hooks/darkTheme";
 import { EMAILJS_CONFIG } from "@/utils/constants";
 
 const createFormSchema = (t: (key: string) => string) =>
@@ -38,13 +39,44 @@ const createFormSchema = (t: (key: string) => string) =>
 
 const Apply = () => {
   const { t, i18n } = useTranslation("apply");
-  const { colors } = useTheme();
+  // Force light mode for this page only
+  const colors = Colors.light;
   const isRTL = i18n.language === "he";
   const [formStatus, setFormStatus] = useState({
     submitted: false,
     success: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Force light mode when this page mounts and restore previous theme on unmount
+  useEffect(() => {
+    // Save current theme state
+    const wasDarkMode = document.documentElement.classList.contains("dark");
+
+    // Force light mode
+    setTheme(false);
+
+    // Watch for theme changes and force back to light mode if user tries to switch
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        // User tried to switch to dark mode, force it back to light
+        setTheme(false);
+      }
+    });
+
+    // Observe changes to the document element's class attribute
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    // Restore previous theme when leaving the page
+    return () => {
+      observer.disconnect();
+      setTheme(wasDarkMode);
+    };
+  }, []);
 
   const formSchema = createFormSchema(t);
 
@@ -94,7 +126,13 @@ const Apply = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundColor: colors.background,
+        color: colors.text,
+      }}
+    >
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
