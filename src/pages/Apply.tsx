@@ -1,12 +1,13 @@
 import emailjs from "@emailjs/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Colors } from "../../colors";
+import { AnimatedText } from "@/components/AnimatedText";
 import { RandomFontText } from "@/components/RandomFontText";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -143,14 +144,17 @@ const Apply = () => {
             transition={{ duration: 0.8 }}
           >
             {/* Main Headline with Random Font Animation */}
-            <RandomFontText
-              text={`${t("hero.headline")} ${t("hero.headlineAccent")}`}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
-              baseColor={colors.primary}
-              accentColor={colors.accent}
-              accentStartIndex={t("hero.headline").length + 1}
-              hoverInterval={100}
-            />
+            <AnimatePresence mode="wait">
+              <RandomFontText
+                key={i18n.language}
+                text={`${t("hero.headline")} ${t("hero.headlineAccent")}`}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight my-12"
+                baseColor={colors.primary}
+                accentColor={colors.accent}
+                accentStartIndex={t("hero.headline").length + 1}
+                hoverInterval={100}
+              />
+            </AnimatePresence>
 
             {/* <motion.h2
               className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8"
@@ -363,15 +367,30 @@ const Apply = () => {
                       <CheckCircle2 className="w-16 h-16" style={{ color: colors.success }} />
                     </div>
                   </motion.div>
-                  <h3 className="text-3xl font-bold mb-4" style={{ color: colors.primary }}>
+                  <AnimatedText
+                    as="h3"
+                    className="text-3xl font-bold mb-4"
+                    style={{ color: colors.primary }}
+                    variant="scale"
+                  >
                     {t("contactForm.success.title")}
-                  </h3>
-                  <p className="text-xl mb-2" style={{ color: colors.textSecondary }}>
+                  </AnimatedText>
+                  <AnimatedText
+                    as="p"
+                    className="text-xl mb-2"
+                    style={{ color: colors.textSecondary }}
+                    variant="fade"
+                  >
                     {t("contactForm.success.message")}
-                  </p>
-                  <p className="text-lg" style={{ color: colors.textTertiary }}>
+                  </AnimatedText>
+                  <AnimatedText
+                    as="p"
+                    className="text-lg"
+                    style={{ color: colors.textTertiary }}
+                    variant="fade"
+                  >
                     {t("contactForm.success.emailMessage")}
-                  </p>
+                  </AnimatedText>
                   <motion.div
                     className="mt-8"
                     whileHover={{ scale: 1.05 }}
@@ -388,7 +407,9 @@ const Apply = () => {
                         color: colors.primary,
                       }}
                     >
-                      {t("contactForm.buttons.submitAnother")}
+                      <AnimatedText as="span" variant="fade">
+                        {t("contactForm.buttons.submitAnother")}
+                      </AnimatedText>
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -401,9 +422,14 @@ const Apply = () => {
                     >
                       {t("contactForm.title")}
                     </h2> */}
-                    <h2 className="text-lg font-bold" style={{ color: colors.primary }}>
+                    <AnimatedText
+                      as="h2"
+                      className="text-lg font-bold"
+                      style={{ color: colors.primary }}
+                      variant="fade"
+                    >
                       {t("contactForm.subtitle")}
-                    </h2>
+                    </AnimatedText>
                   </div>
 
                   {formStatus.submitted && !formStatus.success && (
@@ -416,9 +442,14 @@ const Apply = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      <p style={{ color: colors.error }} className="text-center">
+                      <AnimatedText
+                        as="p"
+                        style={{ color: colors.error }}
+                        className="text-center"
+                        variant="fade"
+                      >
                         {t("contactForm.error.message")}
-                      </p>
+                      </AnimatedText>
                     </motion.div>
                   )}
 
@@ -430,7 +461,9 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.name")}{" "}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.labels.name")}
+                              </AnimatedText>{" "}
                               <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
@@ -457,7 +490,9 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.email")}{" "}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.labels.email")}
+                              </AnimatedText>{" "}
                               <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
@@ -485,7 +520,9 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.project")}{" "}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.labels.project")}
+                              </AnimatedText>{" "}
                               <span style={{ color: colors.error }}>*</span>
                             </FormLabel>
                             <FormControl>
@@ -513,9 +550,13 @@ const Apply = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel style={{ color: colors.textSecondary }}>
-                              {t("contactForm.labels.phone")}{" "}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.labels.phone")}
+                              </AnimatedText>{" "}
                               <span style={{ color: colors.textTertiary }}>
-                                {t("contactForm.labels.optional")}
+                                <AnimatedText as="span" variant="fade">
+                                  {t("contactForm.labels.optional")}
+                                </AnimatedText>
                               </span>
                             </FormLabel>
                             <FormControl>
@@ -552,11 +593,15 @@ const Apply = () => {
                               animate={{ opacity: [1, 0.5, 1] }}
                               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                             >
-                              {t("contactForm.buttons.submitting")}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.buttons.submitting")}
+                              </AnimatedText>
                             </motion.span>
                           ) : (
                             <>
-                              {t("contactForm.buttons.submit")}
+                              <AnimatedText as="span" variant="fade">
+                                {t("contactForm.buttons.submit")}
+                              </AnimatedText>
                               <ArrowRight
                                 className={`h-5 w-5 ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
                               />
@@ -570,7 +615,9 @@ const Apply = () => {
                         style={{ color: colors.textTertiary }}
                       >
                         <span style={{ color: colors.error }}>*</span>{" "}
-                        {t("contactForm.labels.required")}
+                        <AnimatedText as="span" variant="fade">
+                          {t("contactForm.labels.required")}
+                        </AnimatedText>
                       </p>
                     </form>
                   </Form>

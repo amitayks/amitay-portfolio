@@ -13,7 +13,7 @@ const Footer = () => {
       style={{
         backgroundColor: "transparent",
       }}
-      className="pb-5 flex items-center justify-center"
+      className="pb-5 pt-20 flex items-center justify-center"
     >
       <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -37,17 +37,6 @@ const Footer = () => {
           </motion.span>
         </motion.div>
 
-        <motion.p
-          style={{ color: colors.textSecondary }}
-          className="mb-8 max-w-md leading-relaxed text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          {PERSONAL_INFO.tagline}
-        </motion.p>
-
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -58,7 +47,18 @@ const Footer = () => {
           <SocialLinksComponent socialLinks={SOCIAL_LINKS} variant="outline" />
         </motion.div>
 
-        <Separator className="mb-8" style={{ backgroundColor: colors.border }} />
+        <motion.p
+          style={{ color: colors.textSecondary }}
+          className="mb-4 max-w-md leading-relaxed text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          {PERSONAL_INFO.tagline}
+        </motion.p>
+
+        <Separator className="mb-4" style={{ backgroundColor: colors.border }} />
 
         <motion.div
           className="w-full flex justify-center"
