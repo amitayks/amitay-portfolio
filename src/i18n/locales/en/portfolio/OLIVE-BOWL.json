@@ -1,0 +1,29 @@
+{
+  "title": "Handcrafted Olive Wood Bowl",
+  "description": "Bowl made from natural olive wood with custom design and professional handcraftsmanship",
+  "longDescription": "Unique olive wood bowl professionally handcrafted from premium natural olive wood. Each bowl undergoes a special production process and natural oil finish ensuring durability and beauty over time. The product combines natural beauty with functionality and makes an impressive addition to any home.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "קוטר": {
+      "label": "Diameter",
+      "value": "10 inches (25 cm)"
+    },
+    "גובה": {
+      "label": "Height",
+      "value": "2.4 inches (6 cm)"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Natural olive wood"
+    },
+    "גימור": {
+      "label": "Finish",
+      "value": "Natural oil"
+    },
+    "ייחודיות": {
+      "label": "Uniqueness",
+      "value": "Each bowl is different"
+    }
+  }
+}

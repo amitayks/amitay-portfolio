@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { AnimatedText } from "@/components/AnimatedText";
 import { Button } from "@/components/ui/button";
 import { WindProvider } from "@/contexts";
 import { useTheme } from "@/hooks/useTheme";
@@ -80,7 +81,9 @@ function FeaturedProjectsSection() {
                   className="shadow-lg hover:shadow-xl group"
                 >
                   <Link to="/portfolio">
-                    {t("featured.viewAll")}
+                    <AnimatedText as="span" variant="fade">
+                      {t("featured.viewAll")}
+                    </AnimatedText>
                     <ArrowRight
                       className={`h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? "mr-2 rotate-180" : "ml-2"}`}
                     />
@@ -112,12 +115,22 @@ function FeaturedProjectsSection() {
             >
               <ExternalLink style={{ color: colors.textTertiary }} className="w-12 h-12" />
             </motion.div>
-            <h3 style={{ color: colors.primary }} className="text-xl font-semibold mb-3">
+            <AnimatedText
+              as="h3"
+              style={{ color: colors.primary }}
+              className="text-xl font-semibold mb-3"
+              variant="slide"
+            >
               {t("featured.comingSoon.title")}
-            </h3>
-            <p style={{ color: colors.textSecondary }} className="mb-6">
+            </AnimatedText>
+            <AnimatedText
+              as="p"
+              style={{ color: colors.textSecondary }}
+              className="mb-6"
+              variant="fade"
+            >
               {t("featured.comingSoon.description")}
-            </p>
+            </AnimatedText>
           </motion.div>
         )}
       </div>

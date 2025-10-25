@@ -1,0 +1,29 @@
+{
+  "title": "Wooden Wine Bottle Holder",
+  "description": "Elegant handcrafted solid wood wine holder",
+  "longDescription": "Quality wine bottle holder made from solid wood with professional handcraftsmanship. The elegant holder suits any kitchen or home bar, with optional personal engraving that gives it a unique character. Each holder is carefully crafted by skilled carpenters and makes a perfect addition for any wine enthusiast.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "אורך": {
+      "label": "Length",
+      "value": "7 inches (18 cm)"
+    },
+    "רוחב": {
+      "label": "Width",
+      "value": "2 inches (5 cm)"
+    },
+    "עובי": {
+      "label": "Thickness",
+      "value": "1.6 inches (4 cm)"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Solid natural wood"
+    },
+    "חריטה": {
+      "label": "Engraving",
+      "value": "Optional"
+    }
+  }
+}

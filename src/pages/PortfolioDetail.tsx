@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/AnimatedText";
 import { useTheme } from "@/hooks/useTheme";
 import AdditionalInfoTable from "../components/AdditionalInfoTable";
 import Breadcrumb from "../components/Breadcrumb";
@@ -8,6 +9,7 @@ import NoItemFound from "../components/NoItemFound";
 import { PortfolioDetailSkeleton } from "../components/PortfolioDetailSkeleton";
 import PortfolioImage from "../components/PortfolioImage";
 import usePortfolioItem from "../hooks/usePortfolioItem";
+import { usePortfolioTranslation } from "../hooks/usePortfolioTranslation";
 
 const PortfolioDetail = () => {
   const {
@@ -23,11 +25,14 @@ const PortfolioDetail = () => {
   } = usePortfolioItem();
   const { colors } = useTheme();
 
+  // Get translated content with fallback to server data
+  const translated = portfolioItem ? usePortfolioTranslation(portfolioItem) : null;
+
   if (isLoadingPortfolio) {
     return <PortfolioDetailSkeleton />;
   }
 
-  if (!portfolioItem) {
+  if (!portfolioItem || !translated) {
     return <NoItemFound />;
   }
   if (error) {
@@ -60,13 +65,18 @@ const PortfolioDetail = () => {
 
           <div className="space-y-8" dir={portfolioItem.settings.dir}>
             <div>
-              <h1 style={{ color: colors.primary }} className="text-4xl font-bold mb-4">
-                {portfolioItem.title}
-              </h1>
+              <AnimatedText
+                as="h1"
+                style={{ color: colors.primary }}
+                className="text-4xl font-bold mb-4"
+                variant="slide"
+              >
+                {translated.title}
+              </AnimatedText>
             </div>
 
-            <div className="flex ">
-              <div className="flex flex-wrap gap-3 ">
+            <AnimatedText as="div" variant="fade" className="flex">
+              <div className="flex flex-wrap gap-3">
                 {portfolioItem?.technologies?.map((tech) => (
                   <span
                     key={portfolioItem.SKU}
@@ -80,30 +90,35 @@ const PortfolioDetail = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </AnimatedText>
 
             <div>
-              <p style={{ color: colors.textSecondary }} className="text-xl leading-relaxed">
-                {portfolioItem.description}
-              </p>
+              <AnimatedText
+                as="p"
+                style={{ color: colors.textSecondary }}
+                className="text-xl leading-relaxed"
+                variant="fade"
+              >
+                {translated.description}
+              </AnimatedText>
             </div>
 
             {(portfolioItem?.github || portfolioItem?.liveSite) && (
               <div className="grid grid-cols-2 gap-4">
-                {portfolioItem.github && (
+                {portfolioItem.github && translated.github && (
                   <LinkPreviewCard
-                    title="GitHub"
-                    subtitle={portfolioItem.github.subHeader}
+                    title={translated.github.label}
+                    subtitle={translated.github.subHeader}
                     previewImage={githubPreviewImages}
                     link={portfolioItem.github.link}
                     type="github"
                     index={0}
                   />
                 )}
-                {portfolioItem.liveSite && (
+                {portfolioItem.liveSite && translated.liveSite && (
                   <LinkPreviewCard
-                    title="Live Site"
-                    subtitle={portfolioItem.liveSite.subHeader}
+                    title={translated.liveSite.label}
+                    subtitle={translated.liveSite.subHeader}
                     previewImage={liveSitePreviewImages}
                     link={portfolioItem.liveSite.link}
                     type="live"
@@ -114,18 +129,25 @@ const PortfolioDetail = () => {
             )}
 
             <div>
-              <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-4">
-                {portfolioItem.settings.dir === "rtl" ? "על הפרוייקט" : "About The Project"}
-              </h3>
+              <AnimatedText
+                as="h3"
+                style={{ color: colors.primary }}
+                className="text-lg font-semibold mb-4"
+                variant="slide"
+              >
+                {translated.aboutProject}
+              </AnimatedText>
               <div className="prose prose-gray dark:prose-invert max-w-none">
-                <p style={{ color: colors.textSecondary }} className="leading-relaxed">
-                  <ExpandTableText
-                    readMoreText={portfolioItem.settings.dir === "rtl" ? "קרא עוד" : "Read More"}
-                    maxLength={100}
-                  >
-                    {portfolioItem?.longDescription}
+                <AnimatedText
+                  as="p"
+                  style={{ color: colors.textSecondary }}
+                  className="leading-relaxed"
+                  variant="fade"
+                >
+                  <ExpandTableText readMoreText={translated.readMore} maxLength={100}>
+                    {translated.longDescription}
                   </ExpandTableText>
-                </p>
+                </AnimatedText>
               </div>
             </div>
 

@@ -1,6 +1,7 @@
 import { Filter } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { AnimatedText } from "@/components/AnimatedText";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { PROJECT_TYPES } from "../utils/constants";
@@ -29,7 +30,9 @@ function PortfolioFilter() {
                   variant={currentFilter === type.value ? "default" : "secondary"}
                   onClick={() => handleFilterChange(type.value)}
                 >
-                  {t(type.translationKey)}
+                  <AnimatedText as="span" variant="fade">
+                    {t(type.translationKey)}
+                  </AnimatedText>
                 </Button>
               ))}
             </div>

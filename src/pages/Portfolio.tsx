@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AnimatedText } from "@/components/AnimatedText";
 import { WindProvider } from "@/contexts";
 import { useTheme } from "@/hooks/useTheme";
 import PortfolioCard from "../components/PortfolioCard";
@@ -22,7 +23,7 @@ function Portfolio() {
     <div className="min-h-screen">
       <PortfolioFilter />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" dir="rtl">
         {isInitialLoad || isLoading ? (
           <PortfolioGridSkeleton />
         ) : portfolioItems.length === 0 ? (
@@ -31,11 +32,7 @@ function Portfolio() {
           <WindProvider>
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {portfolioItems.map((portfolioItem: PortfolioItem, index) => (
-                <PortfolioCard
-                  key={portfolioItem.id}
-                  portfolioItem={portfolioItem}
-                  index={index}
-                />
+                <PortfolioCard key={portfolioItem.id} portfolioItem={portfolioItem} index={index} />
               ))}
             </div>
           </WindProvider>
@@ -44,7 +41,6 @@ function Portfolio() {
     </div>
   );
 }
-
 
 const NoProjectsFound = () => {
   const { colors } = useTheme();
@@ -57,12 +53,17 @@ const NoProjectsFound = () => {
       >
         <Search style={{ color: colors.textTertiary }} className="w-12 h-12" />
       </div>
-      <h3 style={{ color: colors.primary }} className="text-xl font-semibold mb-3">
+      <AnimatedText
+        as="h3"
+        style={{ color: colors.primary }}
+        className="text-xl font-semibold mb-3"
+        variant="slide"
+      >
         No projects found
-      </h3>
-      <p style={{ color: colors.textSecondary }} className="mb-6">
+      </AnimatedText>
+      <AnimatedText as="p" style={{ color: colors.textSecondary }} className="mb-6" variant="fade">
         Try adjusting your search terms or filters to find what you're looking for.
-      </p>
+      </AnimatedText>
     </div>
   );
 };

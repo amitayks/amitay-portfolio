@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { AnimatedText } from "@/components/AnimatedText";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/hooks/useTheme";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
@@ -47,16 +48,17 @@ const Footer = () => {
           <SocialLinksComponent socialLinks={SOCIAL_LINKS} variant="outline" />
         </motion.div>
 
-        <motion.p
-          style={{ color: colors.textSecondary }}
+        <motion.div
           className="mb-4 max-w-md leading-relaxed text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          {PERSONAL_INFO.tagline}
-        </motion.p>
+          <AnimatedText as="p" style={{ color: colors.textSecondary }} variant="fade">
+            {PERSONAL_INFO.tagline}
+          </AnimatedText>
+        </motion.div>
 
         <Separator className="mb-4" style={{ backgroundColor: colors.border }} />
 
@@ -67,9 +69,9 @@ const Footer = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-sm">
+          <AnimatedText as="p" style={{ color: colors.textSecondary }} className="text-sm" variant="fade">
             &copy; {new Date().getFullYear()} {PERSONAL_INFO.name}. All rights reserved.
-          </p>
+          </AnimatedText>
         </motion.div>
       </div>
     </footer>

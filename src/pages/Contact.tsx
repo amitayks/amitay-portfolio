@@ -1,6 +1,7 @@
 import emailjs from "@emailjs/browser";
 import { AlertCircle, Clock, Mail, Phone, Send } from "lucide-react";
 import React, { useState } from "react";
+import { AnimatedText } from "@/components/AnimatedText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -155,14 +156,24 @@ const Contact = () => {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 style={{ color: colors.primary }} className="text-2xl font-bold mb-6">
+              <AnimatedText
+                as="h2"
+                style={{ color: colors.primary }}
+                className="text-2xl font-bold mb-6"
+                variant="slide"
+              >
                 Let's Start a Conversation
-              </h2>
-              <p style={{ color: colors.textSecondary }} className="text-lg leading-relaxed mb-8">
+              </AnimatedText>
+              <AnimatedText
+                as="p"
+                style={{ color: colors.textSecondary }}
+                className="text-lg leading-relaxed mb-8"
+                variant="fade"
+              >
                 Whether you're looking for custom woodworking, web development services, or just
                 want to discuss an idea, I'm here to help. Every great project starts with a
                 conversation.
-              </p>
+              </AnimatedText>
             </div>
 
             <div className="space-y-6">
@@ -174,9 +185,14 @@ const Contact = () => {
                   <Mail style={{ color: colors.accent }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
+                  <AnimatedText
+                    as="h3"
+                    style={{ color: colors.primary }}
+                    className="text-lg font-semibold mb-1"
+                    variant="fade"
+                  >
                     Email
-                  </h3>
+                  </AnimatedText>
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
                     style={{ color: colors.accent }}
@@ -195,9 +211,14 @@ const Contact = () => {
                   <Phone style={{ color: colors.success }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
+                  <AnimatedText
+                    as="h3"
+                    style={{ color: colors.primary }}
+                    className="text-lg font-semibold mb-1"
+                    variant="fade"
+                  >
                     Phone
-                  </h3>
+                  </AnimatedText>
                   <a
                     href={`tel:${PERSONAL_INFO.phone}`}
                     style={{ color: colors.success }}
@@ -216,10 +237,21 @@ const Contact = () => {
                   <Clock style={{ color: colors.warning }} className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 style={{ color: colors.primary }} className="text-lg font-semibold mb-1">
+                  <AnimatedText
+                    as="h3"
+                    style={{ color: colors.primary }}
+                    className="text-lg font-semibold mb-1"
+                    variant="fade"
+                  >
                     Response Time
-                  </h3>
-                  <p style={{ color: colors.textSecondary }}>Typically 1 to 4 hours</p>
+                  </AnimatedText>
+                  <AnimatedText
+                    as="p"
+                    style={{ color: colors.textSecondary }}
+                    variant="fade"
+                  >
+                    Typically 1 to 4 hours
+                  </AnimatedText>
                 </div>
               </div>
             </div>
@@ -233,9 +265,14 @@ const Contact = () => {
           </div>
 
           <div style={{ backgroundColor: colors.surface }} className="rounded-2xl p-8">
-            <h2 style={{ color: colors.primary }} className="text-2xl font-bold mb-6">
+            <AnimatedText
+              as="h2"
+              style={{ color: colors.primary }}
+              className="text-2xl font-bold mb-6"
+              variant="slide"
+            >
               Send a Message
-            </h2>
+            </AnimatedText>
 
             {formStatus.submitted && (
               <div
@@ -257,7 +294,9 @@ const Contact = () => {
                   ) : (
                     <AlertCircle className="h-5 w-5 mr-2" />
                   )}
-                  {formStatus.message}
+                  <AnimatedText as="span" variant="fade">
+                    {formStatus.message}
+                  </AnimatedText>
                 </p>
               </div>
             )}
@@ -270,7 +309,9 @@ const Contact = () => {
                     style={{ color: colors.textSecondary }}
                     className="block text-sm font-medium mb-2"
                   >
-                    Name *
+                    <AnimatedText as="span" variant="fade">
+                      Name *
+                    </AnimatedText>
                   </label>
                   <Input
                     id="name"
@@ -298,7 +339,9 @@ const Contact = () => {
                     style={{ color: colors.textSecondary }}
                     className="block text-sm font-medium mb-2"
                   >
-                    Email *
+                    <AnimatedText as="span" variant="fade">
+                      Email *
+                    </AnimatedText>
                   </label>
                   <Input
                     id="email"
@@ -328,7 +371,9 @@ const Contact = () => {
                     style={{ color: colors.textSecondary }}
                     className="block text-sm font-medium mb-2"
                   >
-                    Project Type
+                    <AnimatedText as="span" variant="fade">
+                      Project Type
+                    </AnimatedText>
                   </label>
                   <select
                     id="projectType"
@@ -357,7 +402,9 @@ const Contact = () => {
                     style={{ color: colors.textSecondary }}
                     className="block text-sm font-medium mb-2"
                   >
-                    Subject
+                    <AnimatedText as="span" variant="fade">
+                      Subject
+                    </AnimatedText>
                   </label>
                   <Input
                     id="subject"
@@ -381,7 +428,9 @@ const Contact = () => {
                   style={{ color: colors.textSecondary }}
                   className="block text-sm font-medium mb-2"
                 >
-                  Message *
+                  <AnimatedText as="span" variant="fade">
+                    Message *
+                  </AnimatedText>
                 </label>
                 <Textarea
                   id="message"
@@ -407,10 +456,14 @@ const Contact = () => {
               <div>
                 <Button type="submit" disabled={isSubmitting} className="w-full">
                   <Send className="h-5 w-5 mr-2" />
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  <AnimatedText as="span" variant="fade">
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </AnimatedText>
                 </Button>
                 <p style={{ color: colors.textTertiary }} className="mt-2 text-sm text-center">
-                  * Required fields
+                  <AnimatedText as="span" variant="fade">
+                    * Required fields
+                  </AnimatedText>
                 </p>
               </div>
             </form>

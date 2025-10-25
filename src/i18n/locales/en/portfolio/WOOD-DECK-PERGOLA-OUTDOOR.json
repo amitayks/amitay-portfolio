@@ -1,0 +1,57 @@
+{
+  "title": "Outdoor Wood Deck with Pergola and Seating",
+  "description": "Designer outdoor seating area featuring natural wood deck, solid wood pergola, built-in benches, and ambient lighting for the garden",
+  "longDescription": "Perfect outdoor space combining functionality with stunning design. The project includes a quality wood deck with weather-resistant parquet, solid wood pergola creating natural shade and privacy, designer benches with comfortable backrests built into the deck, and ambient lighting completing the romantic atmosphere. The space is designed for enjoying quality outdoor time, family meals, or hosting guests in a natural and inviting environment.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "גודל_דק": {
+      "label": "Deck Size",
+      "value": "11.5 x 11.5 feet (3.5 x 3.5 m)"
+    },
+    "גובה_פרגולה": {
+      "label": "Pergola Height",
+      "value": "8 feet (2.4 m)"
+    },
+    "חומר_עץ": {
+      "label": "Wood Material",
+      "value": "Pressure-treated pine"
+    },
+    "ספסלים": {
+      "label": "Benches",
+      "value": "2 built-in units"
+    },
+    "קיבולת_ישיבה": {
+      "label": "Seating Capacity",
+      "value": "6-8 people"
+    },
+    "תאורה": {
+      "label": "Lighting",
+      "value": "Ambient LED"
+    },
+    "עמידות": {
+      "label": "Durability",
+      "value": "Weather-treated"
+    },
+    "יסודות": {
+      "label": "Foundation",
+      "value": "Poured concrete"
+    },
+    "פרקט_דק": {
+      "label": "Deck Boards",
+      "value": "32mm planks"
+    },
+    "זמן_הקמה": {
+      "label": "Installation Time",
+      "value": "2-3 weeks"
+    },
+    "אחריות": {
+      "label": "Warranty",
+      "value": "3 years"
+    },
+    "תחזוקה": {
+      "label": "Maintenance",
+      "value": "Annual recommended"
+    }
+  }
+}

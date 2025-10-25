@@ -1,0 +1,41 @@
+{
+  "title": "Keisar Club - Personal Website",
+  "description": "A modern, responsive portfolio website showcasing the balance between digital craftsmanship and physical woodworking, built with cutting-edge web technologies.",
+  "longDescription": "Modern React portfolio website showcasing woodworking projects and web development skills. Features responsive design, dynamic portfolio filtering, contact forms, and dark mode support. Built with TypeScript, Supabase backend, and optimized for performance across all devices.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/keisar.club"
+  },
+  "liveSite": {
+    "label": "Live Site",
+    "subHeader": "Keisar Club"
+  },
+  "additionalInfo": {
+    "development_time": {
+      "label": "Development Time",
+      "value": "4 months"
+    },
+    "frontend": {
+      "label": "Frontend",
+      "value": "React + TypeScript"
+    },
+    "backend": {
+      "label": "Backend",
+      "value": "Supabase"
+    },
+    "styling": {
+      "label": "Styling",
+      "value": "Tailwind CSS"
+    },
+    "performance": {
+      "label": "Performance",
+      "value": "98/100 Lighthouse"
+    },
+    "deployment": {
+      "label": "Deployment",
+      "value": "Vercel"
+    }
+  }
+}

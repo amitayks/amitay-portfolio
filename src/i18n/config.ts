@@ -11,6 +11,7 @@ import heAbout from "./locales/he/about.json";
 import heApply from "./locales/he/apply.json";
 import heCommon from "./locales/he/common.json";
 import heHome from "./locales/he/home.json";
+import { enPortfolioTranslations, hePortfolioTranslations } from "./loadPortfolioTranslations";
 
 const resources = {
   en: {
@@ -18,12 +19,14 @@ const resources = {
     home: enHome,
     about: enAbout,
     apply: enApply,
+    portfolio: enPortfolioTranslations,
   },
   he: {
     common: heCommon,
     home: heHome,
     about: heAbout,
     apply: heApply,
+    portfolio: hePortfolioTranslations,
   },
 };
 

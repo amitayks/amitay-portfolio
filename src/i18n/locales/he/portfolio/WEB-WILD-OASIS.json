@@ -1,0 +1,49 @@
+{
+  "title": "The Wild Oasis - פלטפורמת הזמנות מלון",
+  "description": "אתר הזמנות מלון מודרני המאפשר לאורחים לעיין בבקתות יוקרה, לבצע הזמנות ולנהל את ההזמנות שלהם עם אימות Google.",
+  "longDescription": "פלטפורמת הזמנות מלון מקיפה בנויה עם Next.js הכוללת עיון בבקתות, ניהול הזמנות ואימות מאובטח. אורחים יכולים לצפות בבקתות זמינות עם תיאורים מפורטים ותמונות, לבחור תאריכים, להזמין לינה ולנהל את ההזמנות שלהם דרך לוח בקרה מותאם אישית. הפלטפורמה משלבת Google OAuth לאימות חלק של משתמשים ומספקת עדכוני UI אופטימיסטיים לחוויית משתמש משופרת.",
+  "aboutProject": "אודות הפרויקט",
+  "readMore": "קרא עוד",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/the-wild-oasis-website"
+  },
+  "liveSite": {
+    "label": "אתר חי",
+    "subHeader": "The Wild Oasis"
+  },
+  "additionalInfo": {
+    "development_time": {
+      "label": "זמן פיתוח",
+      "value": "6 שבועות"
+    },
+    "framework": {
+      "label": "Framework",
+      "value": "Next.js 14"
+    },
+    "backend": {
+      "label": "Backend",
+      "value": "Supabase"
+    },
+    "authentication": {
+      "label": "אימות",
+      "value": "Google OAuth"
+    },
+    "database": {
+      "label": "מסד נתונים",
+      "value": "PostgreSQL"
+    },
+    "deployment": {
+      "label": "פריסה",
+      "value": "Vercel"
+    },
+    "key_features": {
+      "label": "תכונות מרכזיות",
+      "value": "הזמנת בקתות, לוח בקרה למשתמש"
+    },
+    "responsive_design": {
+      "label": "עיצוב רספונסיבי",
+      "value": "גישת Mobile-first"
+    }
+  }
+}

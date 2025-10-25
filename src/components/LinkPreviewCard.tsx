@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { ExternalLink, Github } from "lucide-react";
+import { AnimatedText } from "@/components/AnimatedText";
 import { useTheme } from "@/hooks/useTheme";
 
 interface LinkPreviewCardProps {
@@ -116,11 +117,21 @@ const LinkPreviewCard = ({ title, subtitle, previewImage, link, type, index = 0 
         <div className="absolute inset-0 flex flex-col justify-end pb-6 px-6">
           <div className="flex items-center gap-3 mb-2">
             <Icon className="w-5 h-5 flex-shrink-0 text-white drop-shadow-lg" />
-            <h3 className="text-lg font-semibold tracking-tight text-white drop-shadow-lg">
+            <AnimatedText
+              as="h3"
+              className="text-lg font-semibold tracking-tight text-white drop-shadow-lg"
+              variant="fade"
+            >
               {title}
-            </h3>
+            </AnimatedText>
           </div>
-          <p className="text-sm font-medium truncate text-white/90 drop-shadow-lg">{subtitle}</p>
+          <AnimatedText
+            as="p"
+            className="text-sm font-medium truncate text-white/90 drop-shadow-lg"
+            variant="fade"
+          >
+            {subtitle}
+          </AnimatedText>
         </div>
       </div>
     </motion.div>

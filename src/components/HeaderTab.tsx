@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { AnimatedText } from "@/components/AnimatedText";
 import { useTheme } from "@/hooks/useTheme";
 
 function HeaderTab({
@@ -50,7 +51,9 @@ function HeaderTab({
     >
       <div className="flex items-center">
         {Icon && <Icon className="h-5 w-5 mr-3" />}
-        {input}
+        <AnimatedText as="span" variant="fade">
+          {input}
+        </AnimatedText>
       </div>
     </Link>
   );

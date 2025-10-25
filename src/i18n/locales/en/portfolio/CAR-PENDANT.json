@@ -1,0 +1,29 @@
+{
+  "title": "Car Pendant - Custom Design",
+  "description": "Personalized wooden car pendant with precise engraving and professional cutting",
+  "longDescription": "Unique car pendant created with custom design tailored exactly to your personal taste. Each pendant undergoes a precise engraving and professional cutting process, ensuring a quality and durable item that will give your car a special and personal character. The option to choose figure, shape, and size allows creation of a unique pendant that reflects your personality.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "אורך": {
+      "label": "Length",
+      "value": "6 inches (15 cm)"
+    },
+    "רוחב": {
+      "label": "Width",
+      "value": "4 inches (10 cm)"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Quality MDF"
+    },
+    "גימור": {
+      "label": "Finish",
+      "value": "Precision engraving"
+    },
+    "התאמה_אישית": {
+      "label": "Customization",
+      "value": "Available"
+    }
+  }
+}

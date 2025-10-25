@@ -1,0 +1,29 @@
+{
+  "title": "Engraved Wooden Sign",
+  "description": "Solid wood sign with custom design and professional handcraftsmanship",
+  "longDescription": "Personalized wooden sign created from premium pine wood with professional handcraftsmanship. Each sign is meticulously designed with precise engraving and careful details, intended to give a unique character to home or office. The process includes custom design and professional preparation by experienced designers.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "אורך": {
+      "label": "Length",
+      "value": "16 inches (40 cm)"
+    },
+    "רוחב": {
+      "label": "Width",
+      "value": "4 inches (10 cm)"
+    },
+    "עובי": {
+      "label": "Thickness",
+      "value": "0.8 inches (2 cm)"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Solid pine wood"
+    },
+    "עיצוב": {
+      "label": "Design",
+      "value": "Custom personalized"
+    }
+  }
+}

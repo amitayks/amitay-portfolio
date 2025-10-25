@@ -1,0 +1,57 @@
+{
+  "title": "The Wild Oasis - לוח בקרה לניהול מלון",
+  "description": "מערכת ניהול מלון פנימית לצוות לניהול הזמנות, בקתות, אורחים ותפעול המלון עם אנליטיקה ודיווח מקיפים.",
+  "longDescription": "מערכת ניהול פנימית מקיפה המיועדת לצוות המלון לניהול יעיל של כל היבטי תפעול המלון. התכונות כוללות ניהול הזמנות עם יכולות check-in/check-out, ניהול מלאי בקתות, טיפול בנתוני אורחים ולוח בקרה אנליטי בזמן אמת. המערכת מספקת לצוות כלים לניטור ביצועי המלון, ניהול הזמנות ושמירה על יעילות תפעולית דרך ממשקים אינטואיטיביים והצגת נתונים ויזואלית.",
+  "aboutProject": "אודות הפרויקט",
+  "readMore": "קרא עוד",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/the-wild-oasis"
+  },
+  "liveSite": {
+    "label": "אתר חי",
+    "subHeader": "The Wild Oasis - Admin"
+  },
+  "additionalInfo": {
+    "development_time": {
+      "label": "זמן פיתוח",
+      "value": "8 שבועות"
+    },
+    "framework": {
+      "label": "Framework",
+      "value": "React 18"
+    },
+    "backend": {
+      "label": "Backend",
+      "value": "Supabase"
+    },
+    "authentication": {
+      "label": "אימות",
+      "value": "גישה לעובדים בלבד"
+    },
+    "data_management": {
+      "label": "ניהול נתונים",
+      "value": "React Query"
+    },
+    "ui_library": {
+      "label": "ספריית UI",
+      "value": "Styled Components"
+    },
+    "charts": {
+      "label": "גרפים",
+      "value": "אינטגרציה עם Recharts"
+    },
+    "key_features": {
+      "label": "תכונות מרכזיות",
+      "value": "שליטה בהזמנות, אנליטיקה"
+    },
+    "user_management": {
+      "label": "ניהול משתמשים",
+      "value": "הרשמה לצוות בלבד"
+    },
+    "real-time_updates": {
+      "label": "עדכונים בזמן אמת",
+      "value": "סטטוס הזמנות חי"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "title": "Natural Wood Cutting Boards",
+  "description": "Premium handcrafted natural wood cutting boards",
+  "longDescription": "High-quality natural wood cutting boards professionally handcrafted to custom order. Each board is made from durable solid wood and carefully finished to ensure perfect durability and functionality. Suitable for both professional and home kitchens, these boards represent a long-term investment in quality craftsmanship.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "גדלים": {
+      "label": "Sizes",
+      "value": "Custom dimensions"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Solid natural wood"
+    },
+    "עמידות": {
+      "label": "Durability",
+      "value": "Heavy-duty use"
+    },
+    "גימור": {
+      "label": "Finish",
+      "value": "Natural and food-safe"
+    },
+    "התאמה": {
+      "label": "Customization",
+      "value": "Made to order"
+    }
+  }
+}

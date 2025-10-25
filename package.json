@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "deploy": "powershell Copy-Item -Path dist/index.html -Destination dist/404.html; gh-pages -d dist",
     "bnd": "npm run build && npm run deploy",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "translations:generate": "tsx scripts/generate-portfolio-translations.ts",
+    "translations:watch": "tsx watch scripts/generate-portfolio-translations.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -54,6 +56,7 @@
     "gh-pages": "^6.3.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.5.3",
     "vite": "^6.3.6"
   }

@@ -1,0 +1,29 @@
+{
+  "title": "Custom Steel Business Card",
+  "description": "Metal business card with precise engraving",
+  "longDescription": "Unique metal business card made from quality steel with precise and deep engraving. The product is designed for professionals seeking to leave an unforgettable impression with a luxurious and durable business card. The advanced engraving process ensures maximum precision and long-lasting durability.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "additionalInfo": {
+    "אורך": {
+      "label": "Length",
+      "value": "85 mm"
+    },
+    "רוחב": {
+      "label": "Width",
+      "value": "53 mm"
+    },
+    "חומר": {
+      "label": "Material",
+      "value": "Durable metal"
+    },
+    "חריטה": {
+      "label": "Engraving",
+      "value": "Precise and deep"
+    },
+    "עיצוב": {
+      "label": "Design",
+      "value": "Custom personalized"
+    }
+  }
+}
