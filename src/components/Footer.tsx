@@ -13,7 +13,7 @@ const Footer = () => {
       style={{
         backgroundColor: "transparent",
       }}
-      className="py-20 flex items-center justify-center"
+      className="pb-5 flex items-center justify-center"
     >
       <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
