@@ -124,6 +124,6 @@ export const PROJECT_TYPE_COLOR = {
 
 export const EMAILJS_CONFIG = {
   SERVICE_ID: "service_vtxkxkm",
-  TEMPLATE_ID: "template_1eehme9",
+  TEMPLATE_ID: "template_1eehme9", // Replace with your new template ID if you create a new one
   USER_ID: "fI7maFmjNQrrkKrV3",
 };

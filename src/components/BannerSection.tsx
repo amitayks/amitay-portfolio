@@ -57,7 +57,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               </motion.div>
             )}
 
-            <motion.h1
+            {/* <motion.h1
               style={{ color: colors.primary }}
               className="text-4xl lg:text-4xl font-bold mb-2 leading-tight"
               initial={{ opacity: 0, x: -30 }}
@@ -65,7 +65,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               {t("banner.greeting")}{" "}
-            </motion.h1>
+            </motion.h1> */}
 
             <motion.h1
               style={{ color: colors.primary }}
@@ -85,7 +85,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
             </motion.h1>
 
             <motion.p
-              style={{ color: colors.textSecondary }}
+              style={{ color: colors.text }}
               className="text-xl lg:text-2xl font-medium mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -244,12 +244,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
             </div>
 
             {/* Social Links - Mobile (horizontal below image) */}
-            <motion.div
-              className="md:hidden absolute -bottom-16 -translate-x-1/2 w-full flex justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
+            <div className="md:hidden absolute -bottom-16 -translate-x-1/7 w-full flex justify-center">
               <SocialLinksComponent
                 socialLinks={SOCIAL_LINKS}
                 variant="filled"
@@ -257,18 +252,15 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                 size="md"
                 className="flex flex-row gap-2"
               />
-            </motion.div>
+            </div>
 
             {/* Social Links - Desktop (vertical beside image) */}
-            <motion.div
-              className={`hidden md:block absolute top-1/5 -translate-y-1/2 ${
+            <div
+              className={`hidden md:block absolute -bottom-40 -translate-y-1/2 ${
                 isRTL
                   ? "md:-left-[-10rem] lg:-right-[30rem]"
                   : "md:-right-[-10rem] lg:-left-[25rem]"
               }`}
-              initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
             >
               <SocialLinksComponent
                 socialLinks={SOCIAL_LINKS}
@@ -277,7 +269,7 @@ function BannerSection({ imageKey, showAvailabilityBadge = true }: BannerSection
                 size="lg"
                 className="flex flex-col gap-4"
               />
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>

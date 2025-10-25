@@ -1,11 +1,12 @@
 import emailjs from "@emailjs/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Lightbulb, Rocket, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { RandomFontText } from "@/components/RandomFontText";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -92,61 +93,26 @@ const Apply = () => {
     }
   }
 
-  const scrollToForm = () => {
-    const formElement = document.getElementById("contact-form");
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <motion.div
             className="text-center max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Main Headline */}
-            <motion.h1
+            {/* Main Headline with Random Font Animation */}
+            <RandomFontText
+              text={`${t("hero.headline")} ${t("hero.headlineAccent")}`}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
-              style={{ color: colors.primary }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-            >
-              {t("hero.headline")}{" "}
-              <span
-                className="bg-gradient-to-r bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: `linear-gradient(to right, ${colors.accent}, ${colors.info})`,
-                }}
-              >
-                {t("hero.headlineAccent")}
-              </span>
-            </motion.h1>
+              baseColor={colors.primary}
+              accentColor={colors.accent}
+              accentStartIndex={t("hero.headline").length + 1}
+              hoverInterval={100}
+            />
 
             {/* <motion.h2
               className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8"

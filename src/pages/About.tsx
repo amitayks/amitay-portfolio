@@ -9,9 +9,9 @@ const About = () => {
     <div>
       <BannerSection imageKey={PERSONAL_INFO.profileImage} showAvailabilityBadge={false} />
 
-      <Skills aboutButton={false} />
+      {/* <Skills aboutButton={false} />
 
-      <ExperienceSection />
+      <ExperienceSection /> */}
 
       <CTASection />
     </div>
