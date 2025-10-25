@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface RandomFontTextProps {
   text: string;
@@ -11,8 +11,8 @@ interface RandomFontTextProps {
   hoverInterval?: number;
 }
 
-// Array of font families to randomly cycle through
-const FONT_FAMILIES = [
+// Array of font families to randomly cycle through (Latin/English fonts)
+const LATIN_FONT_FAMILIES = [
   // Modern Sans-Serif
   "Arial, sans-serif",
   "Helvetica, sans-serif",
@@ -78,6 +78,63 @@ const FONT_FAMILIES = [
   "American Typewriter, serif",
 ];
 
+// Hebrew fonts with emphasis on curly/decorative styles
+const HEBREW_FONT_FAMILIES = [
+  // Curly & Decorative Hebrew Fonts (MOST)
+  "Guttman Yad-Brush, fantasy",
+  "Guttman Yad, cursive",
+  "Guttman Calligraphic, cursive",
+  "Guttman Stam, fantasy",
+  "Guttman Hodes, fantasy",
+  "Guttman Mantova, fantasy",
+  "Guttman Vilna, fantasy",
+  "Guttman Aram, fantasy",
+  "Guttman Kav, fantasy",
+  "Guttman Ketubah, cursive",
+  "Guttman Yad-Light, cursive",
+  "Guttman Fliga, fantasy",
+  "Guttman Rashi, cursive",
+  "Guttman Aharoni, fantasy",
+  "Guttman Drogolin, fantasy",
+  "Guttman Frank, fantasy",
+  "Guttman Haim, fantasy",
+  "Guttman Kav-Light, fantasy",
+  "Guttman Logo, fantasy",
+  "Guttman Miryam, fantasy",
+  "Guttman Myamfix, fantasy",
+  "Guttman Rashi, fantasy",
+  "Guttman Soncino, fantasy",
+  "Guttman Soncino-Light, fantasy",
+  "Guttman Toledo, fantasy",
+  "Guttman Vilna, fantasy",
+  "Shuneet, fantasy",
+  "Shuneet Light, fantasy",
+  "Corsiva Hebrew, cursive",
+  "Ezra SIL, serif",
+  "Adobe Hebrew, serif",
+  "New Peninim MT, fantasy",
+  "Raanana, fantasy",
+
+  // Standard Hebrew Fonts (less presence)
+  "Arial Hebrew, sans-serif",
+  "David, serif",
+  "Tahoma, sans-serif",
+  "Miriam, serif",
+  "Narkisim, serif",
+  "Rod, serif",
+  "Gisha, sans-serif",
+  "Levenim MT, sans-serif",
+  "FrankRuehl, serif",
+  "Times New Roman, serif",
+  "Courier New, monospace",
+];
+
+// Helper function to detect if a character is Hebrew
+const isHebrewChar = (char: string): boolean => {
+  const code = char.charCodeAt(0);
+  return (code >= 0x0590 && code <= 0x05ff) || (code >= 0xfb1d && code <= 0xfb4f);
+};
+
 export const RandomFontText = ({
   text,
   className = "",
@@ -94,24 +151,31 @@ export const RandomFontText = ({
   const intervalsRef = useRef<(NodeJS.Timeout | null)[]>(
     characters.map(() => null)
   );
-
-  const getRandomFontIndex = useCallback(
-    () => Math.floor(Math.random() * FONT_FAMILIES.length),
-    []
+  const spanRefs = useRef<(HTMLSpanElement | null)[]>(
+    characters.map(() => null)
   );
+  const containerRef = useRef<HTMLHeadingElement>(null);
+  const activeCharsRef = useRef<Set<number>>(new Set());
 
-  const handleMouseEnter = useCallback(
-    (index: number) => {
-      // Clear any existing interval for this character
+  const getRandomFontIndex = useCallback((char: string) => {
+    const fontList = isHebrewChar(char) ? HEBREW_FONT_FAMILIES : LATIN_FONT_FAMILIES;
+    return Math.floor(Math.random() * fontList.length);
+  }, []);
+
+  const startAnimation = useCallback(
+    (index: number, char: string) => {
+      // Don't start if already animating
       if (intervalsRef.current[index]) {
-        clearInterval(intervalsRef.current[index]!);
+        return;
       }
+
+      activeCharsRef.current.add(index);
 
       // Start rapidly cycling fonts for this character
       intervalsRef.current[index] = setInterval(() => {
         setFontIndices((prev) => {
           const newIndices = [...prev];
-          newIndices[index] = getRandomFontIndex();
+          newIndices[index] = getRandomFontIndex(char);
           return newIndices;
         });
       }, hoverInterval);
@@ -119,13 +183,71 @@ export const RandomFontText = ({
     [getRandomFontIndex, hoverInterval]
   );
 
-  const handleMouseLeave = useCallback((index: number) => {
+  const stopAnimation = useCallback((index: number) => {
     // Stop the interval and keep the current font
     if (intervalsRef.current[index]) {
       clearInterval(intervalsRef.current[index]!);
       intervalsRef.current[index] = null;
+      activeCharsRef.current.delete(index);
     }
   }, []);
+
+  const handleMouseEnter = useCallback(
+    (index: number, char: string) => {
+      startAnimation(index, char);
+    },
+    [startAnimation]
+  );
+
+  const handleMouseLeave = useCallback(
+    (index: number) => {
+      stopAnimation(index);
+    },
+    [stopAnimation]
+  );
+
+  // Track mouse movement to catch fast movements
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+
+      // Check each character span to see if mouse is over it
+      spanRefs.current.forEach((span, index) => {
+        if (!span) return;
+
+        const rect = span.getBoundingClientRect();
+        const isOver =
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom;
+
+        if (isOver && !activeCharsRef.current.has(index)) {
+          const char = characters[index];
+          if (char) {
+            startAnimation(index, char);
+          }
+        } else if (!isOver && activeCharsRef.current.has(index)) {
+          stopAnimation(index);
+        }
+      });
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("mousemove", handleMouseMove);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("mousemove", handleMouseMove);
+      }
+      // Clean up all intervals
+      intervalsRef.current.forEach((interval) => {
+        if (interval) clearInterval(interval);
+      });
+    };
+  }, [startAnimation, stopAnimation, characters]);
 
   const getCharacterColor = (index: number): string | undefined => {
     if (!accentColor || accentStartIndex === undefined) {
@@ -142,6 +264,7 @@ export const RandomFontText = ({
 
   return (
     <motion.h1
+      ref={containerRef}
       className={className}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -150,13 +273,16 @@ export const RandomFontText = ({
       {characters.map((char, index) => {
         const isSpace = char === " ";
         const fontIndex = fontIndices[index] ?? 0;
-        const fontFamily = FONT_FAMILIES[fontIndex];
+        const isHebrew = isHebrewChar(char);
+        const fontList = isHebrew ? HEBREW_FONT_FAMILIES : LATIN_FONT_FAMILIES;
+        const fontFamily = fontList[fontIndex];
         const color = getCharacterColor(index);
 
         return (
           <span
             key={`${char}-${index}`}
-            onMouseEnter={() => handleMouseEnter(index)}
+            ref={(el) => (spanRefs.current[index] = el)}
+            onMouseEnter={() => handleMouseEnter(index, char)}
             onMouseLeave={() => handleMouseLeave(index)}
             style={{
               fontFamily: fontFamily,

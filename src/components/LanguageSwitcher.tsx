@@ -37,7 +37,7 @@ const LanguageSwitcher = ({ variant = "default" }: LanguageSwitcherProps) => {
           }}
         >
           <Globe className="h-5 w-5 mr-3" />
-          <span className="font-medium">{currentLang === "en" ? "עב" : "EN"}</span>
+          {/* <span className="font-medium">{currentLang === "en" ? "עב" : "EN"}</span> */}
         </Button>
       </motion.div>
     );
@@ -62,7 +62,7 @@ const LanguageSwitcher = ({ variant = "default" }: LanguageSwitcherProps) => {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           <Globe className="h-4 w-4" />
-          <span className="text-sm font-semibold">{currentLang === "en" ? "EN" : "עב"}</span>
+          {/* <span className="text-sm font-semibold">{currentLang === "en" ? "EN" : "עב"}</span> */}
         </motion.div>
       </Button>
     </motion.div>
