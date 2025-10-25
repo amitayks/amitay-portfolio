@@ -18,7 +18,7 @@ function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -270,7 +270,7 @@ function NavigationBar() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.2 }}
                 />
 
                 {/* Menu Panel */}
@@ -278,8 +278,8 @@ function NavigationBar() {
                   className="fixed left-0 right-0 shadow-2xl"
                   style={{
                     top: "64px",
-                    borderBottomLeftRadius: "20px",
-                    borderBottomRightRadius: "20px",
+                    borderBottomLeftRadius: "50px",
+                    borderBottomRightRadius: "50px",
                     backgroundColor: colors.background,
                     zIndex: 50,
                   }}
@@ -320,19 +320,19 @@ function NavigationBar() {
                         onClick={handleThemeToggle}
                         className="flex items-center px-6 py-3 rounded-lg transition-all duration-200"
                         style={{
-                          backgroundColor: colors.surface,
+                          // backgroundColor: colors.surface,
                           color: colors.textSecondary,
                         }}
                       >
-                        {colors.background === "#000000" ? (
+                        {isDark ? (
                           <>
-                            <Sun className="h-5 w-5 mr-3" />
-                            <span className="font-medium">{t("theme.light")}</span>
+                            <Sun className="h-5 w-5" />
+                            {/* <span className="font-medium">{t("theme.light")}</span> */}
                           </>
                         ) : (
                           <>
-                            <Moon className="h-5 w-5 mr-3" />
-                            <span className="font-medium">{t("theme.dark")}</span>
+                            <Moon className="h-5 w-5" />
+                            {/* <span className="font-medium">{t("theme.dark")}</span> */}
                           </>
                         )}
                       </Button>

@@ -32,11 +32,11 @@ const LanguageSwitcher = ({ variant = "default" }: LanguageSwitcherProps) => {
           variant="ghost"
           className="flex items-center px-6 py-3 rounded-lg transition-all duration-200"
           style={{
-            backgroundColor: colors.surface,
+            // backgroundColor: colors.surface,
             color: colors.textSecondary,
           }}
         >
-          <Globe className="h-5 w-5 mr-3" />
+          <Globe className="h-5 w-5" />
           {/* <span className="font-medium">{currentLang === "en" ? "עב" : "EN"}</span> */}
         </Button>
       </motion.div>

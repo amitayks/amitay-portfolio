@@ -188,7 +188,7 @@ const PortfolioCard = ({
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <Github style={{ color: colors.text }} className="w-6 h-6" />
+              <Github style={{ color: colors.text }} className="w-5 h-5" />
             </motion.a>
           )}
         </motion.div>
@@ -210,7 +210,7 @@ const PortfolioCard = ({
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <ExternalLink style={{ color: colors.text }} className="w-6 h-6" />
+              <ExternalLink style={{ color: colors.text }} className="w-5 h-5" />
             </motion.a>
           )}
         </motion.div>
