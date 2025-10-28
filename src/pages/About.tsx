@@ -1,7 +1,7 @@
 import BannerSection from "../components/BannerSection";
 import CTASection from "../components/CTASection";
-import ExperienceSection from "../components/ExperienceSection";
-import Skills from "../components/Skills";
+// import ExperienceSection from "../components/ExperienceSection";
+// import Skills from "../components/Skills";
 import { PERSONAL_INFO } from "../utils/constants";
 
 const About = () => {

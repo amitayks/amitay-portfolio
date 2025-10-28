@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTheme } from "@/hooks/useTheme";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import SocialLinksComponent from "../components/SocialLinksComponent";
 import { EMAILJS_CONFIG, PERSONAL_INFO, SOCIAL_LINKS } from "../utils/constants";
 
 const Contact = () => {
   const { colors } = useTheme();
+  const { trackFormSubmit, trackFormError } = useAnalytics();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -123,6 +125,9 @@ const Contact = () => {
         EMAILJS_CONFIG.USER_ID
       );
 
+      // Track successful form submission
+      trackFormSubmit("contact", true);
+
       setFormStatus({
         submitted: true,
         success: true,
@@ -138,6 +143,11 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("EmailJS Error:", error);
+
+      // Track failed form submission
+      trackFormSubmit("contact", false);
+      trackFormError("contact", error instanceof Error ? error.message : "Unknown error");
+
       setFormStatus({
         submitted: true,
         success: false,

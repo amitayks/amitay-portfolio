@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { AnimatedText } from "@/components/AnimatedText";
 import { useTheme } from "@/hooks/useTheme";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import AdditionalInfoTable from "../components/AdditionalInfoTable";
 import Breadcrumb from "../components/Breadcrumb";
 import ErrorComponent from "../components/ErrorComponent";
@@ -24,9 +26,18 @@ const PortfolioDetail = () => {
     error,
   } = usePortfolioItem();
   const { colors } = useTheme();
+  const { trackPortfolioView } = useAnalytics();
 
   // Get translated content with fallback to server data
-  const translated = portfolioItem ? usePortfolioTranslation(portfolioItem) : null;
+  // IMPORTANT: Always call this hook unconditionally to maintain consistent hook order
+  const translated = usePortfolioTranslation(portfolioItem);
+
+  // Track portfolio item view when data is loaded
+  useEffect(() => {
+    if (portfolioItem && translated) {
+      trackPortfolioView(portfolioItem.SKU, translated.title);
+    }
+  }, [portfolioItem, translated, trackPortfolioView]);
 
   if (isLoadingPortfolio) {
     return <PortfolioDetailSkeleton />;

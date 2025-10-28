@@ -21,13 +21,19 @@ interface TranslatedPortfolioContent {
 
 /**
  * Hook to get translated portfolio content with fallback to server data
- * @param portfolioItem - The portfolio item from the server
- * @returns Translated content with fallback to original server data
+ * @param portfolioItem - The portfolio item from the server (can be null/undefined)
+ * @returns Translated content with fallback to original server data, or null if no portfolio item
  */
 export const usePortfolioTranslation = (
-  portfolioItem: PortfolioItem
-): TranslatedPortfolioContent => {
+  portfolioItem: PortfolioItem | null | undefined
+): TranslatedPortfolioContent | null => {
   const { t } = useTranslation("portfolio");
+
+  // If no portfolio item, return null but still call the hook unconditionally
+  if (!portfolioItem) {
+    return null;
+  }
+
   const sku = portfolioItem.SKU.trim();
 
   // Helper to get translation with fallback to server data

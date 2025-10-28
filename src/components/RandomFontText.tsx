@@ -207,6 +207,20 @@ export const RandomFontText = ({
     [stopAnimation]
   );
 
+  const handleTouchStart = useCallback(
+    (index: number, char: string) => {
+      startAnimation(index, char);
+    },
+    [startAnimation]
+  );
+
+  const handleTouchEnd = useCallback(
+    (index: number) => {
+      stopAnimation(index);
+    },
+    [stopAnimation]
+  );
+
   // Track mouse movement to catch fast movements
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -277,14 +291,88 @@ export const RandomFontText = ({
       });
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!containerRef.current || e.touches.length === 0) return;
+
+      // Extended hover area padding (in pixels)
+      const HOVER_PADDING = 30;
+      // Number of neighboring characters to affect on each side
+      const NEIGHBOR_RANGE = 2;
+
+      // Get the first touch point
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      // Check each character span to see if touch is over it (with extended area)
+      spanRefs.current.forEach((span, index) => {
+        if (!span) return;
+
+        const rect = span.getBoundingClientRect();
+        // Expand the detection area with padding
+        const isOver =
+          touch.clientX >= rect.left - HOVER_PADDING &&
+          touch.clientX <= rect.right + HOVER_PADDING &&
+          touch.clientY >= rect.top - HOVER_PADDING &&
+          touch.clientY <= rect.bottom + HOVER_PADDING;
+
+        if (isOver) {
+          // Trigger animation for the touched character
+          const char = characters[index];
+          if (char && char !== " ") {
+            startAnimation(index, char);
+          }
+
+          // Also trigger animation for neighboring characters
+          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
+            if (offset === 0) continue; // Skip the main character (already handled)
+
+            const neighborIndex = index + offset;
+            if (neighborIndex >= 0 && neighborIndex < characters.length) {
+              const neighborChar = characters[neighborIndex];
+              if (neighborChar && neighborChar !== " ") {
+                startAnimation(neighborIndex, neighborChar);
+              }
+            }
+          }
+        } else if (!isOver && activeCharsRef.current.has(index)) {
+          // Only stop animation if touch is completely outside the extended area
+          // and no neighboring characters are being touched
+          let shouldStop = true;
+          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
+            const neighborIndex = index + offset;
+            if (neighborIndex >= 0 && neighborIndex < spanRefs.current.length) {
+              const neighborSpan = spanRefs.current[neighborIndex];
+              if (neighborSpan) {
+                const neighborRect = neighborSpan.getBoundingClientRect();
+                const isNearNeighbor =
+                  touch.clientX >= neighborRect.left - HOVER_PADDING &&
+                  touch.clientX <= neighborRect.right + HOVER_PADDING &&
+                  touch.clientY >= neighborRect.top - HOVER_PADDING &&
+                  touch.clientY <= neighborRect.bottom + HOVER_PADDING;
+                if (isNearNeighbor) {
+                  shouldStop = false;
+                  break;
+                }
+              }
+            }
+          }
+          if (shouldStop) {
+            stopAnimation(index);
+          }
+        }
+      });
+    };
+
     const container = containerRef.current;
     if (container) {
       container.addEventListener("mousemove", handleMouseMove);
+      container.addEventListener("touchmove", handleTouchMove);
     }
 
     return () => {
       if (container) {
         container.removeEventListener("mousemove", handleMouseMove);
+        container.removeEventListener("touchmove", handleTouchMove);
       }
       // Clean up all intervals
       intervalsRef.current.forEach((interval) => {
@@ -364,6 +452,8 @@ export const RandomFontText = ({
             ref={(el) => (spanRefs.current[index] = el)}
             onMouseEnter={() => handleMouseEnter(index, char)}
             onMouseLeave={() => handleMouseLeave(index)}
+            onTouchStart={() => handleTouchStart(index, char)}
+            onTouchEnd={() => handleTouchEnd(index)}
             style={{
               fontFamily: fontFamily,
               color: color,
