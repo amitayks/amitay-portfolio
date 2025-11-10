@@ -150,7 +150,6 @@ const Apply = () => {
                 baseColor={colors.primary}
                 accentColor={colors.accent}
                 accentStartIndex={t("hero.headline").length + 1}
-                hoverInterval={100}
               />
             </AnimatePresence>
 

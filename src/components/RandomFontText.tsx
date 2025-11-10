@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface RandomFontTextProps {
   text: string;
@@ -8,44 +8,71 @@ interface RandomFontTextProps {
   accentColor?: string;
   accentStartIndex?: number;
   accentEndIndex?: number;
-  hoverInterval?: number;
 }
 
-// Array of font families to randomly cycle through (Latin/English fonts)
+// Four fonts for ripple effect - Latin/English
+// Each ripple cycle uses ONE of these fonts for all characters
+const LATIN_RIPPLE_FONTS = [
+  "Futura, sans-serif", // Font 1: Modern Sans-Serif
+  "Garamond, serif", // Font 2: Classic Serif
+  "Impact, sans-serif", // Font 3: Bold Display
+  "Didot, serif", // Font 4: Elegant
+];
+
+// Four fonts for ripple effect - Hebrew
+// Each ripple cycle uses ONE of these fonts for all characters
+const HEBREW_RIPPLE_FONTS = [
+  "Arial Hebrew, sans-serif", // Font 1: Clean Modern
+  "Guttman Calligraphic, cursive", // Font 2: Decorative Calligraphic
+  "David, serif", // Font 3: Traditional
+  "Guttman Yad-Brush, fantasy", // Font 4: Unique Style
+];
+
+// Full array of all fonts for hover interaction (includes core fonts + extra crazy fonts)
 const LATIN_FONT_FAMILIES = [
-  // Modern Sans-Serif
+  // Core Modern Sans-Serif
+  "Futura, sans-serif",
+  "Avenir, sans-serif",
+  "Century Gothic, sans-serif",
   "Arial, sans-serif",
   "Helvetica, sans-serif",
   "Verdana, sans-serif",
   "Tahoma, sans-serif",
   "Trebuchet MS, sans-serif",
-  "Arial Black, sans-serif",
-  "Impact, sans-serif",
-  "Century Gothic, sans-serif",
-  "Futura, sans-serif",
   "Gill Sans, sans-serif",
+  "Segoe UI, sans-serif",
+  "Roboto, sans-serif",
+  "Oxygen, sans-serif",
+  "Ubuntu, sans-serif",
+  "Cantarell, sans-serif",
+  "Fira Sans, sans-serif",
+  "Droid Sans, sans-serif",
+  "Helvetica Neue, sans-serif",
+  "Optima, sans-serif",
 
-  // Classic Serif
-  "Times New Roman, serif",
-  "Georgia, serif",
+  // Core Classic Serif
   "Garamond, serif",
-  "Palatino, serif",
   "Baskerville, serif",
   "Didot, serif",
+  "Times New Roman, serif",
+  "Georgia, serif",
+  "Palatino, serif",
   "Bodoni MT, serif",
   "Cambria, serif",
   "Book Antiqua, serif",
   "Rockwell, serif",
+  "Hoefler Text, serif",
+  "Perpetua, serif",
+  "Cochin, serif",
+  "Big Caslon, serif",
+  "American Typewriter, serif",
 
-  // Monospace & Typewriter
-  "Courier New, monospace",
-  "Courier, monospace",
-  "Monaco, monospace",
-  "Consolas, monospace",
-  "Lucida Console, monospace",
-  "Andale Mono, monospace",
+  // Core Display/Bold
+  "Impact, sans-serif",
+  "Arial Black, sans-serif",
+  "Franklin Gothic Medium, sans-serif",
 
-  // Display & Decorative
+  // Extra Crazy Fonts for Hover
   "Copperplate, fantasy",
   "Papyrus, fantasy",
   "Brush Script MT, cursive",
@@ -56,43 +83,60 @@ const LATIN_FONT_FAMILIES = [
   "Marker Felt, fantasy",
   "Trattatello, fantasy",
   "Luminari, fantasy",
-
-  // Modern Web Fonts (system fonts)
-  "Segoe UI, sans-serif",
-  "Roboto, sans-serif",
-  "Oxygen, sans-serif",
-  "Ubuntu, sans-serif",
-  "Cantarell, sans-serif",
-  "Fira Sans, sans-serif",
-  "Droid Sans, sans-serif",
-  "Helvetica Neue, sans-serif",
-  "Franklin Gothic Medium, sans-serif",
-
-  // Elegant & Stylish
-  "Optima, sans-serif",
-  "Avenir, sans-serif",
-  "Hoefler Text, serif",
-  "Perpetua, serif",
-  "Cochin, serif",
-  "Big Caslon, serif",
-  "American Typewriter, serif",
+  "Courier New, monospace",
+  "Courier, monospace",
+  "Monaco, monospace",
+  "Consolas, monospace",
+  "Lucida Console, monospace",
+  "Andale Mono, monospace",
+  // Additional crazy decorative fonts
+  "Zapfino, cursive",
+  "Snell Roundhand, cursive",
+  "Party LET, fantasy",
+  "Stencil, fantasy",
+  "Jazz LET, fantasy",
+  "Herculanum, fantasy",
+  "Phosphate, fantasy",
+  "Charcoal, fantasy",
+  "Impact, fantasy",
+  "Wide Latin, fantasy",
+  "Curlz MT, fantasy",
+  "Freestyle Script, cursive",
+  "French Script MT, cursive",
 ];
 
-// Hebrew fonts with emphasis on curly/decorative styles
+// Full array of all Hebrew fonts for hover interaction
 const HEBREW_FONT_FAMILIES = [
-  // Curly & Decorative Hebrew Fonts (MOST)
-  "Guttman Yad-Brush, fantasy",
-  "Guttman Yad, cursive",
+  // Core Clean Modern
+  "Arial Hebrew, sans-serif",
+  "Gisha, sans-serif",
+  "Segoe UI, sans-serif",
+  "Tahoma, sans-serif",
+  "Levenim MT, sans-serif",
+
+  // Core Decorative/Calligraphic
   "Guttman Calligraphic, cursive",
+  "Guttman Yad-Brush, fantasy",
+  "Guttman Mantova, fantasy",
+  "Guttman Yad, cursive",
   "Guttman Stam, fantasy",
   "Guttman Hodes, fantasy",
-  "Guttman Mantova, fantasy",
   "Guttman Vilna, fantasy",
   "Guttman Aram, fantasy",
   "Guttman Kav, fantasy",
   "Guttman Ketubah, cursive",
   "Guttman Yad-Light, cursive",
   "Guttman Fliga, fantasy",
+  "Corsiva Hebrew, cursive",
+
+  // Core Traditional
+  "David, serif",
+  "Miriam, serif",
+  "Narkisim, serif",
+  "Rod, serif",
+  "FrankRuehl, serif",
+
+  // Extra Crazy Decorative Hebrew Fonts for Hover
   "Guttman Rashi, cursive",
   "Guttman Aharoni, fantasy",
   "Guttman Drogolin, fantasy",
@@ -102,29 +146,15 @@ const HEBREW_FONT_FAMILIES = [
   "Guttman Logo, fantasy",
   "Guttman Miryam, fantasy",
   "Guttman Myamfix, fantasy",
-  "Guttman Rashi, fantasy",
   "Guttman Soncino, fantasy",
   "Guttman Soncino-Light, fantasy",
   "Guttman Toledo, fantasy",
-  "Guttman Vilna, fantasy",
   "Shuneet, fantasy",
   "Shuneet Light, fantasy",
-  "Corsiva Hebrew, cursive",
   "Ezra SIL, serif",
   "Adobe Hebrew, serif",
   "New Peninim MT, fantasy",
   "Raanana, fantasy",
-
-  // Standard Hebrew Fonts (less presence)
-  "Arial Hebrew, sans-serif",
-  "David, serif",
-  "Tahoma, sans-serif",
-  "Miriam, serif",
-  "Narkisim, serif",
-  "Rod, serif",
-  "Gisha, sans-serif",
-  "Levenim MT, sans-serif",
-  "FrankRuehl, serif",
   "Times New Roman, serif",
   "Courier New, monospace",
 ];
@@ -142,86 +172,105 @@ export const RandomFontText = ({
   accentColor,
   accentStartIndex,
   accentEndIndex,
-  hoverInterval = 50,
 }: RandomFontTextProps) => {
-  const characters = Array.from(text);
-  const [fontIndices, setFontIndices] = useState<number[]>(
-    characters.map(() => 0) // Start with first font (Arial)
+  // Memoize characters array to prevent recreation on every render
+  const characters = useMemo(() => Array.from(text), [text]);
+
+  // Initialize character fonts with useMemo to prevent recreation
+  const initialFonts = useMemo(
+    () =>
+      characters.map((char) => {
+        const isHebrew = isHebrewChar(char);
+        const rippleFonts = isHebrew ? HEBREW_RIPPLE_FONTS : LATIN_RIPPLE_FONTS;
+        const firstFont = rippleFonts[0];
+        return firstFont ?? "Arial, sans-serif";
+      }),
+    [characters]
   );
-  const intervalsRef = useRef<(NodeJS.Timeout | null)[]>(
-    characters.map(() => null)
-  );
+
+  // State for storing actual font family strings for each character
+  const [characterFonts, setCharacterFonts] = useState<string[]>(initialFonts);
+
+  // Track user-hovered characters
+  const userHoveredIndicesRef = useRef<Set<number>>(new Set());
+
+  // Refs for DOM elements
   const spanRefs = useRef<(HTMLSpanElement | null)[]>(
     characters.map(() => null)
   );
   const containerRef = useRef<HTMLHeadingElement>(null);
-  const activeCharsRef = useRef<Set<number>>(new Set());
 
-  const getRandomFontIndex = useCallback((char: string) => {
-    const fontList = isHebrewChar(char) ? HEBREW_FONT_FAMILIES : LATIN_FONT_FAMILIES;
-    return Math.floor(Math.random() * fontList.length);
+  // Ripple timing refs
+  const rippleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const displayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Store characters in ref to access in ripple effect without triggering re-runs
+  const charactersRef = useRef(characters);
+
+  // Update ref when characters change
+  useEffect(() => {
+    charactersRef.current = characters;
+  }, [characters]);
+
+  // Get random font from full font array (for hover interaction)
+  const getRandomFont = useCallback((char: string): string => {
+    const isHebrew = isHebrewChar(char);
+    const fontList = isHebrew ? HEBREW_FONT_FAMILIES : LATIN_FONT_FAMILIES;
+    const randomIndex = Math.floor(Math.random() * fontList.length);
+    const selectedFont = fontList[randomIndex];
+    return selectedFont ?? (isHebrew ? "Arial Hebrew, sans-serif" : "Arial, sans-serif");
   }, []);
 
-  const startAnimation = useCallback(
+  // Get ripple font for a character based on current cycle
+  // Returns ONE font for the entire ripple cycle
+  const getRippleFontStable = (char: string, cycleIndex: number): string => {
+    const isHebrew = isHebrewChar(char);
+    const rippleFonts = isHebrew ? HEBREW_RIPPLE_FONTS : LATIN_RIPPLE_FONTS;
+
+    // Use modulo 4 since we now have 4 fonts
+    const selectedFont = rippleFonts[cycleIndex % 4];
+
+    return selectedFont ?? (isHebrew ? "Arial Hebrew, sans-serif" : "Arial, sans-serif");
+  };
+
+  // Change character font once when hovered
+  const changeCharacterFont = useCallback(
     (index: number, char: string) => {
-      // If already animating, just mark it as active and continue
-      if (intervalsRef.current[index]) {
-        activeCharsRef.current.add(index);
-        return;
-      }
+      // Mark that user hovered this character
+      userHoveredIndicesRef.current.add(index);
 
-      activeCharsRef.current.add(index);
-
-      // Start rapidly cycling fonts for this character
-      intervalsRef.current[index] = setInterval(() => {
-        setFontIndices((prev) => {
-          const newIndices = [...prev];
-          newIndices[index] = getRandomFontIndex(char);
-          return newIndices;
-        });
-      }, hoverInterval);
+      // Change font once to a random font
+      setCharacterFonts((prev) => {
+        const newFonts = [...prev];
+        newFonts[index] = getRandomFont(char);
+        return newFonts;
+      });
     },
-    [getRandomFontIndex, hoverInterval]
+    [getRandomFont]
   );
-
-  const stopAnimation = useCallback((index: number) => {
-    // Stop the interval and keep the current font
-    if (intervalsRef.current[index]) {
-      clearInterval(intervalsRef.current[index]!);
-      intervalsRef.current[index] = null;
-      activeCharsRef.current.delete(index);
-    }
-  }, []);
 
   const handleMouseEnter = useCallback(
     (index: number, char: string) => {
-      startAnimation(index, char);
+      if (char !== " ") {
+        changeCharacterFont(index, char);
+      }
     },
-    [startAnimation]
-  );
-
-  const handleMouseLeave = useCallback(
-    (index: number) => {
-      stopAnimation(index);
-    },
-    [stopAnimation]
+    [changeCharacterFont]
   );
 
   const handleTouchStart = useCallback(
     (index: number, char: string) => {
-      startAnimation(index, char);
+      if (char !== " ") {
+        changeCharacterFont(index, char);
+      }
     },
-    [startAnimation]
+    [changeCharacterFont]
   );
 
-  const handleTouchEnd = useCallback(
-    (index: number) => {
-      stopAnimation(index);
-    },
-    [stopAnimation]
-  );
+  // Track which character was last hovered to avoid re-triggering
+  const lastHoveredRef = useRef<number>(-1);
 
-  // Track mouse movement to catch fast movements
+  // Track mouse movement to detect new hovers
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -231,12 +280,14 @@ export const RandomFontText = ({
       // Number of neighboring characters to affect on each side
       const NEIGHBOR_RANGE = 2;
 
-      // Check each character span to see if mouse is over it (with extended area)
-      spanRefs.current.forEach((span, index) => {
-        if (!span) return;
+      let currentHoveredIndex = -1;
+
+      // Find which character is currently being hovered
+      for (let index = 0; index < spanRefs.current.length; index++) {
+        const span = spanRefs.current[index];
+        if (!span) continue;
 
         const rect = span.getBoundingClientRect();
-        // Expand the detection area with padding
         const isOver =
           e.clientX >= rect.left - HOVER_PADDING &&
           e.clientX <= rect.right + HOVER_PADDING &&
@@ -244,71 +295,55 @@ export const RandomFontText = ({
           e.clientY <= rect.bottom + HOVER_PADDING;
 
         if (isOver) {
-          // Trigger animation for the hovered character
-          const char = characters[index];
-          if (char && char !== " ") {
-            startAnimation(index, char);
-          }
+          currentHoveredIndex = index;
+          break;
+        }
+      }
 
-          // Also trigger animation for neighboring characters
+      // If hovering a new character, trigger font change
+      if (currentHoveredIndex !== -1 && currentHoveredIndex !== lastHoveredRef.current) {
+        lastHoveredRef.current = currentHoveredIndex;
+
+        const char = charactersRef.current[currentHoveredIndex];
+        if (char && char !== " ") {
+          changeCharacterFont(currentHoveredIndex, char);
+
+          // Also change neighboring characters
           for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            if (offset === 0) continue; // Skip the main character (already handled)
+            if (offset === 0) continue;
 
-            const neighborIndex = index + offset;
-            if (neighborIndex >= 0 && neighborIndex < characters.length) {
-              const neighborChar = characters[neighborIndex];
+            const neighborIndex = currentHoveredIndex + offset;
+            if (neighborIndex >= 0 && neighborIndex < charactersRef.current.length) {
+              const neighborChar = charactersRef.current[neighborIndex];
               if (neighborChar && neighborChar !== " ") {
-                startAnimation(neighborIndex, neighborChar);
+                changeCharacterFont(neighborIndex, neighborChar);
               }
             }
-          }
-        } else if (!isOver && activeCharsRef.current.has(index)) {
-          // Only stop animation if mouse is completely outside the extended area
-          // and no neighboring characters are being hovered
-          let shouldStop = true;
-          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            const neighborIndex = index + offset;
-            if (neighborIndex >= 0 && neighborIndex < spanRefs.current.length) {
-              const neighborSpan = spanRefs.current[neighborIndex];
-              if (neighborSpan) {
-                const neighborRect = neighborSpan.getBoundingClientRect();
-                const isNearNeighbor =
-                  e.clientX >= neighborRect.left - HOVER_PADDING &&
-                  e.clientX <= neighborRect.right + HOVER_PADDING &&
-                  e.clientY >= neighborRect.top - HOVER_PADDING &&
-                  e.clientY <= neighborRect.bottom + HOVER_PADDING;
-                if (isNearNeighbor) {
-                  shouldStop = false;
-                  break;
-                }
-              }
-            }
-          }
-          if (shouldStop) {
-            stopAnimation(index);
           }
         }
-      });
+      } else if (currentHoveredIndex === -1) {
+        // Reset when not hovering any character
+        lastHoveredRef.current = -1;
+      }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!containerRef.current || e.touches.length === 0) return;
 
-      // Extended hover area padding (in pixels)
       const HOVER_PADDING = 30;
-      // Number of neighboring characters to affect on each side
       const NEIGHBOR_RANGE = 2;
 
-      // Get the first touch point
       const touch = e.touches[0];
       if (!touch) return;
 
-      // Check each character span to see if touch is over it (with extended area)
-      spanRefs.current.forEach((span, index) => {
-        if (!span) return;
+      let currentHoveredIndex = -1;
+
+      // Find which character is being touched
+      for (let index = 0; index < spanRefs.current.length; index++) {
+        const span = spanRefs.current[index];
+        if (!span) continue;
 
         const rect = span.getBoundingClientRect();
-        // Expand the detection area with padding
         const isOver =
           touch.clientX >= rect.left - HOVER_PADDING &&
           touch.clientX <= rect.right + HOVER_PADDING &&
@@ -316,51 +351,35 @@ export const RandomFontText = ({
           touch.clientY <= rect.bottom + HOVER_PADDING;
 
         if (isOver) {
-          // Trigger animation for the touched character
-          const char = characters[index];
-          if (char && char !== " ") {
-            startAnimation(index, char);
-          }
+          currentHoveredIndex = index;
+          break;
+        }
+      }
 
-          // Also trigger animation for neighboring characters
+      // If touching a new character, trigger font change
+      if (currentHoveredIndex !== -1 && currentHoveredIndex !== lastHoveredRef.current) {
+        lastHoveredRef.current = currentHoveredIndex;
+
+        const char = charactersRef.current[currentHoveredIndex];
+        if (char && char !== " ") {
+          changeCharacterFont(currentHoveredIndex, char);
+
+          // Also change neighboring characters
           for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            if (offset === 0) continue; // Skip the main character (already handled)
+            if (offset === 0) continue;
 
-            const neighborIndex = index + offset;
-            if (neighborIndex >= 0 && neighborIndex < characters.length) {
-              const neighborChar = characters[neighborIndex];
+            const neighborIndex = currentHoveredIndex + offset;
+            if (neighborIndex >= 0 && neighborIndex < charactersRef.current.length) {
+              const neighborChar = charactersRef.current[neighborIndex];
               if (neighborChar && neighborChar !== " ") {
-                startAnimation(neighborIndex, neighborChar);
+                changeCharacterFont(neighborIndex, neighborChar);
               }
             }
-          }
-        } else if (!isOver && activeCharsRef.current.has(index)) {
-          // Only stop animation if touch is completely outside the extended area
-          // and no neighboring characters are being touched
-          let shouldStop = true;
-          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            const neighborIndex = index + offset;
-            if (neighborIndex >= 0 && neighborIndex < spanRefs.current.length) {
-              const neighborSpan = spanRefs.current[neighborIndex];
-              if (neighborSpan) {
-                const neighborRect = neighborSpan.getBoundingClientRect();
-                const isNearNeighbor =
-                  touch.clientX >= neighborRect.left - HOVER_PADDING &&
-                  touch.clientX <= neighborRect.right + HOVER_PADDING &&
-                  touch.clientY >= neighborRect.top - HOVER_PADDING &&
-                  touch.clientY <= neighborRect.bottom + HOVER_PADDING;
-                if (isNearNeighbor) {
-                  shouldStop = false;
-                  break;
-                }
-              }
-            }
-          }
-          if (shouldStop) {
-            stopAnimation(index);
           }
         }
-      });
+      } else if (currentHoveredIndex === -1) {
+        lastHoveredRef.current = -1;
+      }
     };
 
     const container = containerRef.current;
@@ -374,47 +393,76 @@ export const RandomFontText = ({
         container.removeEventListener("mousemove", handleMouseMove);
         container.removeEventListener("touchmove", handleTouchMove);
       }
-      // Clean up all intervals
-      intervalsRef.current.forEach((interval) => {
-        if (interval) clearInterval(interval);
-      });
     };
-  }, [startAnimation, stopAnimation, characters]);
+  }, [changeCharacterFont]);
 
-  // Automatic random character font changes
+  // Ripple effect - cycles through three font sets
   useEffect(() => {
-    const autoChangeInterval = setInterval(() => {
-      // Pick a random character index (excluding spaces)
-      const nonSpaceIndices = characters
-        .map((char, index) => (char !== " " ? index : -1))
-        .filter((index) => index !== -1);
+    let currentCycle = 0;
+    let isActive = true; // Flag to prevent updates after cleanup
 
-      if (nonSpaceIndices.length === 0) return;
+    const startRipple = () => {
+      if (!isActive) return;
 
-      // Randomly decide how many characters to change (1 to 5 characters)
-      const numCharsToChange = Math.floor(Math.random() * 5) + 1;
+      // Ripple through each character at 100ms per character
+      const rippleCharacter = (charIndex: number) => {
+        if (!isActive) return;
 
-      // Shuffle the indices and pick the first N
-      const shuffled = [...nonSpaceIndices].sort(() => Math.random() - 0.5);
-      const selectedIndices = shuffled.slice(0, Math.min(numCharsToChange, nonSpaceIndices.length));
+        const currentChars = charactersRef.current;
 
-      // Change fonts for all selected characters at once
-      setFontIndices((prev) => {
-        const newIndices = [...prev];
-        selectedIndices.forEach((randomIndex) => {
-          const char = characters[randomIndex];
-          if (char) {
-            newIndices[randomIndex] = getRandomFontIndex(char);
-          }
-        });
-        return newIndices;
-      });
-    }, 500);
+        if (charIndex >= currentChars.length) {
+          // Ripple complete - wait 3 seconds (display time) then immediately start next cycle
+          displayTimeoutRef.current = setTimeout(() => {
+            if (!isActive) return;
+
+            // Move to next font cycle (use modulo 4 for 4 fonts)
+            currentCycle = (currentCycle + 1) % 4;
+            // Immediately start next ripple (no pause)
+            startRipple();
+          }, 3000); // 3 second display time
+          return;
+        }
+
+        const char = currentChars[charIndex];
+        if (char && char !== " ") {
+          // Update this character's font to the current cycle's ripple font
+          setCharacterFonts((prev) => {
+            const newFonts = [...prev];
+            newFonts[charIndex] = getRippleFontStable(char, currentCycle);
+            return newFonts;
+          });
+
+          // If this character was hovered by user, remove it from the hovered set
+          // so it returns to the ripple font
+          userHoveredIndicesRef.current.delete(charIndex);
+        }
+
+        // Move to next character after 100ms
+        rippleTimeoutRef.current = setTimeout(() => {
+          rippleCharacter(charIndex + 1);
+        }, 100);
+      };
+
+      // Start rippling from first character
+      rippleCharacter(0);
+    };
+
+    // Start initial ripple on mount
+    startRipple();
 
     return () => {
-      clearInterval(autoChangeInterval);
+      // Set flag to prevent further updates
+      isActive = false;
+
+      // Cleanup timeouts
+      if (rippleTimeoutRef.current) {
+        clearTimeout(rippleTimeoutRef.current);
+      }
+      if (displayTimeoutRef.current) {
+        clearTimeout(displayTimeoutRef.current);
+      }
     };
-  }, [characters, getRandomFontIndex]);
+  }, []); // Empty dependencies - only run once on mount
 
   const getCharacterColor = (index: number): string | undefined => {
     if (!accentColor || accentStartIndex === undefined) {
@@ -440,10 +488,7 @@ export const RandomFontText = ({
     >
       {characters.map((char, index) => {
         const isSpace = char === " ";
-        const fontIndex = fontIndices[index] ?? 0;
-        const isHebrew = isHebrewChar(char);
-        const fontList = isHebrew ? HEBREW_FONT_FAMILIES : LATIN_FONT_FAMILIES;
-        const fontFamily = fontList[fontIndex];
+        const fontFamily = characterFonts[index];
         const color = getCharacterColor(index);
 
         return (
@@ -451,9 +496,7 @@ export const RandomFontText = ({
             key={`${char}-${index}`}
             ref={(el) => (spanRefs.current[index] = el)}
             onMouseEnter={() => handleMouseEnter(index, char)}
-            onMouseLeave={() => handleMouseLeave(index)}
             onTouchStart={() => handleTouchStart(index, char)}
-            onTouchEnd={() => handleTouchEnd(index)}
             style={{
               fontFamily: fontFamily,
               color: color,
