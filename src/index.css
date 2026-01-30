@@ -2,6 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Keisar Club Fonts */
+@font-face {
+  font-family: 'Hebrew1';
+  src: url('/fonts/hebrew_1.woff2') format('woff2'),
+       url('/fonts/hebrew_1.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hebrew2';
+  src: url('/fonts/hebrew_2.woff2') format('woff2'),
+       url('/fonts/hebrew_2.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hebrew3';
+  src: url('/fonts/hebrew_3.woff2') format('woff2'),
+       url('/fonts/hebrew_3.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'English1';
+  src: url('/fonts/english_1.woff2') format('woff2'),
+       url('/fonts/english_1.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'English2';
+  src: url('/fonts/english_2.woff2') format('woff2'),
+       url('/fonts/english_2.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'English3';
+  src: url('/fonts/english_3.woff2') format('woff2'),
+       url('/fonts/english_3.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Emojis';
+  src: url('/fonts/emojis.woff2') format('woff2'),
+       url('/fonts/emojis.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Add this to your global CSS file */
 .hide-scrollbar {
   -ms-overflow-style: none; /* Internet Explorer and Edge */

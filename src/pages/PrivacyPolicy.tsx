@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { privacyPolicy } from "../constants/VISARA_PRIVACY_POLICY";
 
-function VIsaraPrivacyPolicy() {
+function PrivacyPolicy() {
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -38,4 +38,4 @@ function VIsaraPrivacyPolicy() {
   );
 }
 
-export default VIsaraPrivacyPolicy;
+export default PrivacyPolicy;

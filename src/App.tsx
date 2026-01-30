@@ -14,7 +14,7 @@ import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Portfolio from "./pages/Portfolio";
 import PortfolioDetail from "./pages/PortfolioDetail";
-import VisaraPrivacyPolicy from "./pages/VIsaraPrivacyPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // import VisaraPage from "./pages/Visara";
 
@@ -51,7 +51,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             {/* <Route path="/visara" element={<VisaraPage />} /> */}
-            <Route path="/visara-privacy-policy" element={<VisaraPrivacyPolicy />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/apply" element={<Apply />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />

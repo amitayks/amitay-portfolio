@@ -1,6 +1,6 @@
 import emailjs from "@emailjs/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -142,16 +142,13 @@ const Apply = () => {
             transition={{ duration: 0.8 }}
           >
             {/* Main Headline with Random Font Animation */}
-            <AnimatePresence mode="wait">
-              <RandomFontText
-                key={i18n.language}
-                text={`${t("hero.headline")} ${t("hero.headlineAccent")}`}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight my-12"
-                baseColor={colors.primary}
-                accentColor={colors.accent}
-                accentStartIndex={t("hero.headline").length + 1}
-              />
-            </AnimatePresence>
+            <RandomFontText
+              text={`${t("hero.headline")} ${t("hero.headlineAccent")}`}
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight my-12"
+              baseColor={colors.primary}
+              accentColor={colors.accent}
+              accentStartIndex={t("hero.headline").length + 1}
+            />
 
             {/* <motion.h2
               className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8"

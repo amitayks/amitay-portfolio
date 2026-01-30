@@ -10,153 +10,34 @@ interface RandomFontTextProps {
   accentEndIndex?: number;
 }
 
-// Four fonts for ripple effect - Latin/English
+// Custom Keisar Club fonts for ripple effect
 // Each ripple cycle uses ONE of these fonts for all characters
 const LATIN_RIPPLE_FONTS = [
-  "Futura, sans-serif", // Font 1: Modern Sans-Serif
-  "Garamond, serif", // Font 2: Classic Serif
-  "Impact, sans-serif", // Font 3: Bold Display
-  "Didot, serif", // Font 4: Elegant
+  "English1, sans-serif",
+  "English2, sans-serif",
+  "English3, sans-serif",
 ];
 
-// Four fonts for ripple effect - Hebrew
-// Each ripple cycle uses ONE of these fonts for all characters
 const HEBREW_RIPPLE_FONTS = [
-  "Arial Hebrew, sans-serif", // Font 1: Clean Modern
-  "Guttman Calligraphic, cursive", // Font 2: Decorative Calligraphic
-  "David, serif", // Font 3: Traditional
-  "Guttman Yad-Brush, fantasy", // Font 4: Unique Style
+  "Hebrew1, sans-serif",
+  "Hebrew2, sans-serif",
+  "Hebrew3, sans-serif",
 ];
 
-// Full array of all fonts for hover interaction (includes core fonts + extra crazy fonts)
+// Emoji font for language transition
+const EMOJI_TRANSITION_FONT = "Emojis, sans-serif";
+
+// All Keisar Club fonts for hover interaction (use only custom fonts)
 const LATIN_FONT_FAMILIES = [
-  // Core Modern Sans-Serif
-  "Futura, sans-serif",
-  "Avenir, sans-serif",
-  "Century Gothic, sans-serif",
-  "Arial, sans-serif",
-  "Helvetica, sans-serif",
-  "Verdana, sans-serif",
-  "Tahoma, sans-serif",
-  "Trebuchet MS, sans-serif",
-  "Gill Sans, sans-serif",
-  "Segoe UI, sans-serif",
-  "Roboto, sans-serif",
-  "Oxygen, sans-serif",
-  "Ubuntu, sans-serif",
-  "Cantarell, sans-serif",
-  "Fira Sans, sans-serif",
-  "Droid Sans, sans-serif",
-  "Helvetica Neue, sans-serif",
-  "Optima, sans-serif",
-
-  // Core Classic Serif
-  "Garamond, serif",
-  "Baskerville, serif",
-  "Didot, serif",
-  "Times New Roman, serif",
-  "Georgia, serif",
-  "Palatino, serif",
-  "Bodoni MT, serif",
-  "Cambria, serif",
-  "Book Antiqua, serif",
-  "Rockwell, serif",
-  "Hoefler Text, serif",
-  "Perpetua, serif",
-  "Cochin, serif",
-  "Big Caslon, serif",
-  "American Typewriter, serif",
-
-  // Core Display/Bold
-  "Impact, sans-serif",
-  "Arial Black, sans-serif",
-  "Franklin Gothic Medium, sans-serif",
-
-  // Extra Crazy Fonts for Hover
-  "Copperplate, fantasy",
-  "Papyrus, fantasy",
-  "Brush Script MT, cursive",
-  "Lucida Handwriting, cursive",
-  "Comic Sans MS, cursive",
-  "Bradley Hand, cursive",
-  "Chalkduster, fantasy",
-  "Marker Felt, fantasy",
-  "Trattatello, fantasy",
-  "Luminari, fantasy",
-  "Courier New, monospace",
-  "Courier, monospace",
-  "Monaco, monospace",
-  "Consolas, monospace",
-  "Lucida Console, monospace",
-  "Andale Mono, monospace",
-  // Additional crazy decorative fonts
-  "Zapfino, cursive",
-  "Snell Roundhand, cursive",
-  "Party LET, fantasy",
-  "Stencil, fantasy",
-  "Jazz LET, fantasy",
-  "Herculanum, fantasy",
-  "Phosphate, fantasy",
-  "Charcoal, fantasy",
-  "Impact, fantasy",
-  "Wide Latin, fantasy",
-  "Curlz MT, fantasy",
-  "Freestyle Script, cursive",
-  "French Script MT, cursive",
+  "English1, sans-serif",
+  "English2, sans-serif",
+  "English3, sans-serif",
 ];
 
-// Full array of all Hebrew fonts for hover interaction
 const HEBREW_FONT_FAMILIES = [
-  // Core Clean Modern
-  "Arial Hebrew, sans-serif",
-  "Gisha, sans-serif",
-  "Segoe UI, sans-serif",
-  "Tahoma, sans-serif",
-  "Levenim MT, sans-serif",
-
-  // Core Decorative/Calligraphic
-  "Guttman Calligraphic, cursive",
-  "Guttman Yad-Brush, fantasy",
-  "Guttman Mantova, fantasy",
-  "Guttman Yad, cursive",
-  "Guttman Stam, fantasy",
-  "Guttman Hodes, fantasy",
-  "Guttman Vilna, fantasy",
-  "Guttman Aram, fantasy",
-  "Guttman Kav, fantasy",
-  "Guttman Ketubah, cursive",
-  "Guttman Yad-Light, cursive",
-  "Guttman Fliga, fantasy",
-  "Corsiva Hebrew, cursive",
-
-  // Core Traditional
-  "David, serif",
-  "Miriam, serif",
-  "Narkisim, serif",
-  "Rod, serif",
-  "FrankRuehl, serif",
-
-  // Extra Crazy Decorative Hebrew Fonts for Hover
-  "Guttman Rashi, cursive",
-  "Guttman Aharoni, fantasy",
-  "Guttman Drogolin, fantasy",
-  "Guttman Frank, fantasy",
-  "Guttman Haim, fantasy",
-  "Guttman Kav-Light, fantasy",
-  "Guttman Logo, fantasy",
-  "Guttman Miryam, fantasy",
-  "Guttman Myamfix, fantasy",
-  "Guttman Soncino, fantasy",
-  "Guttman Soncino-Light, fantasy",
-  "Guttman Toledo, fantasy",
-  "Shuneet, fantasy",
-  "Shuneet Light, fantasy",
-  "Ezra SIL, serif",
-  "Adobe Hebrew, serif",
-  "New Peninim MT, fantasy",
-  "Raanana, fantasy",
-  "Times New Roman, serif",
-  "Courier New, monospace",
+  "Hebrew1, sans-serif",
+  "Hebrew2, sans-serif",
+  "Hebrew3, sans-serif",
 ];
 
 // Helper function to detect if a character is Hebrew
@@ -223,23 +104,39 @@ export const RandomFontText = ({
 
   // Get ripple font for a character based on current cycle
   // Returns ONE font for the entire ripple cycle
-  const getRippleFontStable = (char: string, cycleIndex: number): string => {
+  const getRippleFontStable = (char: string, cycleIndex: number, useEmoji: boolean = false): string => {
+    // If emoji transition, return emoji font for all characters
+    if (useEmoji) {
+      return EMOJI_TRANSITION_FONT;
+    }
+
     const isHebrew = isHebrewChar(char);
     const rippleFonts = isHebrew ? HEBREW_RIPPLE_FONTS : LATIN_RIPPLE_FONTS;
 
-    // Use modulo 4 since we now have 4 fonts
-    const selectedFont = rippleFonts[cycleIndex % 4];
+    // Use modulo 3 since we have 3 fonts per language
+    const selectedFont = rippleFonts[cycleIndex % 3];
 
-    return selectedFont ?? (isHebrew ? "Arial Hebrew, sans-serif" : "Arial, sans-serif");
+    return selectedFont ?? "English1, sans-serif";
   };
 
-  // Change character font once when hovered
+  // Change character font with debounce (allow change only after delay)
   const changeCharacterFont = useCallback(
     (index: number, char: string) => {
+      const now = Date.now();
+      const lastChangeTime = lastChangeTimeRef.current.get(index) || 0;
+
+      // Check if enough time has passed since last change (debounce)
+      if (now - lastChangeTime < DEBOUNCE_DELAY) {
+        return; // Skip change if within debounce period
+      }
+
+      // Update the last change time for this character
+      lastChangeTimeRef.current.set(index, now);
+
       // Mark that user hovered this character
       userHoveredIndicesRef.current.add(index);
 
-      // Change font once to a random font
+      // Change font to a random font
       setCharacterFonts((prev) => {
         const newFonts = [...prev];
         newFonts[index] = getRandomFont(char);
@@ -270,6 +167,10 @@ export const RandomFontText = ({
   // Track which character was last hovered to avoid re-triggering
   const lastHoveredRef = useRef<number>(-1);
 
+  // Track last change time for each character (for debouncing)
+  const lastChangeTimeRef = useRef<Map<number, number>>(new Map());
+  const DEBOUNCE_DELAY = 500; // milliseconds between allowed changes
+
   // Track mouse movement to detect new hovers
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -277,8 +178,6 @@ export const RandomFontText = ({
 
       // Extended hover area padding (in pixels)
       const HOVER_PADDING = 30;
-      // Number of neighboring characters to affect on each side
-      const NEIGHBOR_RANGE = 2;
 
       let currentHoveredIndex = -1;
 
@@ -300,26 +199,13 @@ export const RandomFontText = ({
         }
       }
 
-      // If hovering a new character, trigger font change
+      // If hovering a new character, trigger font change (debounced)
       if (currentHoveredIndex !== -1 && currentHoveredIndex !== lastHoveredRef.current) {
         lastHoveredRef.current = currentHoveredIndex;
 
         const char = charactersRef.current[currentHoveredIndex];
         if (char && char !== " ") {
           changeCharacterFont(currentHoveredIndex, char);
-
-          // Also change neighboring characters
-          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            if (offset === 0) continue;
-
-            const neighborIndex = currentHoveredIndex + offset;
-            if (neighborIndex >= 0 && neighborIndex < charactersRef.current.length) {
-              const neighborChar = charactersRef.current[neighborIndex];
-              if (neighborChar && neighborChar !== " ") {
-                changeCharacterFont(neighborIndex, neighborChar);
-              }
-            }
-          }
         }
       } else if (currentHoveredIndex === -1) {
         // Reset when not hovering any character
@@ -331,7 +217,6 @@ export const RandomFontText = ({
       if (!containerRef.current || e.touches.length === 0) return;
 
       const HOVER_PADDING = 30;
-      const NEIGHBOR_RANGE = 2;
 
       const touch = e.touches[0];
       if (!touch) return;
@@ -356,26 +241,13 @@ export const RandomFontText = ({
         }
       }
 
-      // If touching a new character, trigger font change
+      // If touching a new character, trigger font change (debounced)
       if (currentHoveredIndex !== -1 && currentHoveredIndex !== lastHoveredRef.current) {
         lastHoveredRef.current = currentHoveredIndex;
 
         const char = charactersRef.current[currentHoveredIndex];
         if (char && char !== " ") {
           changeCharacterFont(currentHoveredIndex, char);
-
-          // Also change neighboring characters
-          for (let offset = -NEIGHBOR_RANGE; offset <= NEIGHBOR_RANGE; offset++) {
-            if (offset === 0) continue;
-
-            const neighborIndex = currentHoveredIndex + offset;
-            if (neighborIndex >= 0 && neighborIndex < charactersRef.current.length) {
-              const neighborChar = charactersRef.current[neighborIndex];
-              if (neighborChar && neighborChar !== " ") {
-                changeCharacterFont(neighborIndex, neighborChar);
-              }
-            }
-          }
         }
       } else if (currentHoveredIndex === -1) {
         lastHoveredRef.current = -1;
@@ -396,12 +268,26 @@ export const RandomFontText = ({
     };
   }, [changeCharacterFont]);
 
+  // Track text changes to detect language switches
+  const previousTextRef = useRef(text);
+  const [triggerEmojiRipple, setTriggerEmojiRipple] = useState(false);
+
+  // Detect language change
+  useEffect(() => {
+    if (previousTextRef.current !== text) {
+      // Text changed - trigger emoji ripple
+      setTriggerEmojiRipple(true);
+      previousTextRef.current = text;
+    }
+  }, [text]);
+
   // Ripple effect - cycles through three font sets
   useEffect(() => {
     let currentCycle = 0;
     let isActive = true; // Flag to prevent updates after cleanup
+    let isEmojiTransition = triggerEmojiRipple;
 
-    const startRipple = () => {
+    const startRipple = (useEmoji: boolean = false) => {
       if (!isActive) return;
 
       // Ripple through each character at 100ms per character
@@ -411,15 +297,24 @@ export const RandomFontText = ({
         const currentChars = charactersRef.current;
 
         if (charIndex >= currentChars.length) {
-          // Ripple complete - wait 3 seconds (display time) then immediately start next cycle
-          displayTimeoutRef.current = setTimeout(() => {
-            if (!isActive) return;
+          // Ripple complete
+          if (useEmoji) {
+            // Emoji ripple done - immediately start normal font cycle (no wait)
+            setTriggerEmojiRipple(false);
+            isEmojiTransition = false;
+            currentCycle = 0; // Start from first font
+            startRipple(false);
+          } else {
+            // Normal ripple - wait 1 second before next cycle
+            displayTimeoutRef.current = setTimeout(() => {
+              if (!isActive) return;
 
-            // Move to next font cycle (use modulo 4 for 4 fonts)
-            currentCycle = (currentCycle + 1) % 4;
-            // Immediately start next ripple (no pause)
-            startRipple();
-          }, 3000); // 3 second display time
+              // Move to next font cycle (use modulo 3 for 3 fonts)
+              currentCycle = (currentCycle + 1) % 3;
+              // Start next ripple
+              startRipple(false);
+            }, 1000); // 1 second idle time
+          }
           return;
         }
 
@@ -428,7 +323,7 @@ export const RandomFontText = ({
           // Update this character's font to the current cycle's ripple font
           setCharacterFonts((prev) => {
             const newFonts = [...prev];
-            newFonts[charIndex] = getRippleFontStable(char, currentCycle);
+            newFonts[charIndex] = getRippleFontStable(char, currentCycle, useEmoji);
             return newFonts;
           });
 
@@ -447,8 +342,13 @@ export const RandomFontText = ({
       rippleCharacter(0);
     };
 
-    // Start initial ripple on mount
-    startRipple();
+    // If emoji transition is triggered, start emoji ripple immediately
+    if (isEmojiTransition) {
+      startRipple(true);
+    } else {
+      // Start initial ripple on mount
+      startRipple(false);
+    }
 
     return () => {
       // Set flag to prevent further updates
@@ -462,7 +362,7 @@ export const RandomFontText = ({
         clearTimeout(displayTimeoutRef.current);
       }
     };
-  }, []); // Empty dependencies - only run once on mount
+  }, [triggerEmojiRipple]); // Re-run when emoji transition is triggered
 
   const getCharacterColor = (index: number): string | undefined => {
     if (!accentColor || accentStartIndex === undefined) {
