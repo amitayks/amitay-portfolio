@@ -11,7 +11,9 @@
     "bnd": "npm run build && npm run deploy",
     "typecheck": "tsc --noEmit",
     "translations:generate": "tsx scripts/generate-portfolio-translations.ts",
-    "translations:watch": "tsx watch scripts/generate-portfolio-translations.ts"
+    "translations:watch": "tsx watch scripts/generate-portfolio-translations.ts",
+    "portfolio:upload": "node scripts/upload-portfolio-projects.js",
+    "portfolio:upload:dry": "node scripts/upload-portfolio-projects.js --dry-run"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

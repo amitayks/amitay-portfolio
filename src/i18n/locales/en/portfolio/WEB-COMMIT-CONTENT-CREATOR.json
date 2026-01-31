@@ -1,0 +1,41 @@
+{
+  "title": "Commit Content Tracker - AI Social Media Automation",
+  "description": "AI-powered system that transforms GitHub commits and PRs into engaging X (Twitter) threads, managed through a Telegram bot interface.",
+  "longDescription": "An intelligent automation system that bridges development activity with social media content distribution. The tool monitors GitHub repositories for commits and merged PRs, uses Grok AI to generate contextual and engaging content with auto-generated images, and allows review and approval through a Telegram bot before publishing to X (Twitter). Features per-repository customization, draft approval workflow, and enterprise-grade security measures.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/commit-content-creatore"
+  },
+  "liveSite": {
+    "label": "Live Site",
+    "subHeader": "N/A"
+  },
+  "additionalInfo": {
+    "runtime": {
+      "label": "Runtime",
+      "value": "Cloudflare Workers"
+    },
+    "database": {
+      "label": "Database",
+      "value": "Cloudflare D1 (SQLite)"
+    },
+    "ai_model": {
+      "label": "AI Model",
+      "value": "Grok API"
+    },
+    "integrations": {
+      "label": "Integrations",
+      "value": "GitHub, X, Telegram"
+    },
+    "language": {
+      "label": "Language",
+      "value": "TypeScript"
+    },
+    "key_features": {
+      "label": "Key Features",
+      "value": "Draft workflow, Auto-images"
+    }
+  }
+}

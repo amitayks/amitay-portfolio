@@ -1,0 +1,41 @@
+{
+  "title": "Addit - AI Call Recording & Transcription App",
+  "description": "Privacy-first mobile app that automatically records, transcribes, and extracts actionable insights from phone calls and voice recordings - all processed locally on device.",
+  "longDescription": "A privacy-first React Native mobile app that captures and organizes your conversations intelligently. Features automatic call recording in background, AI-powered transcription in 90+ languages with speaker diarization, and smart extraction of calendar events, tasks, reminders, and follow-ups. Everything stays on your device with 100% local storage - you provide your own API keys for AI services. Available on both iOS App Store and Google Play.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "Private Repository"
+  },
+  "liveSite": {
+    "label": "App Store",
+    "subHeader": "addit.dev"
+  },
+  "additionalInfo": {
+    "framework": {
+      "label": "Framework",
+      "value": "React Native 0.81"
+    },
+    "language": {
+      "label": "Language",
+      "value": "TypeScript"
+    },
+    "ai_services": {
+      "label": "AI Services",
+      "value": "Deepgram, Gladia, OpenAI"
+    },
+    "storage": {
+      "label": "Storage",
+      "value": "MMKV + SQLite (Local)"
+    },
+    "platforms": {
+      "label": "Platforms",
+      "value": "iOS + Android"
+    },
+    "key_features": {
+      "label": "Key Features",
+      "value": "Auto-record, Transcribe, Extract"
+    }
+  }
+}

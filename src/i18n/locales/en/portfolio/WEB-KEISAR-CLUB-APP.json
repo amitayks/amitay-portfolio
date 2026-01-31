@@ -1,0 +1,41 @@
+{
+  "title": "Keisar Club App - Mobile Portfolio",
+  "description": "React Native Expo portfolio application showcasing creative projects with iOS-style UI, smooth animations, and Supabase backend integration.",
+  "longDescription": "A React Native Expo portfolio mobile application showcasing creative projects across web development, woodworking, and design. Features an interactive gallery system with grid-based portfolio display and iOS-style wheel picker for filtering, horizontal scrolling image carousels with lazy loading, built-in contact form with EmailJS integration, and haptic feedback for enhanced interactions. Built with TypeScript, Supabase backend, React Query for data management, and React Native Reanimated for smooth animations.",
+  "aboutProject": "About The Project",
+  "readMore": "Read More",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/keisar-club-app"
+  },
+  "liveSite": {
+    "label": "Live Site",
+    "subHeader": "N/A"
+  },
+  "additionalInfo": {
+    "framework": {
+      "label": "Framework",
+      "value": "React Native + Expo"
+    },
+    "language": {
+      "label": "Language",
+      "value": "TypeScript"
+    },
+    "backend": {
+      "label": "Backend",
+      "value": "Supabase"
+    },
+    "data": {
+      "label": "Data Management",
+      "value": "React Query"
+    },
+    "animations": {
+      "label": "Animations",
+      "value": "React Native Reanimated"
+    },
+    "key_features": {
+      "label": "Key Features",
+      "value": "iOS UI, Haptic, Gallery"
+    }
+  }
+}

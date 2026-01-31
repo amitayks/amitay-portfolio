@@ -13,7 +13,9 @@
       "Skill(web-design-guidelines)",
       "Bash(openspec new:*)",
       "Bash(openspec instructions proposal:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run portfolio:upload:dry:*)",
+      "Bash(npm run portfolio:upload:*)"
     ],
     "deny": [],
     "ask": []

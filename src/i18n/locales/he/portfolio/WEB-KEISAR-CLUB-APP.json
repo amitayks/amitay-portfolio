@@ -1,0 +1,41 @@
+{
+  "title": "Keisar Club App - תיק עבודות לנייד",
+  "description": "אפליקציית תיק עבודות React Native Expo שמציגה פרויקטים יצירתיים עם ממשק בסגנון iOS, אנימציות חלקות ואינטגרציה עם Supabase.",
+  "longDescription": "אפליקציית תיק עבודות לנייד ב-React Native Expo שמציגה פרויקטים יצירתיים בפיתוח אתרים, עבודות עץ ועיצוב. כוללת מערכת גלריה אינטראקטיבית עם תצוגת תיק עבודות מבוססת רשת ובורר גלגל בסגנון iOS לסינון, קרוסלות תמונות גלילה אופקית עם טעינה עצלה, טופס יצירת קשר מובנה עם אינטגרציית EmailJS ומשוב הפטי לאינטראקציות משופרות. בנוי עם TypeScript, backend של Supabase, React Query לניהול נתונים ו-React Native Reanimated לאנימציות חלקות.",
+  "aboutProject": "אודות הפרויקט",
+  "readMore": "קרא עוד",
+  "github": {
+    "label": "GitHub",
+    "subHeader": "amitayks/keisar-club-app"
+  },
+  "liveSite": {
+    "label": "אתר חי",
+    "subHeader": "לא זמין"
+  },
+  "additionalInfo": {
+    "framework": {
+      "label": "Framework",
+      "value": "React Native + Expo"
+    },
+    "language": {
+      "label": "שפה",
+      "value": "TypeScript"
+    },
+    "backend": {
+      "label": "Backend",
+      "value": "Supabase"
+    },
+    "data": {
+      "label": "ניהול נתונים",
+      "value": "React Query"
+    },
+    "animations": {
+      "label": "אנימציות",
+      "value": "React Native Reanimated"
+    },
+    "key_features": {
+      "label": "תכונות מרכזיות",
+      "value": "ממשק iOS, הפטי, גלריה"
+    }
+  }
+}
