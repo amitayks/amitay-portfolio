@@ -8,7 +8,12 @@
       "Bash(openspec instructions design:*)",
       "Bash(openspec instructions specs:*)",
       "Bash(openspec instructions apply:*)",
-      "Bash(npm run check:*)"
+      "Bash(npm run check:*)",
+      "Skill(react-best-practices)",
+      "Skill(web-design-guidelines)",
+      "Bash(openspec new:*)",
+      "Bash(openspec instructions proposal:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
