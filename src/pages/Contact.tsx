@@ -326,6 +326,7 @@ const Contact = () => {
                   <Input
                     id="name"
                     name="name"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -356,6 +357,9 @@ const Contact = () => {
                   <Input
                     id="email"
                     name="email"
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
                     value={formData.email}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -446,6 +450,7 @@ const Contact = () => {
                   id="message"
                   name="message"
                   rows={6}
+                  autoComplete="off"
                   value={formData.message}
                   onChange={handleChange}
                   disabled={isSubmitting}

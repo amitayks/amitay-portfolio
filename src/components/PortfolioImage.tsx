@@ -43,6 +43,8 @@ function PortfolioImage({
           <img
             src={selectedImage}
             alt={title}
+            width={800}
+            height={800}
             className="w-full h-full object-cover absolute inset-0 z-10"
             onLoad={(e) => {
               const target = e.target as HTMLElement;
@@ -76,22 +78,34 @@ function PortfolioImage({
               }
 
               return (
-                <div
+                <button
+                  type="button"
                   key={imageItem.url}
                   style={{
                     outlineColor: selectedImage === imageItem.url ? colors.accent : "transparent",
                     outlineWidth: "2px",
                     outlineStyle: "solid",
                   }}
-                  className={`aspect-square cursor-pointer rounded-md overflow-hidden`}
+                  className={`aspect-square cursor-pointer rounded-md overflow-hidden focus-visible:ring-2 focus-visible:ring-offset-2`}
                   onClick={() => imageItem.url && setSelectedImage(imageItem.url)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      imageItem.url && setSelectedImage(imageItem.url);
+                    }
+                  }}
+                  aria-label={`View image ${i + 1} of ${title}`}
+                  aria-pressed={selectedImage === imageItem.url}
                 >
                   {imageItem.isLoading ? (
                     <Skeleton className="absolute inset-0 w-full h-full" />
                   ) : (
                     <img
                       src={imageItem.url}
-                      alt={`${name} thumbnail ${i + 1}`}
+                      alt={`${title} thumbnail ${i + 1}`}
+                      width={200}
+                      height={200}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                       onLoad={(e) => {
                         const target = e.target as HTMLElement;
@@ -103,7 +117,7 @@ function PortfolioImage({
                       }}
                     />
                   )}
-                </div>
+                </button>
               );
             })}
       </div>

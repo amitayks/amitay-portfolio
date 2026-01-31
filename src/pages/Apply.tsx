@@ -448,6 +448,7 @@ const Apply = () => {
                             <FormControl>
                               <Input
                                 placeholder={t("contactForm.placeholders.name")}
+                                autoComplete="name"
                                 {...field}
                                 disabled={isSubmitting}
                                 style={{
@@ -478,6 +479,8 @@ const Apply = () => {
                               <Input
                                 placeholder={t("contactForm.placeholders.email")}
                                 type="email"
+                                autoComplete="email"
+                                inputMode="email"
                                 {...field}
                                 disabled={isSubmitting}
                                 style={{
@@ -507,6 +510,7 @@ const Apply = () => {
                             <FormControl>
                               <Textarea
                                 placeholder={t("contactForm.placeholders.project")}
+                                autoComplete="off"
                                 {...field}
                                 disabled={isSubmitting}
                                 rows={6}
@@ -542,6 +546,8 @@ const Apply = () => {
                               <Input
                                 placeholder={t("contactForm.placeholders.phone")}
                                 type="tel"
+                                autoComplete="tel"
+                                inputMode="tel"
                                 {...field}
                                 disabled={isSubmitting}
                                 style={{

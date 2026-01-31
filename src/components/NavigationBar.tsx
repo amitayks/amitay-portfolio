@@ -38,7 +38,7 @@ function NavigationBar() {
     }
   }, [isMobile, isOpen]);
 
-  // Close settings dropdown when clicking outside
+  // Close settings dropdown when clicking outside or pressing Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
@@ -46,12 +46,20 @@ function NavigationBar() {
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSettingsOpen(false);
+      }
+    };
+
     if (isSettingsOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isSettingsOpen]);
 
@@ -176,15 +184,16 @@ function NavigationBar() {
                         size="icon"
                         onClick={handleThemeToggle}
                         style={{ color: colors.textSecondary }}
+                        aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
                       >
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: 15 }}
                           whileTap={{ scale: 0.9 }}
                         >
                           {colors.background === "#000000" ? (
-                            <Sun className="h-5 w-5" />
+                            <Sun className="h-5 w-5" aria-hidden="true" />
                           ) : (
-                            <Moon className="h-5 w-5" />
+                            <Moon className="h-5 w-5" aria-hidden="true" />
                           )}
                         </motion.div>
                       </Button>
@@ -197,6 +206,8 @@ function NavigationBar() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                  aria-label="Settings"
+                  aria-expanded={isSettingsOpen}
                 >
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -205,7 +216,7 @@ function NavigationBar() {
                     whileHover={{ scale: 1.1, rotate: 15 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Settings className="h-5 w-5" />
+                    <Settings className="h-5 w-5" aria-hidden="true" />
                   </motion.div>
                 </Button>
               </div>
@@ -220,7 +231,13 @@ function NavigationBar() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.4 }}
             >
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isOpen}
+              >
                 <AnimatePresence mode="wait">
                   {isOpen ? (
                     <motion.div
@@ -230,7 +247,7 @@ function NavigationBar() {
                       exit={{ rotate: 90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <X className="h-6 w-6" />
+                      <X className="h-6 w-6" aria-hidden="true" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -240,7 +257,7 @@ function NavigationBar() {
                       exit={{ rotate: -90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Menu className="h-6 w-6" />
+                      <Menu className="h-6 w-6" aria-hidden="true" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -282,6 +299,7 @@ function NavigationBar() {
                     borderBottomRightRadius: "50px",
                     backgroundColor: colors.background,
                     zIndex: 50,
+                    overscrollBehavior: "contain",
                   }}
                   variants={menuVariants}
                   initial="closed"
@@ -323,15 +341,16 @@ function NavigationBar() {
                           // backgroundColor: colors.surface,
                           color: colors.textSecondary,
                         }}
+                        aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
                       >
                         {isDark ? (
                           <>
-                            <Sun className="h-5 w-5" />
+                            <Sun className="h-5 w-5" aria-hidden="true" />
                             {/* <span className="font-medium">{t("theme.light")}</span> */}
                           </>
                         ) : (
                           <>
-                            <Moon className="h-5 w-5" />
+                            <Moon className="h-5 w-5" aria-hidden="true" />
                             {/* <span className="font-medium">{t("theme.dark")}</span> */}
                           </>
                         )}
