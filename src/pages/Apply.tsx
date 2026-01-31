@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { setTheme } from "@/hooks/darkTheme";
 import { useTheme } from "@/hooks/useTheme";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { EMAILJS_CONFIG } from "@/utils/constants";
@@ -41,7 +40,6 @@ const createFormSchema = (t: (key: string) => string) =>
 
 const Apply = () => {
   const { t, i18n } = useTranslation("apply");
-  // Default to light mode for this page, but allow user to toggle
   const { colors } = useTheme();
   const { trackPageVisit, trackFormSubmit, trackFormError } = useAnalytics();
   const isRTL = i18n.language === "he";
@@ -51,22 +49,9 @@ const Apply = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Default to light mode when this page mounts, but allow user to toggle
-  // Restore previous theme on unmount
+  // Track Apply page visit
   useEffect(() => {
-    // Save current theme state
-    const wasDarkMode = document.documentElement.classList.contains("dark");
-
-    // Default to light mode (but users can toggle back via header)
-    setTheme(false);
-
-    // Track Apply page visit
     trackPageVisit("apply");
-
-    // Restore previous theme when leaving the page
-    return () => {
-      setTheme(wasDarkMode);
-    };
   }, [trackPageVisit]);
 
   const formSchema = createFormSchema(t);
