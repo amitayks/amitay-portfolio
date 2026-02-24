@@ -12,7 +12,6 @@ export default function useFeaturdItems(featured: boolean) {
     queryKey: queryKeys.portfolioItems(null), // Use same key as usePortfolioItems() with no filter
     queryFn: () => getPortfolio({ filter: null }), // Fetch all items
     select: (data) => data.filter((item) => item.featured === featured), // Filter in memory
-    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   return { portfolioError, portfolioItems, isLoading };

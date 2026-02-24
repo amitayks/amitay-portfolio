@@ -23,7 +23,6 @@ export default function usePortfolioItems() {
   } = useQuery<PortfolioItem[], Error>({
     queryKey: queryKeys.portfolioItems(filterValue),
     queryFn: () => getPortfolio({ filter }),
-    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   return { portfolioError, portfolioItems, isLoading };

@@ -21,10 +21,10 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 24, // 24 hours
-      gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days garbage collection
+      staleTime: 0, // Always refetch in background (stale-while-revalidate)
+      gcTime: 1000 * 60 * 60 * 24 * 30, // 30 days garbage collection
       retry: 2,
-      refetchOnWindowFocus: false, // Don't refetch on tab switch
+      refetchOnWindowFocus: true, // Refresh when switching back to tab
       refetchOnReconnect: "always", // DO refetch when internet reconnects
     },
   },
@@ -36,7 +36,7 @@ function App() {
       client={queryClient}
       persistOptions={{
         persister: queryPersister,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
       }}
     >
       <ReactQueryDevtools initialIsOpen={false} />
