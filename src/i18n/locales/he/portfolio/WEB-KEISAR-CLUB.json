@@ -4,14 +4,6 @@
   "longDescription": "אתר תיק עבודות React מודרני המציג פרויקטים בעבודת עץ ומיומנויות פיתוח web. כולל עיצוב רספונסיבי, סינון דינמי של תיק העבודות, טפסי יצירת קשר ותמיכה במצב כהה. בנוי עם TypeScript, backend של Supabase, ומותאם לביצועים מיטביים בכל המכשירים.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/keisar.club"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "Keisar Club"
-  },
   "additionalInfo": {
     "development_time": {
       "label": "זמן פיתוח",

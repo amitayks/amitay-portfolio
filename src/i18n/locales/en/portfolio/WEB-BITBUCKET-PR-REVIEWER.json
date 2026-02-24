@@ -4,14 +4,6 @@
   "longDescription": "An intelligent code review automation system that analyzes Bitbucket Cloud pull requests using Claude AI. Features a webhook-driven architecture that eliminates polling, queue-based processing with Redis for scalability, and dual commenting system with both inline and summary reviews. Includes configurable review guidelines, enterprise-grade security with signature verification and rate limiting, and distributed locking to prevent race conditions.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/bitbucket-pr-reviewer"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "runtime": {
       "label": "Runtime",

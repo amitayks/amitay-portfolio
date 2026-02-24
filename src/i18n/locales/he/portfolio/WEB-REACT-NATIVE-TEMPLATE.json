@@ -4,14 +4,6 @@
   "longDescription": "תבנית אפליקציית React Native מקיפה שתוכננה להאיץ פיתוח אפליקציות מובייל. בנויה עם React Native 0.81 New Architecture (JSI), TypeScript במצב strict, WatermelonDB לבסיס נתונים מקומי ריאקטיבי ו-React Reanimated לאנימציות. כוללת מתודולוגיית עיצוב אטומי עם ספריית רכיבי UI מלאה, מערכת ערכות נושא בהיר/כהה, ניווט bottom-tab, onboarding מרובה שלבים ואינטגרציית OpenSpec להתאמה אישית מונחית AI. מוכן לפרודקשן עם הגדרת חתימת שחרור ל-Android והנחיות אבטחה.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/react-native-template"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "לא זמין"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

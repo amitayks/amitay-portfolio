@@ -4,14 +4,6 @@
   "longDescription": "פלטפורמת הזמנות מלון מקיפה בנויה עם Next.js הכוללת עיון בבקתות, ניהול הזמנות ואימות מאובטח. אורחים יכולים לצפות בבקתות זמינות עם תיאורים מפורטים ותמונות, לבחור תאריכים, להזמין לינה ולנהל את ההזמנות שלהם דרך לוח בקרה מותאם אישית. הפלטפורמה משלבת Google OAuth לאימות חלק של משתמשים ומספקת עדכוני UI אופטימיסטיים לחוויית משתמש משופרת.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/the-wild-oasis-website"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "The Wild Oasis"
-  },
   "additionalInfo": {
     "development_time": {
       "label": "זמן פיתוח",

@@ -4,14 +4,6 @@
   "longDescription": "A comprehensive React Native application template designed to accelerate mobile app development. Built with React Native 0.81 New Architecture (JSI), TypeScript strict mode, WatermelonDB for reactive local database, and React Reanimated for animations. Features atomic design methodology with complete UI component library, light/dark theme system, bottom-tab navigation, multi-step onboarding, and OpenSpec integration for AI-guided customization. Production-ready with Android release signing setup and security guidelines.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/react-native-template"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

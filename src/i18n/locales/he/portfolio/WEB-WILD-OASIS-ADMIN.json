@@ -4,14 +4,6 @@
   "longDescription": "מערכת ניהול פנימית מקיפה המיועדת לצוות המלון לניהול יעיל של כל היבטי תפעול המלון. התכונות כוללות ניהול הזמנות עם יכולות check-in/check-out, ניהול מלאי בקתות, טיפול בנתוני אורחים ולוח בקרה אנליטי בזמן אמת. המערכת מספקת לצוות כלים לניטור ביצועי המלון, ניהול הזמנות ושמירה על יעילות תפעולית דרך ממשקים אינטואיטיביים והצגת נתונים ויזואלית.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/the-wild-oasis"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "The Wild Oasis - Admin"
-  },
   "additionalInfo": {
     "development_time": {
       "label": "זמן פיתוח",

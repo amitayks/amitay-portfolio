@@ -7,14 +7,6 @@ interface TranslatedPortfolioContent {
   longDescription: string;
   aboutProject: string;
   readMore: string;
-  github?: {
-    label: string;
-    subHeader: string;
-  };
-  liveSite?: {
-    label: string;
-    subHeader: string;
-  };
   getAdditionalInfoLabel: (key: string) => string;
   getAdditionalInfoValue: (key: string) => string;
 }
@@ -60,21 +52,6 @@ export const usePortfolioTranslation = (
       "readMore",
       portfolioItem.settings.dir === "rtl" ? "קרא עוד" : "Read More"
     ),
-    github: portfolioItem.github
-      ? {
-          label: getTranslation("github.label", "GitHub"),
-          subHeader: getTranslation("github.subHeader", portfolioItem.github.subHeader),
-        }
-      : undefined,
-    liveSite: portfolioItem.liveSite
-      ? {
-          label: getTranslation(
-            "liveSite.label",
-            portfolioItem.settings.dir === "rtl" ? "אתר חי" : "Live Site"
-          ),
-          subHeader: getTranslation("liveSite.subHeader", portfolioItem.liveSite.subHeader),
-        }
-      : undefined,
     getAdditionalInfoLabel: (key: string) => {
       const label = portfolioItem.additionalInfo?.find((info) =>
         info.label.replace(/\s+/g, "_").toLowerCase() === key

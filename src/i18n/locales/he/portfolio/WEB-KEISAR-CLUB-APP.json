@@ -4,14 +4,6 @@
   "longDescription": "אפליקציית תיק עבודות לנייד ב-React Native Expo שמציגה פרויקטים יצירתיים בפיתוח אתרים, עבודות עץ ועיצוב. כוללת מערכת גלריה אינטראקטיבית עם תצוגת תיק עבודות מבוססת רשת ובורר גלגל בסגנון iOS לסינון, קרוסלות תמונות גלילה אופקית עם טעינה עצלה, טופס יצירת קשר מובנה עם אינטגרציית EmailJS ומשוב הפטי לאינטראקציות משופרות. בנוי עם TypeScript, backend של Supabase, React Query לניהול נתונים ו-React Native Reanimated לאנימציות חלקות.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/keisar-club-app"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "לא זמין"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

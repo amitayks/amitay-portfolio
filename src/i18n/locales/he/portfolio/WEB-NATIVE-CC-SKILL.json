@@ -4,14 +4,6 @@
   "longDescription": "מיומנות חינוכית שתוכננה עבור Claude Code שמלמדת מפתחים לבנות אפליקציות נייטיב ברמת טלגרם עם אנימציות חלקות וארכיטקטורות סקלביליות. מכסה iOS (SwiftUI/UIKit), Android (Jetpack Compose), React Native (TurboModules/Reanimated 3), macOS, Windows (WinUI 3) ו-Linux (GTK 4/Qt 6). כולל 50+ דפוסי אנימציה, מדריכי פרופיילינג, דפוסי Clean Architecture ומסלול למידה מובנה של 6 שבועות מיסודות ועד טכניקות מתקדמות.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/Native-CC-skill"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "לא זמין"
-  },
   "additionalInfo": {
     "type": {
       "label": "סוג",

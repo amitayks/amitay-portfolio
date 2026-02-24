@@ -4,14 +4,6 @@
   "longDescription": "Comprehensive internal management system designed for hotel staff to efficiently manage all aspects of hotel operations. Features include booking management with check-in/check-out capabilities, cabin inventory management, guest data handling, and real-time analytics dashboard. The system provides staff with tools to monitor hotel performance, manage reservations, and maintain operational efficiency through intuitive interfaces and data visualization.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/the-wild-oasis"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "The Wild Oasis - Admin"
-  },
   "additionalInfo": {
     "development_time": {
       "label": "Development Time",

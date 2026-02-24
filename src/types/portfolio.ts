@@ -21,6 +21,7 @@ export interface PortfolioItem {
   priority?: number;
   completionDate?: string;
   liveSite?: {
+    label?: string;
     link: string;
     subHeader: string;
     previewImage?: {
@@ -29,6 +30,7 @@ export interface PortfolioItem {
     };
   };
   github?: {
+    label?: string;
     link: string;
     subHeader: string;
     previewImage?: {

@@ -4,14 +4,6 @@
   "longDescription": "אפליקציית React Native ממוקדת פרטיות שלוכדת ומארגנת את השיחות שלך בצורה חכמה. כוללת הקלטת שיחות אוטומטית ברקע, תמלול מבוסס AI ב-90+ שפות עם זיהוי דוברים, וחילוץ חכם של אירועי יומן, משימות, תזכורות ומעקבים. הכל נשאר על המכשיר שלך עם אחסון מקומי 100% - אתה מספק את מפתחות ה-API שלך לשירותי AI. זמין גם ב-iOS App Store וגם ב-Google Play.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "מאגר פרטי"
-  },
-  "liveSite": {
-    "label": "App Store",
-    "subHeader": "addit.dev"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

@@ -116,20 +116,20 @@ const PortfolioDetail = () => {
 
             {(portfolioItem?.github || portfolioItem?.liveSite) && (
               <div className="grid grid-cols-2 gap-4">
-                {portfolioItem.github && translated.github && (
+                {portfolioItem.github && (
                   <LinkPreviewCard
-                    title={translated.github.label}
-                    subtitle={translated.github.subHeader}
+                    title={portfolioItem.github.label || "GitHub"}
+                    subtitle={portfolioItem.github.subHeader}
                     previewImage={githubPreviewImages}
                     link={portfolioItem.github.link}
                     type="github"
                     index={0}
                   />
                 )}
-                {portfolioItem.liveSite && translated.liveSite && (
+                {portfolioItem.liveSite && (
                   <LinkPreviewCard
-                    title={translated.liveSite.label}
-                    subtitle={translated.liveSite.subHeader}
+                    title={portfolioItem.liveSite.label || "Live Site"}
+                    subtitle={portfolioItem.liveSite.subHeader}
                     previewImage={liveSitePreviewImages}
                     link={portfolioItem.liveSite.link}
                     type="live"

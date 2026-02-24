@@ -4,14 +4,6 @@
   "longDescription": "אתר שיווקי מעוצב ורספונסיבי עבור Addit - אפליקציה מבוססת AI להקלטת ותמלול שיחות. בנוי עם React 18 ו-TypeScript, כולל דף נחיתה מודרני, הצגת תכונות ודפי מסמכים משפטיים. האתר משתמש בניתוב מבוסס hash לתאימות עם GitHub Pages ומעוצב עם Tailwind CSS למראה מקצועי ומלוטש.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/addit.dev"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "addit.dev"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

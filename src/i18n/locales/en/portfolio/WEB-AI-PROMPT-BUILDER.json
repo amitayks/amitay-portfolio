@@ -4,14 +4,6 @@
   "longDescription": "A Claude Code skill that streamlines the creation of professional visual prompts for AI image and video generation. Functions as a creative collaborator with four operating modes: new character creation, reference-based imaging, video creation (Veo 3.1 format), and video transitions. Emphasizes mood over mechanics - users specify emotional tone and aesthetic references rather than exact measurements. Maintains character consistency across multiple scenes with master character definitions and organized project structures.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/AI-Prompt-Builder"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "type": {
       "label": "Type",

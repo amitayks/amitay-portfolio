@@ -4,14 +4,6 @@
   "longDescription": "An intelligent automation system that bridges development activity with social media content distribution. The tool monitors GitHub repositories for commits and merged PRs, uses Grok AI to generate contextual and engaging content with auto-generated images, and allows review and approval through a Telegram bot before publishing to X (Twitter). Features per-repository customization, draft approval workflow, and enterprise-grade security measures.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/commit-content-creatore"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "runtime": {
       "label": "Runtime",

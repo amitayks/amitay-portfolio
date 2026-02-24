@@ -4,14 +4,6 @@
   "longDescription": "מערכת אוטומציה חכמה לסקירת קוד שמנתחת pull requests ב-Bitbucket Cloud באמצעות Claude AI. כוללת ארכיטקטורה מבוססת webhooks שמבטלת את הצורך בסריקה, עיבוד מבוסס תור עם Redis לסקלביליות, ומערכת הערות כפולה עם ביקורות inline וסיכומים. כוללת הנחיות סקירה הניתנות להגדרה, אבטחה ברמת ארגון עם אימות חתימה והגבלת קצב, ונעילה מבוזרת למניעת תנאי מרוץ.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/bitbucket-pr-reviewer"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "לא זמין"
-  },
   "additionalInfo": {
     "runtime": {
       "label": "סביבת ריצה",

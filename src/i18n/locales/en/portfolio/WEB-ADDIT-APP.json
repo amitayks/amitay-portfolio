@@ -4,14 +4,6 @@
   "longDescription": "A privacy-first React Native mobile app that captures and organizes your conversations intelligently. Features automatic call recording in background, AI-powered transcription in 90+ languages with speaker diarization, and smart extraction of calendar events, tasks, reminders, and follow-ups. Everything stays on your device with 100% local storage - you provide your own API keys for AI services. Available on both iOS App Store and Google Play.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "Private Repository"
-  },
-  "liveSite": {
-    "label": "App Store",
-    "subHeader": "addit.dev"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

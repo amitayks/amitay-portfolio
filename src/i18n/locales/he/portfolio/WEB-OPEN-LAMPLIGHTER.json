@@ -4,14 +4,6 @@
   "longDescription": "כלי תמלול ממוקד פרטיות שממיר הקלטות אודיו ווידאו לטקסט. תומך בשני מנועי תמלול: OpenAI Whisper API למהירות או Whisper מקומי לפרטיות מלאה עם עיבוד אופליין. מטפל במגוון פורמטים כולל MP3, M4A, WAV, MP4 ועוד. כולל ניקוי אוטומטי של קבצים זמניים, אינטגרציה עם Google Drive ומגוון גדלי מודלים מ-tiny עד large לעיבוד מקומי. כולל מיומנות Claude Code לאינטגרציה עם IDE.",
   "aboutProject": "אודות הפרויקט",
   "readMore": "קרא עוד",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/OpenLamplighter"
-  },
-  "liveSite": {
-    "label": "אתר חי",
-    "subHeader": "לא זמין"
-  },
   "additionalInfo": {
     "language": {
       "label": "שפה",

@@ -4,14 +4,6 @@
   "longDescription": "Modern React portfolio website showcasing woodworking projects and web development skills. Features responsive design, dynamic portfolio filtering, contact forms, and dark mode support. Built with TypeScript, Supabase backend, and optimized for performance across all devices.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/keisar.club"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "Keisar Club"
-  },
   "additionalInfo": {
     "development_time": {
       "label": "Development Time",

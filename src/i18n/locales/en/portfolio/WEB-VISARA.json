@@ -4,14 +4,6 @@
   "longDescription": "An intelligent document scanner mobile application built with React Native and TypeScript. Automatically scans photo galleries for documents, receipts, and text-based images using background processing. Features multi-engine OCR (MLKit, Tesseract, VisionCamera) with confidence-based engine selection, smart document classification, full-text and semantic search capabilities, and automatic metadata extraction. Optimized for performance with memory-efficient processing, battery-aware scanning, and smooth animations with dark/light theme support.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/visara"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",

@@ -4,14 +4,6 @@
   "longDescription": "WeatherMan is an automated social media bot that creates beautiful isometric 3D city weather images using Google's Gemini AI and real-time weather data. The bot automatically posts to Instagram, X (Twitter), and TikTok with timezone-aware scheduling. Features include multi-city configuration via YAML, modular platform architecture, and GitHub Actions automation for hands-free operation at minimal cost.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/weatherMan"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "WeatherMan Docs"
-  },
   "additionalInfo": {
     "language": {
       "label": "Language",

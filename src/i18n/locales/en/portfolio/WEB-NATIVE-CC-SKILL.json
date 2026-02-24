@@ -4,14 +4,6 @@
   "longDescription": "An educational skill designed for Claude Code that teaches developers how to build Telegram-quality native applications with smooth animations and scalable architectures. Covers iOS (SwiftUI/UIKit), Android (Jetpack Compose), React Native (TurboModules/Reanimated 3), macOS, Windows (WinUI 3), and Linux (GTK 4/Qt 6). Includes 50+ animation patterns, profiling guides, Clean Architecture patterns, and a structured 6-week learning path from foundations to advanced techniques.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/Native-CC-skill"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "N/A"
-  },
   "additionalInfo": {
     "type": {
       "label": "Type",

@@ -4,14 +4,6 @@
   "longDescription": "A sleek, responsive marketing website for Addit - an AI-powered call recording and transcription application. Built with React 18 and TypeScript, featuring a modern landing page, features showcase, and legal documentation pages. The site uses hash-based routing for GitHub Pages compatibility and is styled with Tailwind CSS for a polished, professional appearance.",
   "aboutProject": "About The Project",
   "readMore": "Read More",
-  "github": {
-    "label": "GitHub",
-    "subHeader": "amitayks/addit.dev"
-  },
-  "liveSite": {
-    "label": "Live Site",
-    "subHeader": "addit.dev"
-  },
   "additionalInfo": {
     "framework": {
       "label": "Framework",
