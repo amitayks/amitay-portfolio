@@ -21,10 +21,10 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 24, // Always refetch in background (stale-while-revalidate)
+      staleTime: 0, // Always refetch in background (stale-while-revalidate)
       gcTime: 1000 * 60 * 60 * 24 * 30, // 30 days garbage collection
       retry: 2,
-      refetchOnWindowFocus: false, // Refresh when switching back to tab
+      refetchOnWindowFocus: true, // Refresh when switching back to tab
       refetchOnReconnect: "always", // DO refetch when internet reconnects
     },
   },

@@ -49,6 +49,7 @@ const PortfolioCard = ({
       queryClient.prefetchQuery({
         queryKey: queryKeys.portfolioImage(portfolioItem.image),
         queryFn: () => getPortfolioImage(portfolioItem.image),
+        staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
       });
     }
   };

@@ -15,7 +15,8 @@
       "Bash(openspec instructions proposal:*)",
       "Bash(npm run build:*)",
       "Bash(npm run portfolio:upload:dry:*)",
-      "Bash(npm run portfolio:upload:*)"
+      "Bash(npm run portfolio:upload:*)",
+      "Bash(npx create-video@latest:*)"
     ],
     "deny": [],
     "ask": []

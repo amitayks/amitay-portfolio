@@ -23,12 +23,14 @@ const usePortfolioItem = () => {
     queryFn: () =>
       portfolioItem?.image ? getPortfolioImage(portfolioItem.image) : Promise.resolve(null),
     enabled: !!portfolioItem?.image,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
   });
 
   const imagePackQueries = useQueries({
     queries: (portfolioItem?.imagePack?.slice(0, 4) || []).map((image: string) => ({
       queryKey: queryKeys.portfolioImage(image),
       queryFn: () => getPortfolioImage(image),
+      staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
     })),
   });
 
@@ -68,6 +70,7 @@ const usePortfolioItem = () => {
       !!portfolioItem?.github?.previewImage?.dark &&
       portfolioItem.github.previewImage.dark.trim() !== "",
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
   });
 
   const { data: githubPreviewLight, isLoading: isLoadingGithubLight } = useQuery<
@@ -88,6 +91,7 @@ const usePortfolioItem = () => {
         githubHasDifferentImages
     ),
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
   });
 
   // Fetch Live Site preview images (always fetch both for smooth theme transitions)
@@ -106,6 +110,7 @@ const usePortfolioItem = () => {
       !!portfolioItem?.liveSite?.previewImage?.dark &&
       portfolioItem.liveSite.previewImage.dark.trim() !== "",
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
   });
 
   const { data: liveSitePreviewLight, isLoading: isLoadingLiveLight } = useQuery<
@@ -126,6 +131,7 @@ const usePortfolioItem = () => {
         liveSiteHasDifferentImages
     ),
     retry: false,
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker
   });
 
   // Use same image for both if they're identical

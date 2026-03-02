@@ -10,6 +10,7 @@ const usePortfolioImage = (imageName: string) => {
   } = useQuery({
     queryKey: queryKeys.portfolioImage(imageName),
     queryFn: () => getPortfolioImage(imageName),
+    staleTime: 1000 * 60 * 60 * 24 * 14, // 14 days - prevent image flicker on navigate
   });
 
   return { image, isLoading, error };
