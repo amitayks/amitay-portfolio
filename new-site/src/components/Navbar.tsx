@@ -67,7 +67,7 @@ export function Navbar() {
       cancelAnimationFrame(id);
       window.removeEventListener("resize", update);
     };
-  }, [activeSection, lang]);
+  }, [activeSection, lang, showNavContent]);
 
   return (
     <nav
