@@ -48,10 +48,12 @@ textarea:-webkit-autofill:focus {
     --font-heading: "Italki Atik Hebrew", "Instrument Serif", serif;
   }
 
-  /* Hebrew heading font is already calligraphic — disable CSS italic */
+  /* Hebrew heading font is already calligraphic — disable CSS italic and fix baseline */
   html[lang="he"] .font-heading {
     font-style: normal;
     letter-spacing: 0;
+    vertical-align: baseline;
+    transform: translateY(0.08em);
   }
 
   * {
