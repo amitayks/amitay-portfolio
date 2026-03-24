@@ -98,7 +98,7 @@ export function Navbar() {
               key={item.id}
               data-section={item.id}
               onClick={() => scrollTo(item.id)}
-              className={`relative z-10 px-2.5 md:px-6 py-1.5 rounded-full text-xs md:text-sm font-medium font-body transition-colors ${
+              className={`relative z-10 px-2.5 md:px-6 py-1.5 rounded-full text-xs md:text-sm font-bold font-heading italic transition-colors ${
                 activeSection === item.id
                   ? "text-white"
                   : "text-foreground/70 hover:text-foreground/90"

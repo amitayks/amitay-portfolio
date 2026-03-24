@@ -133,13 +133,14 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
     <AnimatePresence>
       {sku && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — extended beyond viewport to cover overscroll */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-[20px]"
+            className="fixed z-[60] bg-black/60 backdrop-blur-[20px]"
+            style={{ inset: "-50vh -50vw", width: "200vw", height: "200vh" }}
             onClick={onClose}
           />
 
@@ -162,8 +163,8 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 z-[70] overflow-y-auto scrollbar-none"
-            style={{ background: "rgba(255,255,255,0.02)", backdropFilter: "blur(50px)", WebkitBackdropFilter: "blur(50px)" }}
+            className="fixed inset-0 z-[70] overflow-y-auto scrollbar-none overscroll-contain"
+            style={{ background: "rgba(255,255,255,0.02)", backdropFilter: "blur(50px)", WebkitBackdropFilter: "blur(50px)", minHeight: "100dvh" }}
             role="dialog"
             aria-modal="true"
             aria-label={project?.title ?? "Project details"}

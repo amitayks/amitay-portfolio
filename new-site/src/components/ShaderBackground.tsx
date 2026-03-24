@@ -86,11 +86,11 @@ function LazyShader({
 // --- Color animation for hero rays ---
 
 const HERO_RAY_COLORS_HSL: [number, number, number][] = [
-  [28, 40, 22],
-  [200, 20, 18],
-  [205, 15, 20],
-  [80, 15, 12],
-  [25, 30, 16],
+  [207, 35, 18],  // mountain haze blue
+  [194, 28, 14],  // valley teal
+  [72, 22, 12],   // dark olive grass
+  [209, 30, 16],  // slate blue distance
+  [75, 28, 10],   // deep green foreground
 ];
 
 function hslToHex(h: number, s: number, l: number): string {

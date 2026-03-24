@@ -6,7 +6,7 @@ import { useSiteImage } from "@/hooks/useSiteImage";
 
 // --- Constants ---
 
-const PROFILE_IMAGE_KEY = "profile-image-banner-2.jpg";
+const PROFILE_IMAGE_KEY = "profile-image-banner-3.jpg";
 
 // Intro card dimensions
 const CARD_WIDTH_DESKTOP = 240;
