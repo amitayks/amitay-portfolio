@@ -6,7 +6,7 @@ interface filter {
 }
 
 export const getPortfolio = async ({ filter }: { filter: filter | null }) => {
-  let query = supabase.from("portfolio").select("*").eq("publish", true);
+  let query = supabase.from("portfolio").select("*").eq("publish", true).eq("lang", "en");
 
   if (filter) query = query.eq(filter.field, filter.value);
 
@@ -27,6 +27,7 @@ export const getPortfolioById = async (SKU: string) => {
     )
     .eq("SKU", SKU)
     .eq("publish", true)
+    .eq("lang", "en")
     .single();
   if (error) throw error;
   return data;
