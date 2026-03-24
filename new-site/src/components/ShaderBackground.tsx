@@ -17,15 +17,6 @@ const HERO_RAY_COLORS_HSL: [number, number, number][] = [
   [25, 30, 16],   // warm earth
 ];
 
-const CONTACT_COLORS_HSL: [number, number, number][] = [
-  [210, 25, 14],  // steel blue dark
-  [190, 22, 12],  // cold teal
-  [220, 20, 16],  // slate blue
-  [180, 18, 10],  // dark cyan
-  [200, 28, 14],  // mountain blue
-  [170, 15, 8],   // deep cold green
-  [230, 18, 12],  // twilight blue
-];
 
 function hslToHex(h: number, s: number, l: number): string {
   const sn = s / 100;
@@ -78,7 +69,6 @@ function useAnimatedRayColors(baseColors: [number, number, number][], speed = 0.
 
 export function ShaderBackground({ variant, className }: ShaderBackgroundProps) {
   const heroColors = useAnimatedRayColors(HERO_RAY_COLORS_HSL, 0.8);
-  const contactColors = useAnimatedRayColors(CONTACT_COLORS_HSL, 0.8);
 
   return (
     <div className={cn("absolute inset-0 z-0 overflow-hidden", className)}>
