@@ -84,7 +84,7 @@ export function Navbar() {
         {/* Nav links pill */}
         <div
           ref={navRef}
-          className="liquid-glass-strong rounded-full px-2 py-1.5 flex items-center justify-evenly flex-1 relative transition-opacity duration-400"
+          className="liquid-glass-strong rounded-[20px] px-2 py-2.5 flex items-center justify-evenly flex-1 relative transition-opacity duration-400"
           style={{ opacity: showNavContent ? 1 : 0 }}
         >
           {/* Animated indicator */}
