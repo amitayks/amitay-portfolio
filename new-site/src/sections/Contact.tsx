@@ -1,0 +1,42 @@
+import { useSiteText } from "@/hooks/useSiteText";
+import { ShaderBackground } from "@/components/ShaderBackground";
+import { VideoFades } from "@/components/HlsVideo";
+import { SectionHeading } from "@/components/SectionHeading";
+import { ContactForm } from "@/components/ContactForm";
+import { SocialLinks } from "@/components/SocialLinks";
+import { LanguageTransition } from "@/components/LanguageTransition";
+
+export function Contact() {
+  const { t } = useSiteText();
+
+  return (
+    <section id="contact" className="relative py-32 px-6 md:px-16 lg:px-24">
+      <ShaderBackground variant="contact" />
+      <VideoFades />
+
+      <div className="relative z-10 text-center">
+        <SectionHeading className="text-5xl md:text-6xl lg:text-7xl">
+          <LanguageTransition inline>
+            {t("contact.heading", "Let's build something.")}
+          </LanguageTransition>
+        </SectionHeading>
+        <p className="text-white/60 font-body font-light text-sm md:text-base mt-4 mb-12">
+          <LanguageTransition inline>
+            {t("contact.subtext", "Have a project in mind? I'd love to hear about it.")}
+          </LanguageTransition>
+        </p>
+
+        <ContactForm />
+        <SocialLinks />
+
+        <a
+          href="/Amitay_Keisar_Resume.pdf"
+          download
+          className="inline-block mt-6 text-white/40 font-body text-xs hover:text-white/60 transition-colors"
+        >
+          Download Resume (PDF)
+        </a>
+      </div>
+    </section>
+  );
+}
