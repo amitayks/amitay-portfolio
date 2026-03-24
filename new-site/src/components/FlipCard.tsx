@@ -107,11 +107,7 @@ export function FlipCard() {
   // Breath pause — moment to appreciate the logo before the flight
   useEffect(() => {
     if (introPhase !== "breath") return;
-    const t = setTimeout(() => {
-      // Strong haptic right before the flip launches
-      navigator.vibrate?.([60, 30, 100]);
-      advancePhase();
-    }, 400);
+    const t = setTimeout(advancePhase, 400);
     return () => clearTimeout(t);
   }, [introPhase, advancePhase]);
 

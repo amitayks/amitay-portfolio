@@ -36,10 +36,6 @@ const LOGO_FRAGMENTS: [string, number, number, number][] = [
   ],
 ];
 
-function haptic(ms: number | number[]) {
-  navigator.vibrate?.(ms);
-}
-
 interface AnimatedLogoProps {
   className?: string;
   size?: number;
@@ -96,7 +92,6 @@ export function AnimatedLogo({
                   delay: 0.05 + i * 0.07,
                   ease: "linear",
                 }}
-                onAnimationComplete={() => haptic(40)}
                 style={{ transformOrigin: "195px -195px" }}
               />
             ) : (
