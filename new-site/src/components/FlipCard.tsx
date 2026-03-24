@@ -109,7 +109,7 @@ export function FlipCard() {
     if (introPhase !== "breath") return;
     const t = setTimeout(() => {
       // Strong haptic right before the flip launches
-      navigator.vibrate?.([40, 20, 60]);
+      navigator.vibrate?.([60, 30, 100]);
       advancePhase();
     }, 400);
     return () => clearTimeout(t);

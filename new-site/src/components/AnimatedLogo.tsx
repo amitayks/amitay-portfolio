@@ -96,7 +96,7 @@ export function AnimatedLogo({
                   delay: 0.05 + i * 0.07,
                   ease: "linear",
                 }}
-                onAnimationComplete={() => haptic(15)}
+                onAnimationComplete={() => haptic(40)}
                 style={{ transformOrigin: "195px -195px" }}
               />
             ) : (
