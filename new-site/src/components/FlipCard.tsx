@@ -104,11 +104,14 @@ export function FlipCard() {
     return () => clearTimeout(t);
   }, [introPhase, advancePhase]);
 
-  // Breath pause — gives the shader→static shimmer time to fade (600ms)
-  // plus a moment to appreciate the clean logo before the flight
+  // Breath pause — moment to appreciate the logo before the flight
   useEffect(() => {
     if (introPhase !== "breath") return;
-    const t = setTimeout(advancePhase, 400);
+    const t = setTimeout(() => {
+      // Strong haptic right before the flip launches
+      navigator.vibrate?.([40, 20, 60]);
+      advancePhase();
+    }, 400);
     return () => clearTimeout(t);
   }, [introPhase, advancePhase]);
 
