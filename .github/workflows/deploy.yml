@@ -19,9 +19,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: new-site
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +44,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "new-site/dist"
+          path: "./dist"
 
   deploy:
     environment:
