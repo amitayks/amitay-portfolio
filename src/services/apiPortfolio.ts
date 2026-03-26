@@ -18,7 +18,7 @@ export const getPortfolioById = async (SKU: string, lang: string) => {
   const { data, error } = await supabase
     .from("portfolio")
     .select(
-      "id, SKU, title, description, longDescription, technologies, projectType, image, imagePack, additionalInfo, featured, settings, priority, liveSite, github"
+      "id, SKU, title, description, longDescription, technologies, projectType, image, imagePack, additionalInfo, featured, settings, priority, liveSite, github, problem, what_i_built, how_it_works, result"
     )
     .eq("SKU", SKU)
     .eq("lang", lang)
@@ -26,5 +26,10 @@ export const getPortfolioById = async (SKU: string, lang: string) => {
     .single();
 
   if (error) throw error;
-  return data;
+  if (!data) return data;
+  return {
+    ...data,
+    whatIBuilt: (data as Record<string, unknown>).what_i_built as string | undefined,
+    howItWorks: (data as Record<string, unknown>).how_it_works as string | undefined,
+  };
 };

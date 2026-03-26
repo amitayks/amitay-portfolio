@@ -5,6 +5,7 @@ import { marked } from "marked";
 import { usePortfolioItem } from "@/hooks/usePortfolioItem";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSiteText } from "@/hooks/useSiteText";
 import { ProjectImageGallery } from "@/components/ProjectImageGallery";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
 
@@ -92,6 +93,7 @@ function ProjectLinkCard({
 export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
   const { dir } = useLanguage();
+  const { t } = useSiteText();
 
   // Body scroll lock
   useEffect(() => {
@@ -199,13 +201,77 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   {project.title}
                 </h2>
 
-                {/* Description */}
-                <p dir={dir} className="text-white/60 font-body font-light text-sm">
+                {/* One-liner */}
+                <p dir={dir} className="text-white/60 font-body font-light text-base">
                   {project.description}
                 </p>
 
-                {/* Long description (markdown) */}
-                {project.longDescription && (
+                {/* Case study sections */}
+                {project.problem && (
+                  <div dir={dir} className="space-y-2">
+                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                      {t("modal.section.problem", "The Problem")}
+                    </h3>
+                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
+                      {project.problem}
+                    </p>
+                  </div>
+                )}
+
+                {project.whatIBuilt && (
+                  <div dir={dir} className="space-y-2">
+                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                      {t("modal.section.whatIBuilt", "What I Built")}
+                    </h3>
+                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
+                      {project.whatIBuilt}
+                    </p>
+                  </div>
+                )}
+
+                {project.howItWorks && (
+                  <div dir={dir} className="space-y-2">
+                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                      {t("modal.section.howItWorks", "How It Works")}
+                    </h3>
+                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
+                      {project.howItWorks}
+                    </p>
+                  </div>
+                )}
+
+                {/* Tech Stack */}
+                {project.technologies?.length > 0 && (
+                  <div dir={dir} className="space-y-2">
+                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                      {t("modal.section.techStack", "Tech Stack")}
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tech: string) => (
+                        <span
+                          key={tech}
+                          className="liquid-glass rounded-full px-3 py-1 text-xs text-white/80 font-body"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {project.result && (
+                  <div dir={dir} className="space-y-2">
+                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                      {t("modal.section.result", "Result")}
+                    </h3>
+                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
+                      {project.result}
+                    </p>
+                  </div>
+                )}
+
+                {/* Fallback: longDescription for products not yet migrated */}
+                {!project.problem && project.longDescription && (
                   <div
                     dir={dir}
                     className="text-white/70 font-body font-light text-sm prose prose-invert prose-sm max-w-none"
@@ -213,36 +279,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                       __html: marked(project.longDescription) as string,
                     }}
                   />
-                )}
-
-                {/* Technologies — centered */}
-                {project.technologies?.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {project.technologies.map((tech: string) => (
-                      <span
-                        key={tech}
-                        className="liquid-glass rounded-full px-3 py-1 text-xs text-white/80 font-body"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Additional info — RTL-aware, no glass wrapper */}
-                {project.additionalInfo?.length > 0 && (
-                  <div className="space-y-0">
-                    {project.additionalInfo.map((info: { label: string; value: string }) => (
-                      <div
-                        key={info.label}
-                        dir={dir}
-                        className="flex justify-between py-2 border-b border-white/5 last:border-0"
-                      >
-                        <span className="text-white/50 font-body text-sm">{info.label}</span>
-                        <span className="text-white font-body text-sm">{info.value}</span>
-                      </div>
-                    ))}
-                  </div>
                 )}
 
                 {/* Link preview cards */}

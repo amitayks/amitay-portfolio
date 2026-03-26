@@ -17,6 +17,10 @@ export interface PortfolioItem {
     label: string;
     value: string;
   }>;
+  problem?: string;
+  whatIBuilt?: string;
+  howItWorks?: string;
+  result?: string;
   priority?: number;
   completionDate?: string;
   liveSite?: {
