@@ -12,7 +12,7 @@ import { CodeCarousel } from "@/sections/CodeCarousel";
 import { About } from "@/sections/About";
 import { SkillsGrid } from "@/sections/SkillsGrid";
 import { Stats } from "@/sections/Stats";
-import { WoodCarousel } from "@/sections/WoodCarousel";
+import { HowIWork } from "@/sections/HowIWork";
 import { Testimonials } from "@/sections/Testimonials";
 import { Contact } from "@/sections/Contact";
 import { Footer } from "@/sections/Footer";
@@ -28,18 +28,19 @@ function AppContent() {
       <Navbar />
       <main>
         <Hero />
+        <SkillsGrid />
         <div id="work" className="scroll-mt-20">
           <ProductsBar />
           <CodeCarousel onProjectClick={setSelectedSku} />
         </div>
+        <HowIWork />
         <div className="relative">
           <ShaderBackground variant="about" />
           <VideoFades />
           <About />
-          <SkillsGrid />
           <Stats />
         </div>
-        <WoodCarousel onProjectClick={setSelectedSku} />
+        <CodeCarousel onProjectClick={setSelectedSku} direction="left" />
         <Testimonials />
         <Contact />
       </main>

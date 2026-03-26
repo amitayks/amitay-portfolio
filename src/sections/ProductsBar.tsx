@@ -1,5 +1,6 @@
 import { useSiteText } from "@/hooks/useSiteText";
 import { SectionBadge } from "@/components/SectionBadge";
+import { SectionHeading } from "@/components/SectionHeading";
 import { LanguageTransition } from "@/components/LanguageTransition";
 
 export function ProductsBar() {
@@ -11,8 +12,11 @@ export function ProductsBar() {
     <section className="py-8 flex flex-col items-center">
       <LanguageTransition className="flex flex-col items-center">
         <SectionBadge>
-          {t("products.badge", "Currently shipping")}
+          {t("products.badge", "Selected Work")}
         </SectionBadge>
+        <SectionHeading>
+          {t("products.heading", "Products I've shipped.")}
+        </SectionHeading>
         <div className="flex items-center gap-12 flex-wrap justify-center mt-4">
           {products.map((name) => (
             <span

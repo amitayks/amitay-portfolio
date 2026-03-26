@@ -22,7 +22,7 @@ export function Contact() {
         </SectionHeading>
         <p className="text-white/60 font-body font-light text-sm md:text-base mt-4 mb-12">
           <LanguageTransition inline>
-            {t("contact.subtext", "Have a project in mind? I'd love to hear about it.")}
+            {t("contact.subtext", "Have a project in mind? Tell me about it and I'll get back to you within 24 hours.")}
           </LanguageTransition>
         </p>
 

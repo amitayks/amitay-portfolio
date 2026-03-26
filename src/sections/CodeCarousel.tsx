@@ -5,12 +5,13 @@ import type { PortfolioItem } from "@/types/portfolio";
 
 interface CodeCarouselProps {
   onProjectClick: (sku: string) => void;
+  direction?: "left" | "right";
 }
 
 // Stable placeholder array — same length, same keys, never recreated
 const PLACEHOLDERS: undefined[] = Array.from({ length: 8 });
 
-export function CodeCarousel({ onProjectClick }: CodeCarouselProps) {
+export function CodeCarousel({ onProjectClick, direction = "right" }: CodeCarouselProps) {
   const { data: projects } = usePortfolioItems("Web-Development", "en");
 
   // Always render the carousel — use placeholders until data arrives
@@ -20,7 +21,7 @@ export function CodeCarousel({ onProjectClick }: CodeCarouselProps) {
     <section>
       <InfiniteCarousel
         items={items}
-        direction="right"
+        direction={direction}
         renderCard={(item: PortfolioItem | undefined, index: number) => (
           <CarouselCard
             item={item || undefined}

@@ -1,10 +1,10 @@
-import { Smartphone, Server, Brain, Shield } from "lucide-react";
+import { Smartphone, Server, Brain, Rocket } from "lucide-react";
 import { useSiteText } from "@/hooks/useSiteText";
 import { SectionBadge } from "@/components/SectionBadge";
 import { SectionHeading } from "@/components/SectionHeading";
 import { LanguageTransition } from "@/components/LanguageTransition";
 
-const SKILL_ICONS = [Smartphone, Server, Brain, Shield];
+const SKILL_ICONS = [Smartphone, Server, Brain, Rocket];
 
 export function SkillsGrid() {
   const { t } = useSiteText();
@@ -12,10 +12,10 @@ export function SkillsGrid() {
   const cards = [
     {
       icon: SKILL_ICONS[0],
-      title: t("skills.card1.title", "Mobile"),
+      title: t("skills.card1.title", "Mobile Apps"),
       description: t(
         "skills.card1.description",
-        "React Native to native Kotlin. Both platforms, production-grade."
+        "Native and cross-platform. From first commit to App Store submission. iOS, Android, or both."
       ),
     },
     {
@@ -23,23 +23,23 @@ export function SkillsGrid() {
       title: t("skills.card2.title", "Backend & Infrastructure"),
       description: t(
         "skills.card2.description",
-        "Node.js, Rust, PostgreSQL, Docker, Terraform, GCP. Production-grade."
+        "APIs, databases, cloud deployment, CI/CD. Systems built to scale and run without babysitting."
       ),
     },
     {
       icon: SKILL_ICONS[2],
-      title: t("skills.card3.title", "AI & Agents"),
+      title: t("skills.card3.title", "AI-Powered Products"),
       description: t(
         "skills.card3.description",
-        "Claude SDK, MCP servers, Gemini, Deepgram. Building intelligent products."
+        "Voice agents, content automation, intelligent workflows. AI that solves real problems, not demos."
       ),
     },
     {
       icon: SKILL_ICONS[3],
-      title: t("skills.card4.title", "Security & Protocols"),
+      title: t("skills.card4.title", "Full Product Builds"),
       description: t(
         "skills.card4.description",
-        "E2E encryption, Signal Protocol, on-device processing, zero-trust architecture."
+        "You bring the idea. I handle architecture, development, deployment, and maintenance. One point of contact, start to finish."
       ),
     },
   ];
@@ -48,10 +48,10 @@ export function SkillsGrid() {
     <section id="skills" className="py-24 px-6 md:px-16 lg:px-24">
       <div className="text-center mb-12">
         <SectionBadge>
-          <LanguageTransition inline>{t("skills.badge", "What I Do")}</LanguageTransition>
+          <LanguageTransition inline>{t("skills.badge", "What I Build")}</LanguageTransition>
         </SectionBadge>
         <SectionHeading>
-          <LanguageTransition inline>{t("skills.heading", "The full stack. For real.")}</LanguageTransition>
+          <LanguageTransition inline>{t("skills.heading", "End-to-end. From architecture to App Store.")}</LanguageTransition>
         </SectionHeading>
       </div>
 

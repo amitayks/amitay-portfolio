@@ -31,7 +31,7 @@ export function About() {
 
   const bodyText = t(
     "about.body",
-    "4 years ago I opened a code editor for the first time. No bootcamp. No CS degree. Just documentation, source code, and a need to build things that actually work.\n\nToday I ship full products across mobile, web, backend, and infrastructure. Every project you see here was built from nothing — designed, architected, coded, deployed, and maintained end-to-end.\n\nPreviously, I served as Head of Logistics in IDF Unit 8200, managing operations for a 1,000+ soldier technology center."
+    "4 years ago I opened a code editor for the first time. Today I ship production software across TypeScript, Kotlin, Rust, and Python — every layer of the stack, from mobile UI to encrypted protocols to cloud infrastructure.\n\nEvery project on this site was built from nothing — designed, architected, coded, deployed, and maintained by me.\n\nPreviously, I served as Head of Logistics in IDF Unit 8200, managing operations for a 1,000+ soldier technology center."
   );
 
   return (
