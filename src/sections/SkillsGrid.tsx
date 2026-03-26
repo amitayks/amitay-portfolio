@@ -45,7 +45,7 @@ export function SkillsGrid() {
   ];
 
   return (
-    <section id="skills" className="py-24 px-6 md:px-16 lg:px-24">
+    <section id="skills" className="relative z-10 py-24 px-6 md:px-16 lg:px-24">
       <div className="text-center mb-12">
         <SectionBadge>
           <LanguageTransition inline>{t("skills.badge", "What I Build")}</LanguageTransition>

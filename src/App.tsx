@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntro } from "@/contexts/IntroContext";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { queryClient, persistOptions } from "@/lib/queryClient";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -22,13 +23,27 @@ import { VideoFades } from "@/components/HlsVideo";
 
 function AppContent() {
   const [selectedSku, setSelectedSku] = useState<string | null>(null);
+  const { introPhase } = useIntro();
+
+  const mountShader =
+    introPhase === "landing" ||
+    introPhase === "final-flip" ||
+    introPhase === "overlay-fadeout" ||
+    introPhase === "done";
 
   return (
     <div className="bg-black overflow-visible">
       <Navbar />
       <main>
-        <Hero />
-        <SkillsGrid />
+        <div className="relative overflow-visible">
+          {mountShader && <ShaderBackground variant="hero" />}
+          <Hero />
+          <SkillsGrid />
+          <div
+            className="absolute bottom-0 left-0 right-0 z-[1] h-[300px] pointer-events-none"
+            style={{ background: "linear-gradient(to bottom, transparent, black)" }}
+          />
+        </div>
         <div id="work" className="scroll-mt-20">
           <ProductsBar />
           <CodeCarousel onProjectClick={setSelectedSku} />

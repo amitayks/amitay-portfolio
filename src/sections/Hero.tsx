@@ -5,7 +5,6 @@ import { useSiteText } from "@/hooks/useSiteText";
 import { useIntro } from "@/contexts/IntroContext";
 import { BlurText } from "@/components/BlurText";
 import { Button } from "@/components/ui/button";
-import { ShaderBackground } from "@/components/ShaderBackground";
 import { LanguageTransition } from "@/components/LanguageTransition";
 
 export function Hero() {
@@ -18,19 +17,8 @@ export function Hero() {
     introPhase === "final-flip" ||
     introPhase === "done";
 
-  // Mount shader earlier so WebGL has time to initialize behind the opaque overlay
-  const mountShader =
-    introPhase === "landing" ||
-    introPhase === "final-flip" ||
-    canAnimate;
-
   return (
-    <section id="home" className="relative overflow-visible h-[850px] bg-black">
-      {mountShader && <ShaderBackground variant="hero" />}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-[1] h-[300px]"
-        style={{ background: "linear-gradient(to bottom, transparent, black)" }}
-      />
+    <section id="home" className="relative overflow-visible h-[850px]">
 
       {/* Content */}
       <LanguageTransition className="relative z-10 flex flex-col items-center justify-center text-center h-full px-6">
