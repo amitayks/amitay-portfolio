@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NeuroNoise, GodRays, Water } from "@paper-design/shaders-react";
 import { cn } from "@/lib/utils";
+import { usePageVisibility } from "@/hooks/usePageVisibility";
+import { useDeviceTier } from "@/hooks/useDeviceTier";
 
 interface ShaderBackgroundProps {
   variant: "hero" | "about" | "stats" | "contact";
@@ -21,7 +23,7 @@ function LazyShader({
   fallback,
   className,
 }: {
-  children: ReactNode;
+  children: (isVisible: boolean) => ReactNode;
   fallback: string;
   className?: string;
 }) {
@@ -77,7 +79,9 @@ function LazyShader({
       <div className="absolute inset-0" style={{ background: fallback }} />
       {/* Shader mounts on top when visible and not crashed */}
       {isVisible && !hasError && (
-        <div className="absolute inset-0">{children}</div>
+        <div className="absolute inset-0" style={{ willChange: "transform" }}>
+          {children(isVisible)}
+        </div>
       )}
     </div>
   );
@@ -113,22 +117,28 @@ function useAnimatedRayColors(baseColors: [number, number, number][], speed = 0.
   useEffect(() => {
     let frame: number;
     let start: number | null = null;
+    let frameCount = 0;
 
     const tick = (now: number) => {
       if (!start) start = now;
-      const elapsed = (now - start) / 1000;
+      frameCount++;
 
-      setColors(
-        baseColors.map(([h, s, l], i) => {
-          const drift = Math.sin(elapsed * speed + i * 1.3) * 18;
-          const satDrift = Math.sin(elapsed * speed * 0.7 + i * 0.9) * 8;
-          return hslToHex(
-            (h + drift + 360) % 360,
-            Math.max(10, Math.min(70, s + satDrift)),
-            l
-          );
-        })
-      );
+      // Skip update when tab is hidden or not every 4th frame (throttle to ~15fps)
+      if (!document.hidden && frameCount % 4 === 0) {
+        const elapsed = (now - start) / 1000;
+
+        setColors(
+          baseColors.map(([h, s, l], i) => {
+            const drift = Math.sin(elapsed * speed + i * 1.3) * 18;
+            const satDrift = Math.sin(elapsed * speed * 0.7 + i * 0.9) * 8;
+            return hslToHex(
+              (h + drift + 360) % 360,
+              Math.max(10, Math.min(70, s + satDrift)),
+              l
+            );
+          })
+        );
+      }
 
       frame = requestAnimationFrame(tick);
     };
@@ -140,77 +150,98 @@ function useAnimatedRayColors(baseColors: [number, number, number][], speed = 0.
   return colors;
 }
 
+// --- Configured speeds per variant ---
+const SHADER_SPEEDS: Record<ShaderBackgroundProps["variant"], number> = {
+  hero: 0.15,
+  about: 0.3,
+  stats: 0.15,
+  contact: 0.15,
+};
+
 // --- Main component ---
 
 export function ShaderBackground({ variant, className }: ShaderBackgroundProps) {
   const heroColors = useAnimatedRayColors(HERO_RAY_COLORS_HSL, 0.8);
+  const pageVisible = usePageVisibility();
+  const { maxPixelCount } = useDeviceTier();
+
+  const getSpeed = (isVisible: boolean) =>
+    isVisible && pageVisible ? SHADER_SPEEDS[variant] : 0;
 
   return (
     <div className={cn("absolute inset-0 z-0 overflow-hidden", className)}>
       <LazyShader fallback={FALLBACK_GRADIENTS[variant]}>
-        {variant === "hero" && (
-          <GodRays
-            colors={heroColors}
-            colorBack="#060504"
-            colorBloom="#3a2810"
-            bloom={0.35}
-            intensity={0.55}
-            density={0.45}
-            spotty={0.2}
-            midSize={0.2}
-            midIntensity={0.15}
-            speed={0.15}
-            offsetX={0.5}
-            offsetY={-0.4}
-            rotation={25}
-            scale={1.4}
-            style={{ width: "100%", height: "100%" }}
-          />
-        )}
+        {(isVisible) => (
+          <>
+            {variant === "hero" && (
+              <GodRays
+                colors={heroColors}
+                colorBack="#060504"
+                colorBloom="#3a2810"
+                bloom={0.35}
+                intensity={0.55}
+                density={0.45}
+                spotty={0.2}
+                midSize={0.2}
+                midIntensity={0.15}
+                speed={getSpeed(isVisible)}
+                maxPixelCount={maxPixelCount}
+                offsetX={0.5}
+                offsetY={-0.4}
+                rotation={25}
+                scale={1.4}
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
 
-        {variant === "about" && (
-          <NeuroNoise
-            colorFront="#ffffff"
-            colorMid="#1a3a5c"
-            colorBack="#000000"
-            brightness={0.03}
-            contrast={0.25}
-            speed={0.3}
-            scale={1.5}
-            style={{ width: "100%", height: "100%" }}
-          />
-        )}
+            {variant === "about" && (
+              <NeuroNoise
+                colorFront="#ffffff"
+                colorMid="#1a3a5c"
+                colorBack="#000000"
+                brightness={0.03}
+                contrast={0.25}
+                speed={getSpeed(isVisible)}
+                maxPixelCount={maxPixelCount}
+                scale={1.5}
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
 
-        {variant === "stats" && (
-          <GodRays
-            colors={["#0a1628", "#1a2d4a", "#0d1f3c", "#162b4d", "#091322"]}
-            colorBack="#000000"
-            colorBloom="#0a1a2f"
-            bloom={0.3}
-            intensity={0.4}
-            density={0.5}
-            spotty={0.3}
-            midSize={0.3}
-            midIntensity={0.15}
-            speed={0.15}
-            style={{ width: "100%", height: "100%" }}
-          />
-        )}
+            {variant === "stats" && (
+              <GodRays
+                colors={["#0a1628", "#1a2d4a", "#0d1f3c", "#162b4d", "#091322"]}
+                colorBack="#000000"
+                colorBloom="#0a1a2f"
+                bloom={0.3}
+                intensity={0.4}
+                density={0.5}
+                spotty={0.3}
+                midSize={0.3}
+                midIntensity={0.15}
+                speed={getSpeed(isVisible)}
+                maxPixelCount={maxPixelCount}
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
 
-        {variant === "contact" && (
-          <Water
-            colorBack="#040608"
-            colorHighlight="#1a2a35"
-            highlights={0.4}
-            layering={0.5}
-            edges={0.2}
-            caustic={0.6}
-            waves={0.3}
-            size={1.5}
-            speed={0.15}
-            scale={1.2}
-            style={{ width: "100%", height: "100%" }}
-          />
+            {variant === "contact" && (
+              <Water
+                colorBack="#040608"
+                colorHighlight="#1a2a35"
+                highlights={0.4}
+                layering={0.5}
+                edges={0.2}
+                caustic={0.6}
+                waves={0.3}
+                size={1.5}
+                speed={getSpeed(isVisible)}
+                maxPixelCount={maxPixelCount}
+                scale={1.2}
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
+          </>
         )}
       </LazyShader>
     </div>

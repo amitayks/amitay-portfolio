@@ -96,6 +96,7 @@ textarea:-webkit-autofill:focus {
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
+    contain: content;
   }
 
   .liquid-glass::before {
@@ -126,13 +127,14 @@ textarea:-webkit-autofill:focus {
   .liquid-glass-strong {
     background: rgba(255, 255, 255, 0.02);
     background-blend-mode: luminosity;
-    backdrop-filter: blur(50px);
+    backdrop-filter: blur(20px);
     border: none;
     box-shadow:
       4px 4px 4px rgba(0, 0, 0, 0.05),
       inset 0 1px 1px rgba(255, 255, 255, 0.15);
     position: relative;
     overflow: hidden;
+    contain: content;
   }
 
   .liquid-glass-strong::before {
