@@ -78,7 +78,7 @@ export function AdminProjectsPage() {
         <p className="text-sm text-white/50">No projects match these filters.</p>
       )}
 
-      <ul className="divide-y divide-white/10 border border-white/10 rounded-lg overflow-hidden">
+      <ul className="divide-y divide-white/10 border border-white/10 rounded-xl overflow-hidden">
         {filtered.map((p) => (
           <li key={p.id}>
             <Link

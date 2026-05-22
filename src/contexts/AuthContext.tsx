@@ -13,6 +13,7 @@ export interface AuthContextValue {
   user: User | null;
   profile: Profile | null;
   isLoading: boolean;
+  isProfileLoading: boolean;
   signInWithGoogle: (redirectPath?: string) => Promise<void>;
   signInWithGitHub: (redirectPath?: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -25,6 +26,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Tracked separately from `isLoading` because the profile fetch is
+  // scheduled on a fresh task (see below) and resolves after the session
+  // is already known. Route guards need this distinction to avoid
+  // flashing a 403 between session-ready and profile-ready.
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   // IMPORTANT: never call supabase.from/.rpc inside onAuthStateChange or
   // inside the .then of getSession — supabase-js holds an auth lock for
@@ -32,12 +38,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // them would deadlock. We schedule profile loads on a fresh task with
   // setTimeout(0) so the lock is released first.
   const loadProfile = (userId: string) => {
+    setIsProfileLoading(true);
     setTimeout(async () => {
       try {
         const p = await getProfile(userId);
         setProfile(p);
       } catch {
         setProfile(null);
+      } finally {
+        setIsProfileLoading(false);
       }
     }, 0);
   };
@@ -48,7 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
       setSession(data.session);
-      if (data.session?.user.id) loadProfile(data.session.user.id);
+      if (data.session?.user.id) {
+        loadProfile(data.session.user.id);
+      } else {
+        setIsProfileLoading(false);
+      }
       setIsLoading(false);
     });
 
@@ -59,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loadProfile(newSession.user.id);
       } else {
         setProfile(null);
+        setIsProfileLoading(false);
       }
     });
 
@@ -74,17 +88,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       profile,
       isLoading,
+      isProfileLoading,
       signInWithGoogle: supabaseSignInWithGoogle,
       signInWithGitHub: supabaseSignInWithGitHub,
       signOut: supabaseSignOut,
       refreshProfile: async () => {
         if (session?.user.id) {
-          const p = await getProfile(session.user.id);
-          setProfile(p);
+          setIsProfileLoading(true);
+          try {
+            const p = await getProfile(session.user.id);
+            setProfile(p);
+          } finally {
+            setIsProfileLoading(false);
+          }
         }
       },
     }),
-    [session, profile, isLoading]
+    [session, profile, isLoading, isProfileLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

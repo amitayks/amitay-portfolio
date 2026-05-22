@@ -175,7 +175,7 @@ function TextArea(props: {
         onChange={(e) => props.onChange(e.target.value)}
         maxLength={props.maxLength}
         rows={3}
-        className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40 resize-y"
+        className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40 resize-y"
       />
     </label>
   );

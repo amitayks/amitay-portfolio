@@ -10,11 +10,11 @@ export function RequireRole({
   role: UserRole | UserRole[];
   children: ReactNode;
 }) {
-  const { session, profile, isLoading } = useAuth();
+  const { session, profile, isLoading, isProfileLoading } = useAuth();
   const location = useLocation();
   const allowed = Array.isArray(role) ? role : [role];
 
-  if (isLoading) {
+  if (isLoading || (session && isProfileLoading)) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white/60 text-sm">
         Loading…

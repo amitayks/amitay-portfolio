@@ -32,6 +32,11 @@ export function OnboardPage() {
   const [twitter, setTwitter] = useState("");
   const [consent, setConsent] = useState(false);
 
+  // Effect A — validate the invite and decide the phase. Runs only when
+  // the inputs that actually affect that decision change (token, auth
+  // readiness, identity). Form-field edits MUST NOT re-trigger this; an
+  // earlier version included them in the deps and made one
+  // validate_invite RPC per keystroke.
   useEffect(() => {
     if (!rawToken) {
       setPhase("no_token");
@@ -57,16 +62,6 @@ export function OnboardPage() {
           setPhase("email_mismatch");
           return;
         }
-        // Pre-fill from OAuth metadata
-        const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
-        const seedName =
-          (meta.full_name as string | undefined) ??
-          (meta.name as string | undefined) ??
-          "";
-        const ghUser = meta.user_name as string | undefined;
-        if (!fullName) setFullName(seedName);
-        if (!displayName) setDisplayName(seedName);
-        if (ghUser && !github) setGithub(`https://github.com/${ghUser}`);
         setPhase("ready");
       } catch (e) {
         if (cancelled) return;
@@ -77,7 +72,26 @@ export function OnboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [rawToken, isLoading, session, user, fullName, displayName, github]);
+  }, [rawToken, isLoading, session, user?.id, user?.email]);
+
+  // Effect B — pre-fill form fields from OAuth metadata once the form
+  // becomes visible. Each field is only seeded if the user hasn't typed
+  // into it; the deps deliberately omit the field values so we don't
+  // bounce the user's edits.
+  useEffect(() => {
+    if (phase !== "ready" || !user) return;
+    const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
+    const seedName =
+      (meta.full_name as string | undefined) ??
+      (meta.name as string | undefined) ??
+      "";
+    const ghUser = meta.user_name as string | undefined;
+    setFullName((curr) => (curr ? curr : seedName));
+    setDisplayName((curr) => (curr ? curr : seedName));
+    if (ghUser) {
+      setGithub((curr) => (curr ? curr : `https://github.com/${ghUser}`));
+    }
+  }, [phase, user]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,7 +308,7 @@ function TextArea(props: {
         maxLength={props.maxLength}
         placeholder={props.placeholder}
         rows={3}
-        className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/40 resize-y"
+        className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/40 resize-y"
       />
     </label>
   );

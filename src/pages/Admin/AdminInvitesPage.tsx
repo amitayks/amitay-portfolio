@@ -56,7 +56,7 @@ export function AdminInvitesPage() {
 
       <form
         onSubmit={onCreate}
-        className="flex flex-wrap gap-3 items-end mb-8 border border-white/10 rounded-lg p-4"
+        className="flex flex-wrap gap-3 items-end mb-8 border border-white/10 rounded-xl p-4"
       >
         <label className="block flex-1 min-w-[240px]">
           <span className="block text-xs uppercase tracking-wide text-white/50 mb-1.5">
@@ -83,7 +83,7 @@ export function AdminInvitesPage() {
       {error && <p className="text-sm text-red-400 mb-4">{error}</p>}
 
       {generated && (
-        <div className="mb-8 border border-amber-400/40 bg-amber-400/5 rounded-lg p-4 space-y-3">
+        <div className="mb-8 border border-amber-400/40 bg-amber-400/5 rounded-xl p-4 space-y-3">
           <p className="text-xs uppercase tracking-wider text-amber-300">
             Copy this URL now — it's shown only once
           </p>
@@ -128,7 +128,7 @@ export function AdminInvitesPage() {
         <p className="text-sm text-white/50">No invites yet.</p>
       )}
 
-      <ul className="divide-y divide-white/10 border border-white/10 rounded-lg overflow-hidden">
+      <ul className="divide-y divide-white/10 border border-white/10 rounded-xl overflow-hidden">
         {invites.map((inv) => {
           const status = inv.used_at
             ? { label: "Used", color: "text-white/50" }

@@ -81,7 +81,24 @@ export async function adminListManagers(): Promise<Profile[]> {
 
 // Raw DB row shape (snake_case from Postgres, plus the existing
 // camelCase columns from the legacy portfolio schema).
-export interface AdminProjectRow extends Omit<PortfolioItem, "developerProfiles" | "status" | "companyName" | "duration" | "developers" | "assignedManager" | "clientVisibility" | "devAttribution" | "startedAt" | "finishedAt" | "whatIBuilt" | "howItWorks"> {
+export interface AdminProjectRow
+  extends Omit<
+    PortfolioItem,
+    | "developerProfiles"
+    | "status"
+    | "companyName"
+    | "duration"
+    | "developers"
+    | "assignedManager"
+    | "clientVisibility"
+    | "devAttribution"
+    | "startedAt"
+    | "finishedAt"
+    | "whatIBuilt"
+    | "howItWorks"
+    | "problem"
+    | "result"
+  > {
   status: ProjectStatus;
   company_name: string | null;
   duration: string | null;
@@ -93,4 +110,6 @@ export interface AdminProjectRow extends Omit<PortfolioItem, "developerProfiles"
   finished_at: string | null;
   what_i_built: string | null;
   how_it_works: string | null;
+  problem: string | null;
+  result: string | null;
 }

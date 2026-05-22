@@ -28,14 +28,6 @@ export function Contact() {
 
         <ContactForm />
         <SocialLinks />
-
-        <a
-          href="/Amitay_Keisar_Resume.pdf"
-          download
-          className="inline-block mt-6 text-white/40 font-body text-xs hover:text-white/60 transition-colors"
-        >
-          Download Resume (PDF)
-        </a>
       </div>
     </section>
   );

@@ -98,7 +98,7 @@ export function AdminProfilesPage() {
         <p className="text-sm text-white/50">No profiles match these filters.</p>
       )}
 
-      <ul className="divide-y divide-white/10 border border-white/10 rounded-lg overflow-hidden">
+      <ul className="divide-y divide-white/10 border border-white/10 rounded-xl overflow-hidden">
         {filtered.map((p) => (
           <li key={p.id} className="flex items-center gap-4 px-4 py-3 hover:bg-white/5">
             {p.avatar_url ? (

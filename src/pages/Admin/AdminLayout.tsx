@@ -50,6 +50,14 @@ export function AdminLayout() {
       <main className="px-6 py-8">
         <Outlet />
       </main>
+      <footer className="mt-12 border-t border-white/10 px-6 py-6 flex gap-6 text-xs text-white/40">
+        <Link to="/legal/terms" className="hover:text-white/70">
+          Terms
+        </Link>
+        <Link to="/legal/privacy" className="hover:text-white/70">
+          Privacy
+        </Link>
+      </footer>
     </div>
   );
 }

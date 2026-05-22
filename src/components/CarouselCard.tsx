@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSiteText } from "@/hooks/useSiteText";
 import { getProjectBySku } from "@/services/apiPortfolio";
 import { getPortfolioImage } from "@/services/apiImages";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
@@ -18,6 +19,7 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const queryClient = useQueryClient();
   const { lang } = useLanguage();
+  const { t } = useSiteText();
 
   const handlePrefetch = useCallback(() => {
     if (!item) return;
@@ -36,7 +38,11 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
   }, [queryClient, item, lang]);
 
   const badge =
-    item?.status === "ongoing" ? "In progress" : item?.status === "upcoming" ? "Coming soon" : null;
+    item?.status === "ongoing"
+      ? t("carouselCard.badge.ongoing", "In progress")
+      : item?.status === "upcoming"
+      ? t("carouselCard.badge.upcoming", "Coming soon")
+      : null;
 
   return (
     <button

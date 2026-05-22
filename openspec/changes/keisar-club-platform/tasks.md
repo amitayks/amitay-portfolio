@@ -129,3 +129,74 @@
 - [ ] 14.4 Hand-invite the first 5–10 devs from the non-code-tasks B3 list
 - [ ] 14.5 Deploy to production; smoke-test the OAuth callback domain matches Supabase configuration
 - [ ] 14.6 Monitor logs for the first 48 hours; triage any failed invite redemptions or OAuth callback errors
+
+## 15. Post-verification fixes (from /opsx:verify on 2026-05-23)
+
+Findings from the verification pass. Decision: wood items stay archived in `wood_work` at DB level only — no public surface, no admin UI, no spiral. Other findings are real bugs or spec gaps that need to be closed before launch.
+
+### 15.1 AuthContext: surface profile-loading state
+- [x] 15.1.1 Add `isProfileLoading: boolean` to `AuthContextValue` in `src/contexts/AuthContext.tsx`
+- [x] 15.1.2 Track it inside `loadProfile`: set `true` at scheduling time, set `false` after the fetch resolves (success or failure)
+- [x] 15.1.3 Reset to `true` on `onAuthStateChange` when a new session appears, before scheduling the next `loadProfile`
+- [x] 15.1.4 Set to `false` when the session becomes `null` (no profile to load)
+
+### 15.2 RequireRole: eliminate the 403 flash for admins
+- [x] 15.2.1 Update `src/components/RequireRole.tsx` to render the existing `Loading…` block when `session && !profile && isProfileLoading`
+- [x] 15.2.2 Only render the 403 page when `session && !isProfileLoading && (!profile || !allowed.includes(profile.role))`
+- [ ] 15.2.3 Manual verification: hard-refresh `/admin` while signed in as admin → no flash of "403 — Not authorized"
+
+### 15.3 OnboardPage: stop re-validating on every keystroke
+- [x] 15.3.1 Split the mega-useEffect in `src/pages/OnboardPage.tsx` into two:
+  - Effect A — validate + phase transition. Deps: `[rawToken, isLoading, session, user?.id, user?.email]`. Only this effect calls `validateInvite`.
+  - Effect B — pre-fill form fields from OAuth metadata. Runs once when `phase` flips to `ready`. Deps: `[phase, user]`.
+- [x] 15.3.2 Drop `fullName`, `displayName`, `github` from the validation effect's dep array
+- [ ] 15.3.3 Manual verification: open DevTools Network tab on `/onboard?token=…`, type into the form → zero new `validate_invite` RPC calls per keystroke
+
+### 15.4 ProjectSpirals: respect the active language
+- [x] 15.4.1 Remove the hardcoded `"en"` argument in all three `useProjectsByStatus(status, "en")` calls in `src/sections/ProjectSpirals.tsx`
+- [x] 15.4.2 Let `useProjectsByStatus` pick up `lang` from `useLanguage()` (already its default behavior)
+- [ ] 15.4.3 Manual verification: switch site language to Hebrew → spirals refetch and render Hebrew rows (or hide if none exist for that lang)
+
+### 15.5 Admin editor: expose all case-study + meta fields
+- [x] 15.5.1 Add four markdown `TextArea`s to `src/pages/Admin/AdminProjectEditorPage.tsx`: `problem`, `what_i_built`, `how_it_works`, `result`
+- [x] 15.5.2 Add a `Featured` checkbox bound to the existing `featured` column
+- [x] 15.5.3 Add JSON editors (raw textarea + parse-on-blur with inline error if invalid JSON) for `liveSite`, `github`, `additionalInfo`, `settings`
+- [x] 15.5.4 Group the new fields under a "Case study" subheading between "Agency fields" and the developers section
+- [x] 15.5.5 Acceptance: admin can author a complete finished project — title, SKU, image, all four case-study sections, live-site + github links — without touching SQL
+
+### 15.6 Remove all Wood-Working surface from app code
+- [x] 15.6.1 Remove `Wood-Working` option from the `projectType` `Select` in `AdminProjectEditorPage.tsx` (admin shouldn't create new wood rows in `projects`)
+- [x] 15.6.2 Delete `src/sections/WoodCarousel.tsx` (orphaned; no importers)
+- [x] 15.6.3 Delete `src/sections/CodeCarousel.tsx` (orphaned; replaced by `ProjectSpirals`)
+- [x] 15.6.4 Migration `keisar_club_wood_work_archive_comment` applied; table comment documents archive-only intent
+- [x] 15.6.5 Verified: only remaining hit is the `projectType` type union in `src/types/portfolio.ts`, which is harmless (no UI surface emits it)
+
+### 15.7 AdminLayout: footer with legal links
+- [x] 15.7.1 Add a footer block to `src/pages/Admin/AdminLayout.tsx` after `<Outlet />` rendering Terms + Privacy links with the same styling tokens as `LegalLayout.tsx`
+- [ ] 15.7.2 Acceptance: navigate to `/admin`, `/admin/invites`, `/admin/projects` → Terms and Privacy links visible at the bottom on every admin page
+
+### 15.8 Audit trigger: cover role / status / invited_by
+- [x] 15.8.1 Migration `keisar_club_extend_profile_audit` applied; `profile_audit_trigger()` now writes rows for `role`, `status`, `invited_by` changes in addition to the original six editable fields
+- [ ] 15.8.2 Acceptance: admin suspends a profile via `AdminProfilesPage` → one new `profile_audit` row with `field='status'`, `old_value='active'`, `new_value='suspended'`
+
+### 15.9 is_admin(): remove from public RPC surface (revised approach)
+- [x] 15.9.1 Initial naive REVOKE migration (`keisar_club_lock_is_admin_rpc`) tested and rejected — it broke admin RLS evaluation because policy quals run under the caller's privileges and need EXECUTE on `is_admin()`.
+- [x] 15.9.2 Corrective migration `keisar_club_move_is_admin_to_private_schema` applied: moved the function to a new `private` schema (preserves OID so RLS policies keep working), granted USAGE+EXECUTE to anon/authenticated. PostgREST only auto-exposes `public`, so the function is no longer reachable via `/rest/v1/rpc/is_admin`.
+- [x] 15.9.3 Verified with `set role authenticated; select count(*) from public.profiles` — returns the caller's own row via `profiles_self_read`, no `permission denied for function is_admin`.
+- [x] 15.9.4 `mcp__supabase__get_advisors security` confirms both `is_admin` warnings gone. Remaining warnings are intentional: invite RPCs (needed for the unauthenticated onboarding flow), wood_work archive (documented), leaked-password protection (N/A — no passwords), Postgres patch version (ops-level).
+
+### 15.10 Sync design.md with reality
+- [x] 15.10.1 In `openspec/changes/keisar-club-platform/design.md`, updated the `projects` schema block: `id bigint generated by default as identity PK` with a note that the bigint comes from the legacy `portfolio_items` table for migration continuity
+- [x] 15.10.2 Added "Wood-Working items — archive only" subsection under "Data model" explaining the `wood_work` archive table is DB-only with no public surface and no admin UI
+- [x] 15.10.3 Added "`is_admin()` helper lives in the `private` schema" subsection documenting the post-verification fix
+- [x] 15.10.4 Closed design.md open question #1 with the explicit resolution about wood items
+
+### 15.11 Visual + behavioral verification pass
+- [ ] 15.11.1 `npm run dev`, sign in as admin, hard-refresh `/admin` → confirm no 403 flash (validates 15.1+15.2)
+- [ ] 15.11.2 Open `/onboard?token=<test>`, type a few characters in each field, watch Network → confirm no per-keystroke RPC (validates 15.3)
+- [ ] 15.11.3 Toggle language between EN and HE on the home page → confirm spirals refetch and render (validates 15.4)
+- [ ] 15.11.4 Create a new finished project in admin with all case-study sections + a live-site link → confirm it saves and renders correctly in `ProjectModal` (validates 15.5)
+- [ ] 15.11.5 Navigate every admin page → confirm Terms/Privacy footer present (validates 15.7)
+- [ ] 15.11.6 Suspend a non-admin profile in admin, then `SELECT * FROM profile_audit WHERE profile_id = …` → confirm row with `field='status'` exists (validates 15.8)
+- [ ] 15.11.7 `mcp__supabase__get_advisors security` → confirm `is_admin` advisor warnings gone (validates 15.9)
+- [x] 15.11.8 `npx tsc -b` → exit 0 (regression check across all the edits)

@@ -157,7 +157,6 @@ export function AdminProjectEditorPage() {
             }
             options={[
               { value: "Web-Development", label: "Web Development" },
-              { value: "Wood-Working", label: "Wood Working" },
               { value: "Design", label: "Design" },
               { value: "Other", label: "Other" },
             ]}
@@ -265,6 +264,76 @@ export function AdminProjectEditorPage() {
           />
         </Row>
 
+        <h2 className="text-xs uppercase tracking-wider text-white/40 pt-4 border-t border-white/10">
+          Case study
+        </h2>
+
+        <TextArea
+          label="Problem"
+          rows={4}
+          value={draft.problem ?? ""}
+          onChange={(v) => set("problem", v || null)}
+        />
+        <TextArea
+          label="What I built"
+          rows={4}
+          value={draft.what_i_built ?? ""}
+          onChange={(v) => set("what_i_built", v || null)}
+        />
+        <TextArea
+          label="How it works"
+          rows={4}
+          value={draft.how_it_works ?? ""}
+          onChange={(v) => set("how_it_works", v || null)}
+        />
+        <TextArea
+          label="Result"
+          rows={4}
+          value={draft.result ?? ""}
+          onChange={(v) => set("result", v || null)}
+        />
+
+        <label className="flex items-center gap-2 text-sm text-white/70">
+          <input
+            type="checkbox"
+            checked={Boolean(draft.featured)}
+            onChange={(e) => set("featured", e.target.checked)}
+            className="accent-white"
+          />
+          Featured (highlight on home / case-study lists)
+        </label>
+
+        <JsonField
+          label="Live site (JSON)"
+          help="Shape: { label?, link, subHeader, previewImage?: { dark, light } }"
+          value={draft.liveSite}
+          onChange={(v) => set("liveSite", v as AdminProjectRow["liveSite"])}
+        />
+        <JsonField
+          label="GitHub (JSON)"
+          help="Shape: { label?, link, subHeader, previewImage?: { dark, light } }"
+          value={draft.github}
+          onChange={(v) => set("github", v as AdminProjectRow["github"])}
+        />
+        <JsonField
+          label="Additional info (JSON)"
+          help="Array of { label, value } pairs"
+          value={draft.additionalInfo}
+          onChange={(v) =>
+            set("additionalInfo", v as AdminProjectRow["additionalInfo"])
+          }
+        />
+        <JsonField
+          label="Settings (JSON)"
+          help='Shape: { imageAspect: "square" }'
+          value={draft.settings}
+          onChange={(v) => set("settings", v as AdminProjectRow["settings"])}
+        />
+
+        <h2 className="text-xs uppercase tracking-wider text-white/40 pt-4 border-t border-white/10">
+          Assignment
+        </h2>
+
         <Select
           label="Assigned manager"
           value={draft.assigned_manager ?? ""}
@@ -304,7 +373,7 @@ export function AdminProjectEditorPage() {
                 return (
                   <div
                     key={devId}
-                    className="flex items-center gap-3 border border-white/10 rounded-md px-3 py-2"
+                    className="flex items-center gap-3 border border-white/10 rounded-xl px-3 py-2"
                   >
                     <span className="text-xs text-white/40 w-12">
                       {idx === 0 ? "Lead" : `#${idx + 1}`}
@@ -339,7 +408,7 @@ export function AdminProjectEditorPage() {
                 );
               })}
 
-              <details className="border border-white/10 rounded-md">
+              <details className="border border-white/10 rounded-xl">
                 <summary className="cursor-pointer text-xs uppercase tracking-wider text-white/50 px-3 py-2">
                   Add developer
                 </summary>
@@ -447,7 +516,7 @@ function TextArea(props: {
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         rows={props.rows ?? 3}
-        className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white resize-y"
+        className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white resize-y"
       />
     </label>
   );
@@ -475,6 +544,74 @@ function Select(props: {
           </option>
         ))}
       </select>
+    </label>
+  );
+}
+
+// JsonField renders a JSON-shaped value as pretty-printed text in a
+// textarea. Local text state lets the user type freely without us
+// re-stringifying mid-edit. On blur we attempt to parse and either
+// commit the parsed value upward or surface an inline error.
+function JsonField(props: {
+  label: string;
+  value: unknown;
+  onChange: (v: unknown) => void;
+  help?: string;
+}) {
+  const stringify = (v: unknown) =>
+    v === undefined || v === null ? "" : JSON.stringify(v, null, 2);
+  const [text, setText] = useState(() => stringify(props.value));
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [focused, setFocused] = useState(false);
+
+  // Reset the local text when the source value changes from outside
+  // (e.g. initial load completes, or a sibling field reset the draft)
+  // but never while the user is actively editing.
+  useEffect(() => {
+    if (!focused) {
+      setText(stringify(props.value));
+      setParseError(null);
+    }
+  }, [props.value, focused]);
+
+  const commit = () => {
+    setFocused(false);
+    if (text.trim() === "") {
+      setParseError(null);
+      props.onChange(null);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(text);
+      setParseError(null);
+      props.onChange(parsed);
+    } catch (e) {
+      setParseError(e instanceof Error ? e.message : "Invalid JSON");
+    }
+  };
+
+  return (
+    <label className="block">
+      <span className="block text-xs uppercase tracking-wide text-white/50 mb-1.5">
+        {props.label}
+      </span>
+      <textarea
+        value={text}
+        onFocus={() => setFocused(true)}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={commit}
+        rows={4}
+        spellCheck={false}
+        className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-xs text-white font-mono resize-y"
+      />
+      {props.help && (
+        <span className="block text-[10px] text-white/40 mt-1">{props.help}</span>
+      )}
+      {parseError && (
+        <span className="block text-[11px] text-red-400 mt-1">
+          Invalid JSON — {parseError}
+        </span>
+      )}
     </label>
   );
 }
