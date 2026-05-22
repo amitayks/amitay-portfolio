@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useSiteText } from "@/hooks/useSiteText";
 import { SOCIAL_LINKS } from "@/constants/personal";
 import { LanguageTransition } from "@/components/LanguageTransition";
@@ -24,10 +25,23 @@ export function Footer() {
               {link.label === "email" ? "Email" : link.label.charAt(0).toUpperCase() + link.label.slice(1)}
             </a>
           ))}
+          <span className="text-white/15">·</span>
+          <Link
+            to="/legal/terms"
+            className="text-white/40 font-body text-xs hover:text-white/60 transition-colors"
+          >
+            Terms
+          </Link>
+          <Link
+            to="/legal/privacy"
+            className="text-white/40 font-body text-xs hover:text-white/60 transition-colors"
+          >
+            Privacy
+          </Link>
         </div>
         <LanguageTransition className="flex items-center justify-center">
           <span className="text-white/40 font-body text-xs">
-            {t("footer.copyright", "\u00A9 2026 Amitay Keisar. All rights reserved.")}
+            {t("footer.copyright", "© 2026 Keisar Club. Founded by Amitay Keisar.")}
           </span>
         </LanguageTransition>
       </div>

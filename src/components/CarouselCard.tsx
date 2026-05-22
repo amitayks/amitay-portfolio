@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
 import { useLanguage } from "@/hooks/useLanguage";
-import { getPortfolioById } from "@/services/apiPortfolio";
+import { getProjectBySku } from "@/services/apiPortfolio";
 import { getPortfolioImage } from "@/services/apiImages";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
 import type { PortfolioItem } from "@/types/portfolio";
@@ -22,8 +22,8 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
   const handlePrefetch = useCallback(() => {
     if (!item) return;
     queryClient.prefetchQuery({
-      queryKey: ["portfolio", item.SKU, lang],
-      queryFn: () => getPortfolioById(item.SKU, lang),
+      queryKey: ["project", item.SKU, lang],
+      queryFn: () => getProjectBySku(item.SKU, lang),
       staleTime: 1000 * 60 * 60,
     });
     if (item.image) {
@@ -35,6 +35,9 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
     }
   }, [queryClient, item, lang]);
 
+  const badge =
+    item?.status === "ongoing" ? "In progress" : item?.status === "upcoming" ? "Coming soon" : null;
+
   return (
     <button
       onClick={(e) => {
@@ -43,7 +46,7 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
         onClick(item.SKU);
       }}
       onMouseEnter={handlePrefetch}
-      className="liquid-glass rounded-2xl w-[180px] sm:w-[220px] lg:w-[300px] flex-shrink-0 text-left group"
+      className="liquid-glass rounded-2xl w-[180px] sm:w-[220px] lg:w-[300px] flex-shrink-0 text-left group relative"
       aria-label={item ? `View project: ${item.title}` : "Loading project"}
     >
       <div className="aspect-square w-full relative overflow-hidden rounded-2xl">
@@ -57,6 +60,11 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
             className="w-full h-full object-cover transition-opacity duration-300"
             style={{ opacity: imageLoaded ? 1 : 0 }}
           />
+        )}
+        {badge && (
+          <span className="absolute top-2 left-2 rounded-full bg-black/60 backdrop-blur-md text-[10px] uppercase tracking-wider text-white/90 px-2 py-1 z-[1]">
+            {badge}
+          </span>
         )}
       </div>
     </button>

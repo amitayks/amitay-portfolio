@@ -1,80 +1,64 @@
-import { useState } from "react";
-import { useIntro } from "@/contexts/IntroContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { queryClient, persistOptions } from "@/lib/queryClient";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { IntroProvider } from "@/contexts/IntroContext";
-import { FlipCard } from "@/components/FlipCard";
-import { IntroOverlay } from "@/components/IntroOverlay";
-import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/sections/Hero";
-import { ProductsBar } from "@/sections/ProductsBar";
-import { CodeCarousel } from "@/sections/CodeCarousel";
-import { About } from "@/sections/About";
-import { SkillsGrid } from "@/sections/SkillsGrid";
-import { Stats } from "@/sections/Stats";
-import { HowIWork } from "@/sections/HowIWork";
-import { Testimonials } from "@/sections/Testimonials";
-import { Contact } from "@/sections/Contact";
-import { Footer } from "@/sections/Footer";
-import { ProjectModal } from "@/components/ProjectModal";
-import { ShaderBackground } from "@/components/ShaderBackground";
-import { VideoFades } from "@/components/HlsVideo";
-
-function AppContent() {
-  const [selectedSku, setSelectedSku] = useState<string | null>(null);
-  const { introPhase } = useIntro();
-
-  const mountShader =
-    introPhase === "landing" ||
-    introPhase === "final-flip" ||
-    introPhase === "overlay-fadeout" ||
-    introPhase === "done";
-
-  return (
-    <div className="bg-black overflow-visible">
-      <Navbar />
-      <main>
-        <div className="relative overflow-visible">
-          {mountShader && <ShaderBackground variant="hero" />}
-          <Hero />
-          <SkillsGrid />
-          <div
-            className="absolute bottom-0 left-0 right-0 z-[1] h-[300px] pointer-events-none"
-            style={{ background: "linear-gradient(to bottom, transparent, black)" }}
-          />
-        </div>
-        <div id="work" className="scroll-mt-20">
-          <ProductsBar />
-          <CodeCarousel onProjectClick={setSelectedSku} />
-        </div>
-        <HowIWork />
-        <div className="relative">
-          <ShaderBackground variant="about" />
-          <VideoFades />
-          <About />
-          <Stats />
-        </div>
-        <CodeCarousel onProjectClick={setSelectedSku} direction="left" />
-        <Testimonials />
-        <Contact />
-      </main>
-      <Footer />
-      <ProjectModal sku={selectedSku} onClose={() => setSelectedSku(null)} />
-    </div>
-  );
-}
+import { AuthProvider } from "@/contexts/AuthContext";
+import { RequireAuth } from "@/components/RequireAuth";
+import { RequireRole } from "@/components/RequireRole";
+import { HomePage } from "@/pages/HomePage";
+import { LoginPage } from "@/pages/LoginPage";
+import { OnboardPage } from "@/pages/OnboardPage";
+import { MePage } from "@/pages/MePage";
+import { NotFoundPage } from "@/pages/NotFoundPage";
+import { TermsPage } from "@/pages/Legal/TermsPage";
+import { PrivacyPage } from "@/pages/Legal/PrivacyPage";
+import { AdminLayout } from "@/pages/Admin/AdminLayout";
+import { AdminProfilesPage } from "@/pages/Admin/AdminProfilesPage";
+import { AdminInvitesPage } from "@/pages/Admin/AdminInvitesPage";
+import { AdminProjectsPage } from "@/pages/Admin/AdminProjectsPage";
+import { AdminProjectEditorPage } from "@/pages/Admin/AdminProjectEditorPage";
 
 export default function App() {
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-      <LanguageProvider>
-        <IntroProvider>
-          <AppContent />
-          <FlipCard />
-          <IntroOverlay />
-        </IntroProvider>
-      </LanguageProvider>
+      <BrowserRouter>
+        <LanguageProvider>
+          <IntroProvider>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/onboard" element={<OnboardPage />} />
+                <Route
+                  path="/me"
+                  element={
+                    <RequireAuth>
+                      <MePage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <RequireRole role="admin">
+                      <AdminLayout />
+                    </RequireRole>
+                  }
+                >
+                  <Route index element={<AdminProfilesPage />} />
+                  <Route path="invites" element={<AdminInvitesPage />} />
+                  <Route path="projects" element={<AdminProjectsPage />} />
+                  <Route path="projects/:id" element={<AdminProjectEditorPage />} />
+                </Route>
+                <Route path="/legal/terms" element={<TermsPage />} />
+                <Route path="/legal/privacy" element={<PrivacyPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </AuthProvider>
+          </IntroProvider>
+        </LanguageProvider>
+      </BrowserRouter>
     </PersistQueryClientProvider>
   );
 }

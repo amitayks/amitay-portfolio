@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Github, ExternalLink } from "lucide-react";
+import { X, Github, ExternalLink, User } from "lucide-react";
 import { marked } from "marked";
 import { usePortfolioItem } from "@/hooks/usePortfolioItem";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
@@ -8,6 +8,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteText } from "@/hooks/useSiteText";
 import { ProjectImageGallery } from "@/components/ProjectImageGallery";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
+import type { PortfolioItem } from "@/types/portfolio";
 
 interface ProjectModalProps {
   sku: string | null;
@@ -40,7 +41,6 @@ function ProjectLinkCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Image or fallback */}
       <div className="absolute inset-0">
         {showFallback ? (
           <div className="w-full h-full liquid-glass flex items-center justify-center">
@@ -55,8 +55,6 @@ function ProjectLinkCard({
           />
         )}
       </div>
-
-      {/* Blur overlay at bottom */}
       <div
         className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
         style={{
@@ -74,7 +72,8 @@ function ProjectLinkCard({
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.4) 50%, transparent 100%)",
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.4) 50%, transparent 100%)",
           }}
         />
         <div className="absolute inset-0 flex flex-col justify-end pb-5 px-5">
@@ -90,12 +89,91 @@ function ProjectLinkCard({
   );
 }
 
+function ProjectMetaRow({ project }: { project: PortfolioItem }) {
+  const statusLabel =
+    project.status === "ongoing"
+      ? "In progress"
+      : project.status === "upcoming"
+      ? "Coming soon"
+      : project.status === "finished"
+      ? "Shipped"
+      : null;
+
+  const clientLabel =
+    project.clientVisibility === "hidden"
+      ? "Confidential client"
+      : project.companyName || null;
+
+  const items: string[] = [];
+  if (clientLabel) items.push(clientLabel);
+  if (project.duration) items.push(project.duration);
+  if (statusLabel) items.push(statusLabel);
+
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-white/50">
+      {items.map((it, i) => (
+        <span key={it} className="flex items-center gap-3">
+          {i > 0 && <span className="text-white/20">·</span>}
+          {it}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function DeveloperAttribution({ project }: { project: PortfolioItem }) {
+  if (project.devAttribution === "hidden") return null;
+  const profiles = project.developerProfiles ?? [];
+  if (profiles.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+        {profiles.length > 1 ? "Built by" : "Developer"}
+      </h3>
+      <div className="flex flex-wrap gap-3">
+        {profiles.map((p, idx) => {
+          const isAnon = project.devAttribution === "anonymized";
+          const name = isAnon
+            ? `Developer ${String.fromCharCode(65 + idx)}`
+            : p.display_name || "—";
+          const avatar = !isAnon && p.avatar_url;
+          return (
+            <div
+              key={p.id}
+              className="flex items-center gap-2 liquid-glass rounded-full pl-1 pr-3 py-1"
+            >
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt=""
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                  <User className="w-3.5 h-3.5 text-white/50" />
+                </div>
+              )}
+              <span className="text-xs text-white/80">{name}</span>
+              {idx === 0 && profiles.length > 1 && (
+                <span className="text-[10px] uppercase tracking-wider text-white/40">
+                  Lead
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
   const { dir } = useLanguage();
   const { t } = useSiteText();
 
-  // Body scroll lock
   useEffect(() => {
     if (sku) {
       document.body.style.overflow = "hidden";
@@ -107,7 +185,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
     };
   }, [sku]);
 
-  // Escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -116,7 +193,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, [sku, onClose]);
 
-  // Browser back button closes modal
   useEffect(() => {
     if (!sku) return;
     history.pushState({ modal: true }, "");
@@ -135,7 +211,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
     <AnimatePresence>
       {sku && (
         <>
-          {/* Backdrop — extended beyond viewport to cover overscroll */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -146,7 +221,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
             onClick={onClose}
           />
 
-          {/* Close button — fixed to viewport */}
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -159,28 +233,35 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
             <X className="w-5 h-5" />
           </motion.button>
 
-          {/* Modal panel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed inset-0 z-[70] overflow-y-auto scrollbar-none overscroll-contain"
-            style={{ background: "rgba(255,255,255,0.02)", backdropFilter: "blur(50px)", WebkitBackdropFilter: "blur(50px)", minHeight: "100dvh" }}
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              backdropFilter: "blur(50px)",
+              WebkitBackdropFilter: "blur(50px)",
+              minHeight: "100dvh",
+            }}
             role="dialog"
             aria-modal="true"
             aria-label={project?.title ?? "Project details"}
           >
             {isLoading ? (
               <div className="max-w-5xl mx-auto p-8 md:p-12 space-y-6">
-                {/* Gallery skeleton — matches real 60/40 layout */}
                 <div className="flex gap-3">
                   <div className="w-[60%] flex-shrink-0">
                     <LiquidSkeleton variant="image" className="aspect-square rounded-2xl w-full" />
                   </div>
                   <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-2">
                     {Array.from({ length: 6 }).map((_, i) => (
-                      <LiquidSkeleton key={i} variant="image" className="aspect-square rounded-[8px] w-full" />
+                      <LiquidSkeleton
+                        key={i}
+                        variant="image"
+                        className="aspect-square rounded-[8px] w-full"
+                      />
                     ))}
                   </div>
                 </div>
@@ -190,23 +271,23 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
               </div>
             ) : project ? (
               <div className="max-w-5xl mx-auto p-8 md:p-12 space-y-6">
-                {/* Image gallery */}
                 <ProjectImageGallery
                   mainImage={project.image}
                   imagePack={project.imagePack ?? []}
                 />
 
-                {/* Title */}
                 <h2 dir={dir} className="font-heading italic text-3xl text-white">
                   {project.title}
                 </h2>
 
-                {/* One-liner */}
+                <ProjectMetaRow project={project} />
+
                 <p dir={dir} className="text-white/60 font-body font-light text-base">
                   {project.description}
                 </p>
 
-                {/* Case study sections */}
+                <DeveloperAttribution project={project} />
+
                 {project.problem && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
@@ -240,7 +321,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   </div>
                 )}
 
-                {/* Tech Stack */}
                 {project.technologies?.length > 0 && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
@@ -270,7 +350,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   </div>
                 )}
 
-                {/* Fallback: longDescription for products not yet migrated */}
                 {!project.problem && project.longDescription && (
                   <div
                     dir={dir}
@@ -281,7 +360,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   />
                 )}
 
-                {/* Link preview cards */}
                 {hasLinks && (
                   <div className="grid grid-cols-2 gap-4">
                     {project.github && (
