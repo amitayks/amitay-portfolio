@@ -1,11 +1,4 @@
-## ADDED Requirements
-
-### Requirement: Supabase client initialization
-A Supabase client SHALL be initialized with the existing project URL (`https://qjyybkgqqadjedgelakf.supabase.co`) and anon key. The client SHALL be exported from `src/services/supabase.ts`.
-
-#### Scenario: Client connects to Supabase
-- **WHEN** the application starts
-- **THEN** the Supabase client is initialized and ready for queries
+## MODIFIED Requirements
 
 ### Requirement: Portfolio list query
 A `getProjects(opts?)` function SHALL fetch all rows from the `projects` table where `publish=true`, optionally filtered by `projectType` and/or `status`. It SHALL NOT take a `lang` argument; rows are returned with bilingual JSONB fields intact. Results SHALL be ordered as follows: when `status='finished'`, by `finished_at` DESC then `priority` DESC; when `status='ongoing'`, by `started_at` DESC then `priority` DESC; when `status='upcoming'`, by `priority` DESC then `created_at` ASC; when no status filter is supplied, by `priority` DESC then `id` ASC.
@@ -44,49 +37,6 @@ A `fetchSiteContent()` function SHALL fetch all rows from `site_content` in a si
 - **WHEN** `fetchSiteContent()` is called
 - **THEN** it returns an object like `{ 'hero.heading.line1': { en: 'I ship products,', he: 'אנחנו בונים מוצרים' }, ... }`
 
-### Requirement: Portfolio image signed URL
-A `getPortfolioImage(imageName)` function SHALL generate a signed URL from Supabase Storage bucket `products-image` with 100-day validity. It SHALL return `null` on error.
-
-#### Scenario: Get image URL
-- **WHEN** `getPortfolioImage('addit-main.jpg')` is called
-- **THEN** it returns a signed URL valid for 100 days
-
-### Requirement: Site image signed URL
-A `getSiteImage(imageName)` function SHALL generate a signed URL from Supabase Storage bucket `site-image` with 100-day validity.
-
-#### Scenario: Get site image URL
-- **WHEN** `getSiteImage('profile-image-banner.jpg')` is called
-- **THEN** it returns a signed URL valid for 100 days
-
-### Requirement: React Query client configuration
-The React Query client SHALL be configured with: `retry: 2`, `refetchOnWindowFocus: true`, `refetchOnReconnect: 'always'`, `gcTime: 30 days` (garbage collection).
-
-#### Scenario: Failed query retries
-- **WHEN** a Supabase query fails due to network error
-- **THEN** React Query retries the query up to 2 times before reporting failure
-
-### Requirement: Per-query stale times
-Stale times SHALL be: `site_content` = 24 hours, `portfolio` list = 0 (stale-while-revalidate), `portfolio` single item = 1 hour, `portfolioImage` = 14 days, `siteImage` = 14 days.
-
-#### Scenario: Site content cached aggressively
-- **WHEN** site content was fetched 12 hours ago
-- **THEN** it is still considered fresh and served from cache without background refetch
-
-#### Scenario: Portfolio list always refetches
-- **WHEN** portfolio list is accessed after initial fetch
-- **THEN** the cached data is shown immediately AND a background refetch occurs
-
-### Requirement: IndexedDB cache persistence
-React Query state SHALL be persisted to IndexedDB using `idb-keyval` with key `'portfolio-v3-cache'`. Max cache age SHALL be 30 days. On app startup, the persisted cache SHALL be restored before any network requests.
-
-#### Scenario: Return visit instant render
-- **WHEN** a user revisits the site after previously loading it with the v3 cache shape
-- **THEN** the IndexedDB cache is restored and content renders immediately before any Supabase calls
-
-#### Scenario: Stale v2 cache is discarded
-- **WHEN** a user revisits with a pre-existing `'portfolio-v2-cache'` entry from before this change
-- **THEN** the v2 cache is ignored (different key), fresh data is fetched under `'portfolio-v3-cache'`, and no stale-shape error occurs
-
 ### Requirement: Query key structure
 Query keys SHALL follow the pattern: `['site_content']`, `['projects', { projectType?, status? }]`, `['project', SKU]`, `['portfolioImage', imageName]`, `['siteImage', imageName]`, `['profile', userId]`, `['profile_public', userId]`. Language is NOT part of any query key — bilingual rows live in the cache language-agnostically and the active language is picked at render time.
 
@@ -104,3 +54,14 @@ When a user hovers over a carousel card, `queryClient.prefetchQuery` SHALL be ca
 #### Scenario: Hover triggers prefetch
 - **WHEN** user hovers over a card with SKU "WEB-MUSE" for 200ms+
 - **THEN** `queryClient.prefetchQuery` is called for `['project', 'WEB-MUSE']` and `['portfolioImage', mainImageName]`
+
+### Requirement: IndexedDB cache persistence
+React Query state SHALL be persisted to IndexedDB using `idb-keyval` with key `'portfolio-v3-cache'`. Max cache age SHALL be 30 days. On app startup, the persisted cache SHALL be restored before any network requests.
+
+#### Scenario: Return visit instant render
+- **WHEN** a user revisits the site after previously loading it with the v3 cache shape
+- **THEN** the IndexedDB cache is restored and content renders immediately before any Supabase calls
+
+#### Scenario: Stale v2 cache is discarded
+- **WHEN** a user revisits with a pre-existing `'portfolio-v2-cache'` entry from before this change
+- **THEN** the v2 cache is ignored (different key), fresh data is fetched under `'portfolio-v3-cache'`, and no stale-shape error occurs

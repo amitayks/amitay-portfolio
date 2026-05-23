@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteText } from "@/hooks/useSiteText";
+import { useTranslated } from "@/hooks/useTranslated";
 import { getProjectBySku } from "@/services/apiPortfolio";
 import { getPortfolioImage } from "@/services/apiImages";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
@@ -18,14 +18,14 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
   const { data: imageUrl } = usePortfolioImage(item?.image ?? null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const queryClient = useQueryClient();
-  const { lang } = useLanguage();
   const { t } = useSiteText();
+  const title = useTranslated(item?.title) ?? "";
 
   const handlePrefetch = useCallback(() => {
     if (!item) return;
     queryClient.prefetchQuery({
-      queryKey: ["project", item.SKU, lang],
-      queryFn: () => getProjectBySku(item.SKU, lang),
+      queryKey: ["project", item.SKU],
+      queryFn: () => getProjectBySku(item.SKU),
       staleTime: 1000 * 60 * 60,
     });
     if (item.image) {
@@ -35,7 +35,7 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
         staleTime: 1000 * 60 * 60 * 24 * 14,
       });
     }
-  }, [queryClient, item, lang]);
+  }, [queryClient, item]);
 
   const badge =
     item?.status === "ongoing"
@@ -53,14 +53,14 @@ export function CarouselCard({ item, index, onClick }: CarouselCardProps) {
       }}
       onMouseEnter={handlePrefetch}
       className="liquid-glass rounded-2xl w-[180px] sm:w-[220px] lg:w-[300px] flex-shrink-0 text-left group relative"
-      aria-label={item ? `View project: ${item.title}` : "Loading project"}
+      aria-label={item ? `View project: ${title}` : "Loading project"}
     >
       <div className="aspect-square w-full relative overflow-hidden rounded-2xl">
         {!imageLoaded && <LiquidSkeleton variant="image" className="absolute inset-0" />}
         {imageUrl && (
           <img
             src={imageUrl}
-            alt={item?.title ?? ""}
+            alt={title}
             loading={index < 6 ? "eager" : "lazy"}
             onLoad={() => setImageLoaded(true)}
             className="w-full h-full object-cover transition-opacity duration-300"

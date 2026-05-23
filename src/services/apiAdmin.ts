@@ -1,5 +1,6 @@
 import supabase from "./supabase";
 import type { PortfolioItem, ProjectStatus, ClientVisibility, DevAttribution } from "@/types/portfolio";
+import type { Translated } from "@/types/content";
 import type { Profile } from "@/types/profile";
 
 // Full project row for the admin editor (all columns, unpublished included).
@@ -55,7 +56,6 @@ export async function adminDeleteProject(id: string): Promise<void> {
   if (error) throw error;
 }
 
-// Used by the project editor's "Developers" multi-select.
 export async function adminListAssignableDevs(): Promise<Profile[]> {
   const { data, error } = await supabase
     .from("profiles")
@@ -67,7 +67,6 @@ export async function adminListAssignableDevs(): Promise<Profile[]> {
   return (data ?? []) as Profile[];
 }
 
-// Used by the project editor's "Assigned manager" select.
 export async function adminListManagers(): Promise<Profile[]> {
   const { data, error } = await supabase
     .from("profiles")
@@ -79,8 +78,8 @@ export async function adminListManagers(): Promise<Profile[]> {
   return (data ?? []) as Profile[];
 }
 
-// Raw DB row shape (snake_case from Postgres, plus the existing
-// camelCase columns from the legacy portfolio schema).
+// Raw DB row shape: one row per SKU, with snake_case columns for the v1
+// agency fields and JSONB {en, he} for translatable text fields.
 export interface AdminProjectRow
   extends Omit<
     PortfolioItem,
@@ -100,16 +99,16 @@ export interface AdminProjectRow
     | "result"
   > {
   status: ProjectStatus;
-  company_name: string | null;
-  duration: string | null;
+  company_name: Translated | null;
+  duration: Translated | null;
   developers: string[];
   assigned_manager: string | null;
   client_visibility: ClientVisibility;
   dev_attribution: DevAttribution;
   started_at: string | null;
   finished_at: string | null;
-  what_i_built: string | null;
-  how_it_works: string | null;
-  problem: string | null;
-  result: string | null;
+  what_i_built: Translated | null;
+  how_it_works: Translated | null;
+  problem: Translated | null;
+  result: Translated | null;
 }

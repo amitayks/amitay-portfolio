@@ -15,14 +15,16 @@ import type {
   DevAttribution,
   ProjectStatus,
 } from "@/types/portfolio";
+import type { Translated } from "@/types/content";
 import type { Profile } from "@/types/profile";
+
+const EMPTY_TRANSLATED: Translated = { en: "", he: "" };
 
 const DEFAULT_DRAFT = (currentAdminId: string | null): Partial<AdminProjectRow> => ({
   SKU: "",
-  lang: "en",
-  title: "",
-  description: "",
-  longDescription: "",
+  title: { ...EMPTY_TRANSLATED },
+  description: { ...EMPTY_TRANSLATED },
+  longDescription: { ...EMPTY_TRANSLATED },
   image: "",
   imagePack: [],
   technologies: [],
@@ -73,6 +75,20 @@ export function AdminProjectEditorPage() {
 
   const set = <K extends keyof AdminProjectRow>(key: K, value: AdminProjectRow[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
+
+  const setTranslated = (
+    key: keyof AdminProjectRow,
+    locale: "en" | "he",
+    value: string
+  ) => {
+    setDraft((prev) => {
+      const current = (prev[key] as Translated | null | undefined) ?? { en: null, he: null };
+      return {
+        ...prev,
+        [key]: { ...current, [locale]: value },
+      };
+    });
+  };
 
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,30 +141,24 @@ export function AdminProjectEditorPage() {
     return <p className="text-sm text-white/50">Loading…</p>;
   }
 
+  const title = draft.title?.en || draft.title?.he || "Untitled";
+
   return (
     <div className="max-w-3xl">
       <Link to="/admin/projects" className="text-xs text-white/50 hover:text-white">
         ← Back to projects
       </Link>
-      <h1 className="mt-4 text-xl font-medium">
-        {isNew ? "New project" : draft.title || "Untitled"}
-      </h1>
+      <h1 className="mt-4 text-xl font-medium">{isNew ? "New project" : title}</h1>
 
       <form onSubmit={onSave} className="mt-8 space-y-5">
+        <TranslatedField
+          label="Title"
+          value={(draft.title as Translated | undefined) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("title", loc, v)}
+          required
+        />
         <Row>
-          <Field label="Title" value={draft.title ?? ""} onChange={(v) => set("title", v)} required />
           <Field label="SKU" value={draft.SKU ?? ""} onChange={(v) => set("SKU", v)} required />
-        </Row>
-        <Row>
-          <Select
-            label="Language"
-            value={draft.lang ?? "en"}
-            onChange={(v) => set("lang", v as "en" | "he")}
-            options={[
-              { value: "en", label: "English" },
-              { value: "he", label: "Hebrew" },
-            ]}
-          />
           <Select
             label="Project type"
             value={draft.projectType ?? "Web-Development"}
@@ -163,16 +173,16 @@ export function AdminProjectEditorPage() {
           />
         </Row>
 
-        <TextArea
+        <TranslatedTextArea
           label="Short description"
-          value={draft.description ?? ""}
-          onChange={(v) => set("description", v)}
+          value={(draft.description as Translated | undefined) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("description", loc, v)}
         />
-        <TextArea
+        <TranslatedTextArea
           label="Long description (markdown)"
           rows={5}
-          value={draft.longDescription ?? ""}
-          onChange={(v) => set("longDescription", v)}
+          value={(draft.longDescription as Translated | undefined) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("longDescription", loc, v)}
         />
 
         <Row>
@@ -225,13 +235,16 @@ export function AdminProjectEditorPage() {
               { value: "finished", label: "Finished" },
             ]}
           />
-          <Field
-            label="Duration"
-            value={draft.duration ?? ""}
-            onChange={(v) => set("duration", v || null)}
-            placeholder="e.g. 3 months"
-          />
+          <div />
         </Row>
+        <TranslatedField
+          label="Duration"
+          value={(draft.duration as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) =>
+            setTranslated("duration", loc, v)
+          }
+          placeholder='e.g. "3 months" / "3 חודשים"'
+        />
         <Row>
           <Field
             label="Started"
@@ -247,11 +260,6 @@ export function AdminProjectEditorPage() {
           />
         </Row>
         <Row>
-          <Field
-            label="Client company name"
-            value={draft.company_name ?? ""}
-            onChange={(v) => set("company_name", v || null)}
-          />
           <Select
             label="Client visibility"
             value={draft.client_visibility ?? "logo_only"}
@@ -262,35 +270,41 @@ export function AdminProjectEditorPage() {
               { value: "hidden", label: "Hidden — show as confidential" },
             ]}
           />
+          <div />
         </Row>
+        <TranslatedField
+          label="Client company name"
+          value={(draft.company_name as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("company_name", loc, v)}
+        />
 
         <h2 className="text-xs uppercase tracking-wider text-white/40 pt-4 border-t border-white/10">
           Case study
         </h2>
 
-        <TextArea
+        <TranslatedTextArea
           label="Problem"
           rows={4}
-          value={draft.problem ?? ""}
-          onChange={(v) => set("problem", v || null)}
+          value={(draft.problem as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("problem", loc, v)}
         />
-        <TextArea
+        <TranslatedTextArea
           label="What I built"
           rows={4}
-          value={draft.what_i_built ?? ""}
-          onChange={(v) => set("what_i_built", v || null)}
+          value={(draft.what_i_built as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("what_i_built", loc, v)}
         />
-        <TextArea
+        <TranslatedTextArea
           label="How it works"
           rows={4}
-          value={draft.how_it_works ?? ""}
-          onChange={(v) => set("how_it_works", v || null)}
+          value={(draft.how_it_works as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("how_it_works", loc, v)}
         />
-        <TextArea
+        <TranslatedTextArea
           label="Result"
           rows={4}
-          value={draft.result ?? ""}
-          onChange={(v) => set("result", v || null)}
+          value={(draft.result as Translated | null) ?? EMPTY_TRANSLATED}
+          onChange={(loc, v) => setTranslated("result", loc, v)}
         />
 
         <label className="flex items-center gap-2 text-sm text-white/70">
@@ -305,19 +319,19 @@ export function AdminProjectEditorPage() {
 
         <JsonField
           label="Live site (JSON)"
-          help="Shape: { label?, link, subHeader, previewImage?: { dark, light } }"
+          help='Shape: { label?: { en, he }, link, subHeader: { en, he }, previewImage?: { dark, light } }'
           value={draft.liveSite}
           onChange={(v) => set("liveSite", v as AdminProjectRow["liveSite"])}
         />
         <JsonField
           label="GitHub (JSON)"
-          help="Shape: { label?, link, subHeader, previewImage?: { dark, light } }"
+          help='Shape: { label?: { en, he }, link, subHeader: { en, he }, previewImage?: { dark, light } }'
           value={draft.github}
           onChange={(v) => set("github", v as AdminProjectRow["github"])}
         />
         <JsonField
           label="Additional info (JSON)"
-          help="Array of { label, value } pairs"
+          help='Array of { label: { en, he }, value: { en, he } }'
           value={draft.additionalInfo}
           onChange={(v) =>
             set("additionalInfo", v as AdminProjectRow["additionalInfo"])
@@ -501,27 +515,6 @@ function Field(props: {
   );
 }
 
-function TextArea(props: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  rows?: number;
-}) {
-  return (
-    <label className="block">
-      <span className="block text-xs uppercase tracking-wide text-white/50 mb-1.5">
-        {props.label}
-      </span>
-      <textarea
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-        rows={props.rows ?? 3}
-        className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white resize-y"
-      />
-    </label>
-  );
-}
-
 function Select(props: {
   label: string;
   value: string;
@@ -548,6 +541,102 @@ function Select(props: {
   );
 }
 
+// Returns a "Missing EN" / "Missing HE" badge when exactly one locale is empty.
+// Both-empty fields don't trigger the badge (treated as "not authored yet").
+function missingLocale(v: Translated): "en" | "he" | null {
+  const enFilled = (v.en ?? "").trim().length > 0;
+  const heFilled = (v.he ?? "").trim().length > 0;
+  if (enFilled && !heFilled) return "he";
+  if (heFilled && !enFilled) return "en";
+  return null;
+}
+
+function MissingBadge({ locale }: { locale: "en" | "he" }) {
+  return (
+    <span className="text-[10px] uppercase tracking-wider text-amber-300 border border-amber-300/40 bg-amber-300/10 rounded-full px-1.5 py-0.5">
+      Missing {locale.toUpperCase()}
+    </span>
+  );
+}
+
+function TranslatedField(props: {
+  label: string;
+  value: Translated;
+  onChange: (locale: "en" | "he", value: string) => void;
+  required?: boolean;
+  placeholder?: string;
+}) {
+  const missing = missingLocale(props.value);
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="block text-xs uppercase tracking-wide text-white/50">
+          {props.label}
+        </span>
+        {missing && <MissingBadge locale={missing} />}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input
+          type="text"
+          dir="ltr"
+          aria-label={`${props.label} (EN)`}
+          value={props.value.en ?? ""}
+          required={props.required}
+          placeholder={props.placeholder ? `${props.placeholder} (EN)` : "EN"}
+          onChange={(e) => props.onChange("en", e.target.value)}
+          className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white placeholder:text-white/30"
+        />
+        <input
+          type="text"
+          dir="rtl"
+          aria-label={`${props.label} (HE)`}
+          value={props.value.he ?? ""}
+          placeholder={props.placeholder ? `${props.placeholder} (HE)` : "HE"}
+          onChange={(e) => props.onChange("he", e.target.value)}
+          className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white placeholder:text-white/30"
+        />
+      </div>
+    </div>
+  );
+}
+
+function TranslatedTextArea(props: {
+  label: string;
+  value: Translated;
+  onChange: (locale: "en" | "he", value: string) => void;
+  rows?: number;
+}) {
+  const missing = missingLocale(props.value);
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="block text-xs uppercase tracking-wide text-white/50">
+          {props.label}
+        </span>
+        {missing && <MissingBadge locale={missing} />}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <textarea
+          dir="ltr"
+          aria-label={`${props.label} (EN)`}
+          value={props.value.en ?? ""}
+          onChange={(e) => props.onChange("en", e.target.value)}
+          rows={props.rows ?? 3}
+          className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white resize-y"
+        />
+        <textarea
+          dir="rtl"
+          aria-label={`${props.label} (HE)`}
+          value={props.value.he ?? ""}
+          onChange={(e) => props.onChange("he", e.target.value)}
+          rows={props.rows ?? 3}
+          className="w-full rounded-xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white resize-y"
+        />
+      </div>
+    </div>
+  );
+}
+
 // JsonField renders a JSON-shaped value as pretty-printed text in a
 // textarea. Local text state lets the user type freely without us
 // re-stringifying mid-edit. On blur we attempt to parse and either
@@ -564,9 +653,6 @@ function JsonField(props: {
   const [parseError, setParseError] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
 
-  // Reset the local text when the source value changes from outside
-  // (e.g. initial load completes, or a sibling field reset the draft)
-  // but never while the user is actively editing.
   useEffect(() => {
     if (!focused) {
       setText(stringify(props.value));

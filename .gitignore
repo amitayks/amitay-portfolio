@@ -1,3 +1,6 @@
+# Local DB snapshots (pre-migration backups)
+.local-snapshots/
+
 # Logs
 logs
 *.log

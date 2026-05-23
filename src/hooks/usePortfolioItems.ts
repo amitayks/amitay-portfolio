@@ -1,29 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProjects, type GetProjectsOpts } from "@/services/apiPortfolio";
-import { useLanguage } from "./useLanguage";
 import type { PortfolioItem, ProjectStatus } from "@/types/portfolio";
 
-export function usePortfolioItems(projectType?: string, langOverride?: string) {
-  const { lang } = useLanguage();
-  const effectiveLang = langOverride ?? lang;
-
+export function usePortfolioItems(projectType?: string) {
   return useQuery<PortfolioItem[]>({
-    queryKey: ["projects", effectiveLang, { projectType: projectType ?? "all" }],
-    queryFn: () => getProjects(effectiveLang, { projectType }),
+    queryKey: ["projects", { projectType: projectType ?? "all" }],
+    queryFn: () => getProjects({ projectType }),
     staleTime: 0,
   });
 }
 
-export function useProjects(opts: GetProjectsOpts = {}, langOverride?: string) {
-  const { lang } = useLanguage();
-  const effectiveLang = langOverride ?? lang;
+export function useProjects(opts: GetProjectsOpts = {}) {
   return useQuery<PortfolioItem[]>({
-    queryKey: ["projects", effectiveLang, opts],
-    queryFn: () => getProjects(effectiveLang, opts),
+    queryKey: ["projects", opts],
+    queryFn: () => getProjects(opts),
     staleTime: 0,
   });
 }
 
-export function useProjectsByStatus(status: ProjectStatus, langOverride?: string) {
-  return useProjects({ status }, langOverride);
+export function useProjectsByStatus(status: ProjectStatus) {
+  return useProjects({ status });
 }

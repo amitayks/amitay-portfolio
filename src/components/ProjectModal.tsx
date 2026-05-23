@@ -6,6 +6,7 @@ import { usePortfolioItem } from "@/hooks/usePortfolioItem";
 import { usePortfolioImage } from "@/hooks/usePortfolioImage";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteText } from "@/hooks/useSiteText";
+import { useTranslated, pickLang } from "@/hooks/useTranslated";
 import { ProjectImageGallery } from "@/components/ProjectImageGallery";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
 import type { PortfolioItem } from "@/types/portfolio";
@@ -90,6 +91,7 @@ function ProjectLinkCard({
 }
 
 function ProjectMetaRow({ project }: { project: PortfolioItem }) {
+  const { lang } = useLanguage();
   const statusLabel =
     project.status === "ongoing"
       ? "In progress"
@@ -99,14 +101,16 @@ function ProjectMetaRow({ project }: { project: PortfolioItem }) {
       ? "Shipped"
       : null;
 
+  const companyName = pickLang(project.companyName, lang);
+  const duration = pickLang(project.duration, lang);
   const clientLabel =
     project.clientVisibility === "hidden"
       ? "Confidential client"
-      : project.companyName || null;
+      : companyName || null;
 
   const items: string[] = [];
   if (clientLabel) items.push(clientLabel);
-  if (project.duration) items.push(project.duration);
+  if (duration) items.push(duration);
   if (statusLabel) items.push(statusLabel);
 
   if (items.length === 0) return null;
@@ -171,8 +175,16 @@ function DeveloperAttribution({ project }: { project: PortfolioItem }) {
 
 export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
-  const { dir } = useLanguage();
+  const { dir, lang } = useLanguage();
   const { t } = useSiteText();
+
+  const title = useTranslated(project?.title) ?? "";
+  const description = useTranslated(project?.description) ?? "";
+  const longDescription = useTranslated(project?.longDescription);
+  const problem = useTranslated(project?.problem);
+  const whatIBuilt = useTranslated(project?.whatIBuilt);
+  const howItWorks = useTranslated(project?.howItWorks);
+  const result = useTranslated(project?.result);
 
   useEffect(() => {
     if (sku) {
@@ -206,6 +218,8 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   }, [sku, onClose]);
 
   const hasLinks = project?.github || project?.liveSite;
+  const githubLabel = pickLang(project?.github?.label, lang) ?? "GitHub";
+  const liveSiteLabel = pickLang(project?.liveSite?.label, lang) ?? "Live Site";
 
   return (
     <AnimatePresence>
@@ -247,7 +261,7 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
             }}
             role="dialog"
             aria-modal="true"
-            aria-label={project?.title ?? "Project details"}
+            aria-label={title || "Project details"}
           >
             {isLoading ? (
               <div className="max-w-5xl mx-auto p-8 md:p-12 space-y-6">
@@ -277,46 +291,46 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                 />
 
                 <h2 dir={dir} className="font-heading italic text-3xl text-white">
-                  {project.title}
+                  {title}
                 </h2>
 
                 <ProjectMetaRow project={project} />
 
                 <p dir={dir} className="text-white/60 font-body font-light text-base">
-                  {project.description}
+                  {description}
                 </p>
 
                 <DeveloperAttribution project={project} />
 
-                {project.problem && (
+                {problem && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
                       {t("modal.section.problem", "The Problem")}
                     </h3>
                     <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {project.problem}
+                      {problem}
                     </p>
                   </div>
                 )}
 
-                {project.whatIBuilt && (
+                {whatIBuilt && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
                       {t("modal.section.whatIBuilt", "What I Built")}
                     </h3>
                     <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {project.whatIBuilt}
+                      {whatIBuilt}
                     </p>
                   </div>
                 )}
 
-                {project.howItWorks && (
+                {howItWorks && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
                       {t("modal.section.howItWorks", "How It Works")}
                     </h3>
                     <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {project.howItWorks}
+                      {howItWorks}
                     </p>
                   </div>
                 )}
@@ -339,23 +353,23 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   </div>
                 )}
 
-                {project.result && (
+                {result && (
                   <div dir={dir} className="space-y-2">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
                       {t("modal.section.result", "Result")}
                     </h3>
                     <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {project.result}
+                      {result}
                     </p>
                   </div>
                 )}
 
-                {!project.problem && project.longDescription && (
+                {!problem && longDescription && (
                   <div
                     dir={dir}
                     className="text-white/70 font-body font-light text-sm prose prose-invert prose-sm max-w-none"
                     dangerouslySetInnerHTML={{
-                      __html: marked(project.longDescription) as string,
+                      __html: marked(longDescription) as string,
                     }}
                   />
                 )}
@@ -365,7 +379,7 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                     {project.github && (
                       <ProjectLinkCard
                         link={project.github.link}
-                        label={project.github.label ?? "GitHub"}
+                        label={githubLabel}
                         previewImageName={project.github.previewImage?.dark}
                         type="github"
                       />
@@ -373,7 +387,7 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                     {project.liveSite && (
                       <ProjectLinkCard
                         link={project.liveSite.link}
-                        label={project.liveSite.label ?? "Live Site"}
+                        label={liveSiteLabel}
                         previewImageName={project.liveSite.previewImage?.dark}
                         type="live"
                       />

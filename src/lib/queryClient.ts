@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { get, set, del } from "idb-keyval";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
 
-const CACHE_KEY = "portfolio-v2-cache";
+const CACHE_KEY = "portfolio-v3-cache";
 const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
 
 export const queryClient = new QueryClient({

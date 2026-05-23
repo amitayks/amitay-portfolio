@@ -1,3 +1,8 @@
 export type Language = "en" | "he";
 
-export type SiteContentMap = Record<string, string>;
+export type Translated<T = string> = {
+  en: T | null;
+  he: T | null;
+};
+
+export type SiteContentMap = Record<string, Translated>;
