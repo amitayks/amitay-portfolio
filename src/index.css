@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@1&family=Barlow:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&family=Barlow:wght@300;400;500;600&display=swap");
 
 @font-face {
   font-family: "Italki Atik Hebrew";
@@ -48,12 +48,16 @@ textarea:-webkit-autofill:focus {
     --font-heading: "Italki Atik Hebrew", "IM Fell DW Pica", serif;
   }
 
-  /* Hebrew heading font is already calligraphic — disable CSS italic and fix baseline */
+  /* Heading fonts are already calligraphic on both sides — disable CSS italic.
+     Hebrew: keep the baseline nudge. English: just kill the lean. */
   html[lang="he"] .font-heading {
     font-style: normal;
     letter-spacing: 0;
     vertical-align: baseline;
     transform: translateY(0.08em);
+  }
+  html[lang="en"] .font-heading {
+    font-style: normal;
   }
 
   * {
