@@ -41,7 +41,7 @@ export function HomePage() {
           />
         </div>
         <div id="work" className="scroll-mt-20">
-          <ProductsBar />
+          {/* <ProductsBar /> */}
           <ProjectSpirals onProjectClick={setSelectedSku} />
         </div>
         <HowIWork />
@@ -49,7 +49,7 @@ export function HomePage() {
           <ShaderBackground variant="about" />
           <VideoFades />
           <About />
-          <Stats />
+          {/* <Stats /> */}
         </div>
         <Testimonials />
         <Contact />
