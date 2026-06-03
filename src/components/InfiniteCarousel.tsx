@@ -33,16 +33,36 @@ export function InfiniteCarousel<T>({
 
   const tripled = [...items, ...items, ...items];
 
-  // Measure single set width
+  // Measure the visual repeat period. We anchor on the offsetLeft delta
+  // between the first card of copy 1 and the first card of copy 2 — that
+  // is exactly the distance the wrap needs to snap by, and includes any
+  // subpixel rounding the browser applies to the gap. Summing
+  // `offsetWidth + 12` is unsafe: it drifts whenever the actual gap
+  // differs from 12px (root-font scale, breakpoint changes, subpixel
+  // rendering), and the drift accumulates into a visible jump every loop.
   useEffect(() => {
     if (!innerRef.current || items.length === 0) return;
-    const cards = innerRef.current.children;
-    const cardCount = items.length;
-    let width = 0;
-    for (let i = 0; i < cardCount && i < cards.length; i++) {
-      width += (cards[i] as HTMLElement).offsetWidth + 12;
-    }
-    setSingleSetWidth(width);
+
+    const measure = () => {
+      const inner = innerRef.current;
+      if (!inner) return;
+      const cards = inner.children;
+      if (cards.length <= items.length) return;
+      const first = cards[0] as HTMLElement;
+      const startOfCopy2 = cards[items.length] as HTMLElement;
+      const width = startOfCopy2.offsetLeft - first.offsetLeft;
+      if (width > 0) setSingleSetWidth(width);
+    };
+
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(innerRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [items.length]);
 
   // Wrap x into [-singleSetWidth, 0] range using modulo
