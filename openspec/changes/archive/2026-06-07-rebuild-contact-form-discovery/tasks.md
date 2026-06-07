@@ -43,5 +43,5 @@
 ## 7. Ship
 
 - [x] 7.1 Sequence verified: EmailJS template was updated and saved before any frontend deploy. Frontend code is committed locally only; production form still references the old code path until commit/push, so the live template is ahead, not behind.
-- [ ] 7.2 Commit + push — pending user authorization
+- [x] 7.2 Committed (a77b93b) and pushed to origin/keisar/v2
 - [x] 7.3 `openspec validate rebuild-contact-form-discovery` passes (no `openspec verify` subcommand in this CLI version; `validate` is the equivalent)
