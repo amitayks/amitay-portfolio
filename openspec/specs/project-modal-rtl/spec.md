@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Right-to-left support for the project modal: additional-info rows respect the `dir` prop, sourced from `useLanguage`, so layout flips correctly under Hebrew.
+
+## Requirements
 
 ### Requirement: Additional info rows respect dir parameter
 The additional info key-value rows SHALL accept and apply the `dir` attribute from the current language context, so that in RTL mode (Hebrew) the label appears on the right and the value on the left.

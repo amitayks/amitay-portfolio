@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+A dual-face 3D card used in the navbar and intro: front shows the AnimatedLogo shader, back shows the profile photo, with perspective-based flip animation on a liquid-glass surface.
+
+## Requirements
 
 ### Requirement: Dual-face 3D card structure
 The FlipCard component SHALL render a 3D card with exactly two faces: a **front face** (logo + shader) and a **back face** (profile photo). The card SHALL use CSS 3D transforms with `transform-style: preserve-3d` on the inner container and `backface-visibility: hidden` on each face. The back face SHALL have `rotateX(180deg)` pre-applied so it is visible when the card is flipped 180 degrees on the X-axis. The component SHALL accept a `rotateX` value (in degrees) as a controlled prop to determine which face is visible.

@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The site's visual language: pure black background, custom font stack, two liquid-glass variants (subtle/strong), shared CSS variables, and shared patterns for section headings, buttons, badges, skeleton loaders, HLS video backgrounds, and motion-respecting animations.
+
+## Requirements
 
 ### Requirement: Pure black background
 The site SHALL use `bg-black` (#000000) as the background color for the entire page. The outer page wrapper SHALL have `overflow-visible`.

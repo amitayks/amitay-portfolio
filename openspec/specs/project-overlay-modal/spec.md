@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The shared overlay-modal primitive for project deep-dives: full-screen presentation, backdrop, open/close animations, scroll lock, focus trap, gallery, content rendering, external-link buttons, and data fetching with prefetch support.
+
+## Requirements
 
 ### Requirement: Full-screen overlay presentation
 The modal SHALL render as a full-screen overlay on top of the page content. It SHALL NOT change the URL. The modal container SHALL have `max-height: 90vh`, `overflow-y: auto`, `rounded-t-3xl` (rounded top corners), and use `liquid-glass-strong` styling. On desktop, the modal SHALL be centered with `max-w-4xl` and side margins. On mobile, it SHALL be full-width.

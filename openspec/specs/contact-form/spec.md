@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The portfolio's contact form: a discovery-style intake with three required questions (challenge, tried, why-now) before name + email, delivered via EmailJS, with all visible copy sourced from `site_content`.
+
+## Requirements
 
 ### Requirement: Form fields
 The contact form SHALL have five required fields in this order: (1) **Challenge** (textarea, required, min 30 chars) — the answer to "What is the biggest challenge you're trying to solve right now?"; (2) **Tried** (textarea, required, min 20 chars) — the answer to "What have you already tried?"; (3) **Why Now** (textarea, required, min 15 chars) — the answer to "Why is now the right time to address this?"; (4) **Name** (text, required, min 2 chars); (5) **Email** (email, required, valid email format). There SHALL be no standalone Subject field, no freeform Message field, and no project type selector.

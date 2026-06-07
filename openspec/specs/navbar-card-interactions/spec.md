@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The navbar profile card behaviors: hover-flip to reveal the photo, click-to-expand to a full-screen profile view, mobile-friendly touch handling, keyboard accessibility, and position tracking across resize.
+
+## Requirements
 
 ### Requirement: Navbar placeholder element
 The Navbar component SHALL render an invisible placeholder `<div>` in the position where the logo icon button currently exists. This placeholder SHALL have the same dimensions as the current logo button (`w-12 h-12`, i.e., 48×48px) and be round (`rounded-full`). It SHALL occupy space in the navbar's flex layout but SHALL NOT be visually visible (no background, no border, no content). A React `ref` on this placeholder SHALL be exposed via `IntroContext` so the FlipCard can read its position with `getBoundingClientRect()`.

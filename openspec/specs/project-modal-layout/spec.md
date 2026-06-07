@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The project modal's structural layout: full-viewport coverage, viewport-fixed close button, unified scrolling content without section breaks or scroll-triggered animations, and centered technology tags.
+
+## Requirements
 
 ### Requirement: Modal covers full viewport
 The modal panel SHALL cover the entire viewport dimensions — full width and full height — with no top gap, no max-width constraint on the outer shell, and no rounded top corners.

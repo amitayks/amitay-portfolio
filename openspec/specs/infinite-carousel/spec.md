@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The edge-to-edge, auto-scrolling card carousel used for project showcases. Supports hover pause, drag/swipe, configurable direction, and prefetch-on-hover into the project modal.
+
+## Requirements
 
 ### Requirement: Edge-to-edge layout
 The carousel SHALL span the full viewport width with no horizontal padding. Vertical padding SHALL be `py-16`.

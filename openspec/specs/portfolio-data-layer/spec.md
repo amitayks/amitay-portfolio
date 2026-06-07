@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The Supabase + React Query data layer for portfolio content: client init, list/single/site-content queries, signed image URLs, per-query stale times, IndexedDB persistence, query-key conventions, and prefetch on carousel-card hover.
+
+## Requirements
 
 ### Requirement: Supabase client initialization
 A Supabase client SHALL be initialized with the existing project URL (`https://qjyybkgqqadjedgelakf.supabase.co`) and anon key. The client SHALL be exported from `src/services/supabase.ts`.

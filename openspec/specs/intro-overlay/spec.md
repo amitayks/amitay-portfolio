@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The first-load intro sequence: a full-screen overlay that plays a logo assembly, coin-flips into the navbar, lands on the profile photo, and flips back to the logo before fading out to hand off to the live site.
+
+## Requirements
 
 ### Requirement: Full-screen fixed overlay
 The IntroOverlay SHALL render as a `position: fixed` element covering the entire viewport (`inset: 0`) with a z-index higher than all other content (at minimum `z-60`, above the navbar's `z-50`). It SHALL be visible from the moment the app mounts and SHALL remain visible until the intro sequence is complete. The overlay SHALL prevent any page content from being visible behind it.

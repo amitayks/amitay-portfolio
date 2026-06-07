@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Runtime performance scaling: device-tier detection, shader pixel-count capping, GPU layer promotion for shader canvases, and the `usePageVisibility` / `useDeviceTier` hooks that downstream components use to adapt.
+
+## Requirements
 
 ### Requirement: Device tier detection
 The system SHALL detect the device capability tier and provide appropriate rendering quality settings. Detection SHALL use `navigator.maxTouchPoints`, viewport width, `navigator.hardwareConcurrency`, and `navigator.deviceMemory` (when available).

@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The site's internationalization layer: `site_content` and `projects` tables hold bilingual `{en, he}` JSONB; `useSiteText` and `useTranslated` hooks resolve the active language with EN fallback; `LanguageContext` persists the choice; no i18next dependency.
+
+## Requirements
 
 ### Requirement: site_content table
 A `site_content` table SHALL exist in Supabase with columns: `id` (serial primary key), `key` (text, not null), `value` (jsonb, not null), `created_at` (timestamptz, default now()). The `value` column SHALL conform to the shape `{ "en": string | null, "he": string | null }`. A unique constraint SHALL exist on `(key)`. The `lang` column SHALL NOT exist. RLS SHALL be enabled with a public read policy.

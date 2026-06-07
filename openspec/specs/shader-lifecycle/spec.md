@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Lifecycle management for WebGL shader canvases: pause on viewport exit, pause on tab hide via the Page Visibility API, color-animation throttling, and visibility-state propagation to downstream effects.
+
+## Requirements
 
 ### Requirement: Shader viewport pause
 When a shader section scrolls out of the viewport, the shader SHALL pause rendering by setting `speed={0}`. When the section scrolls back into viewport range (within 200px rootMargin), the shader SHALL resume its original speed value.

@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The home page's ordered single-page layout — navbar, hero, products bar, code carousel, about, skills grid, stats, wood carousel, testimonials, contact, footer — with smooth-scroll navigation and a baseline accessibility contract.
+
+## Requirements
 
 ### Requirement: Single page layout
 The entire site SHALL be a single scrollable page. There SHALL be no client-side routing. All sections render in a single component tree within `App.tsx`.
@@ -44,7 +48,7 @@ After the products bar, a full-width infinite carousel SHALL display all `Web-De
 - **THEN** web development projects scroll continuously to the right in 1:1 image cards
 
 ### Requirement: About section
-A full-width section with min-height 700px, `py-32`, and an HLS video background (from template, desaturated). Content: badge "About", heading "Self-taught. Ship-obsessed." (two lines), body text (3 paragraphs about self-teaching journey, shipping products, and 8200 background), and a "Download Resume" CTA button that downloads the resume PDF.
+The about section SHALL render full-width with min-height 700px, `py-32`, and an HLS video background (from template, desaturated). Content: badge "About", heading "Self-taught. Ship-obsessed." (two lines), body text (3 paragraphs about self-teaching journey, shipping products, and 8200 background), and a "Download Resume" CTA button that downloads the resume PDF.
 
 #### Scenario: Resume download
 - **WHEN** user clicks "Download Resume"
@@ -55,7 +59,7 @@ A full-width section with min-height 700px, `py-32`, and an HLS video background
 - **THEN** all text is sourced from `useSiteText()` with `about.*` keys
 
 ### Requirement: Skills grid section
-A section with `py-24` displaying badge "What I Do", heading "The full stack. For real.", and a 4-column grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`) of liquid-glass cards. Cards: (1) Mobile — Smartphone icon, (2) Backend & Infrastructure — Server icon, (3) AI & Agents — Brain icon, (4) Security & Protocols — Shield icon. Each card has an icon in a liquid-glass-strong circle, title in heading font, and description in body font.
+The skills grid section SHALL render with `py-24`, displaying badge "What I Do", heading "The full stack. For real.", and a 4-column grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`) of liquid-glass cards. Cards: (1) Mobile — Smartphone icon, (2) Backend & Infrastructure — Server icon, (3) AI & Agents — Brain icon, (4) Security & Protocols — Shield icon. Each card SHALL have an icon in a liquid-glass-strong circle, title in heading font, and description in body font.
 
 #### Scenario: Skills grid responsive layout
 - **WHEN** viewport is mobile
@@ -66,7 +70,7 @@ A section with `py-24` displaying badge "What I Do", heading "The full stack. Fo
 - **THEN** all four skills cards appear in a single row
 
 ### Requirement: Stats section
-A section with an HLS video background (desaturated, from template), top + bottom black fades. Content: a liquid-glass `rounded-3xl` card with `p-12 md:p-16`, `grid grid-cols-2 lg:grid-cols-4 gap-8 text-center`. Stats: "4+" / "Products in production", "5" / "Languages", "1,000+" / "Soldiers supported (8200)", "0" / "Runtime dependencies (Muse)". Values in heading font `text-4xl md:text-5xl lg:text-6xl`, labels in body font `text-white/60`.
+The stats section SHALL render with an HLS video background (desaturated, from template) and top + bottom black fades. Content: a liquid-glass `rounded-3xl` card with `p-12 md:p-16`, `grid grid-cols-2 lg:grid-cols-4 gap-8 text-center`. Stats: "4+" / "Products in production", "5" / "Languages", "1,000+" / "Soldiers supported (8200)", "0" / "Runtime dependencies (Muse)". Values SHALL use heading font `text-4xl md:text-5xl lg:text-6xl`, labels in body font `text-white/60`.
 
 #### Scenario: Stats render from Supabase
 - **WHEN** the stats section renders
@@ -91,14 +95,14 @@ A section with badge "What They Say", heading "Don't take our word for it.", and
 - **THEN** quotes display in a 3-column grid with glass card styling
 
 ### Requirement: Contact section
-A section with an HLS video background, heading "Let's build something.", subtext, contact form (see contact-form spec), social links row (GitHub, LinkedIn, X, Instagram, WhatsApp, Email as liquid-glass-strong rounded-full icon buttons), and a "Download Resume (PDF)" text link.
+The contact section SHALL render with an HLS video background, the localized heading (currently "Start with the hard part."), subtext, the contact form (see `contact-form` spec), a social links row (GitHub, LinkedIn, X, Instagram, WhatsApp, Email as liquid-glass-strong rounded-full icon buttons), and a "Download Resume (PDF)" text link.
 
 #### Scenario: Social links open correctly
 - **WHEN** user clicks the GitHub social link icon
 - **THEN** it opens `https://github.com/amitayks` in a new tab
 
 ### Requirement: Footer section
-A footer with `mt-32 pt-8 border-t border-white/10`. Left: copyright text "© 2026 Amitay Keisar". Right: links (Privacy, Terms, Contact) in `text-white/40 text-xs font-body`.
+The footer SHALL render with `mt-32 pt-8 border-t border-white/10`. Left: copyright text "© 2026 Amitay Keisar". Right: links (Privacy, Terms, Contact) in `text-white/40 text-xs font-body`.
 
 #### Scenario: Footer renders
 - **WHEN** the page is scrolled to the bottom

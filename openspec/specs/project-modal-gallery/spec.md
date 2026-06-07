@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The project modal's image gallery: a 60/40 width split between main image and a 2×3 square-thumbnail grid that swaps the main image on click, reading up to six images from `imagePack`.
+
+## Requirements
 
 ### Requirement: Image gallery uses 60/40 width split
 The `ProjectImageGallery` component SHALL display the main image at approximately 60% of the gallery width and the thumbnail area at approximately 40%.

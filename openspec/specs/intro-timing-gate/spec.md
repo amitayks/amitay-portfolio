@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The `IntroContext` that gates Hero animations and Navbar appearance until the intro overlay finishes. Skipped entirely under `prefers-reduced-motion`; plays on every page load.
+
+## Requirements
 
 ### Requirement: IntroContext provides intro phase state
 A React context (`IntroContext`) SHALL be created and provided at the app root level (wrapping `AppContent`). It SHALL expose the following values:

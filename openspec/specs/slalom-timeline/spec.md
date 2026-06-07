@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The "How I work" section's scroll-driven zigzag SVG path with glowing waypoint nodes that activate as the user scrolls. Step copy covers the client engagement journey, is translatable, and renders identically on mobile and desktop.
+
+## Requirements
 
 ### Requirement: Slalom SVG path renders as a zigzag across the viewport
 The section SHALL render an SVG path that zigzags horizontally — left-to-right on the first row, then curves down and goes right-to-left on the next row, repeating. The path SHALL use quadratic/cubic bezier curves for the connecting arcs between rows.

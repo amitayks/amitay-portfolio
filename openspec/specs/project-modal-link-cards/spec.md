@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+The project modal's external-link cards (live site / GitHub): clickable preview-image buttons with blurred title overlays in a 2-column grid; images fetched via `usePortfolioImage`, with sensible fallbacks when previews or links are absent.
+
+## Requirements
 
 ### Requirement: Link cards display preview image as clickable button
 GitHub and LiveSite links SHALL be presented as tall image cards (9:16 aspect ratio) where the preview image fills the card and the entire card is clickable, opening the link in a new tab.
