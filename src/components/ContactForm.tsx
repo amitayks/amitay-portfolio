@@ -15,10 +15,11 @@ import { LanguageTransition } from "@/components/LanguageTransition";
 const HEIGHT_TRANSITION = "height 0.35s cubic-bezier(0.16, 1, 0.3, 1)";
 
 const schema = z.object({
+  challenge: z.string().min(30),
+  tried: z.string().min(20),
+  whyNow: z.string().min(15),
   name: z.string().min(2),
   email: z.string().email(),
-  subject: z.string().min(2),
-  message: z.string().min(10),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -55,8 +56,10 @@ export function ContactForm() {
         {
           from_name: data.name,
           from_email: data.email,
-          subject: data.subject,
-          message: data.message,
+          challenge: data.challenge,
+          tried: data.tried,
+          why_now: data.whyNow,
+          subject: `${t("contact.email.subjectPrefix", "New project — ")}${data.name}`,
         },
         EMAILJS_CONFIG.USER_ID
       );
@@ -85,25 +88,93 @@ export function ContactForm() {
             >
               <CheckCircle2 className="w-12 h-12 text-green-400 mb-4" />
               <p className="text-white font-body text-lg">
-                {t("contact.form.success", "Message sent! I'll get back to you soon.")}
+                {t("contact.form.success", "Message sent! We'll get back to you soon.")}
               </p>
             </motion.div>
           ) : (
             <motion.form
               key="form"
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4"
+              className="space-y-5"
               exit={{ opacity: 0 }}
             >
               <LanguageTransition>
-                <div dir={dir} className="space-y-4">
+                <div dir={dir} className="space-y-5 text-start">
+                  <div>
+                    <label className="block text-white/80 font-body text-sm mb-2">
+                      {t(
+                        "contact.form.challenge.label",
+                        "What's the biggest challenge you're trying to solve right now?"
+                      )}
+                    </label>
+                    <Textarea
+                      placeholder={t(
+                        "contact.form.challenge.placeholder",
+                        "The real problem, in your words…"
+                      )}
+                      {...register("challenge", { required: true, minLength: 30 })}
+                    />
+                    {errors.challenge && (
+                      <p className="text-red-400 text-xs mt-1">
+                        {t(
+                          "contact.form.challenge.error",
+                          "Give us a sentence or two — what's actually in the way?"
+                        )}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-white/80 font-body text-sm mb-2">
+                      {t("contact.form.tried.label", "What have you already tried?")}
+                    </label>
+                    <Textarea
+                      placeholder={t(
+                        "contact.form.tried.placeholder",
+                        "What you've already explored or built…"
+                      )}
+                      {...register("tried", { required: true, minLength: 20 })}
+                    />
+                    {errors.tried && (
+                      <p className="text-red-400 text-xs mt-1">
+                        {t(
+                          "contact.form.tried.error",
+                          "A line or two on what you've tried helps a lot."
+                        )}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-white/80 font-body text-sm mb-2">
+                      {t("contact.form.whyNow.label", "Why is now the right time to address this?")}
+                    </label>
+                    <Textarea
+                      placeholder={t(
+                        "contact.form.whyNow.placeholder",
+                        "The deadline, opportunity, or breaking point…"
+                      )}
+                      {...register("whyNow", { required: true, minLength: 15 })}
+                    />
+                    {errors.whyNow && (
+                      <p className="text-red-400 text-xs mt-1">
+                        {t(
+                          "contact.form.whyNow.error",
+                          "Even a short reason helps us prioritize."
+                        )}
+                      </p>
+                    )}
+                  </div>
+
                   <div>
                     <Input
                       placeholder={t("contact.form.name.placeholder", "Your name")}
                       {...register("name", { required: true, minLength: 2 })}
                     />
                     {errors.name && (
-                      <p className="text-red-400 text-xs mt-1">Name is required (min 2 characters)</p>
+                      <p className="text-red-400 text-xs mt-1">
+                        {t("contact.form.name.error", "Tell us your name.")}
+                      </p>
                     )}
                   </div>
 
@@ -114,31 +185,8 @@ export function ContactForm() {
                       {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
                     />
                     {errors.email && (
-                      <p className="text-red-400 text-xs mt-1">Valid email is required</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Input
-                      placeholder={t("contact.form.subject.placeholder", "What's this about?")}
-                      {...register("subject", { required: true, minLength: 2 })}
-                    />
-                    {errors.subject && (
-                      <p className="text-red-400 text-xs mt-1">Subject is required</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Textarea
-                      placeholder={t(
-                        "contact.form.message.placeholder",
-                        "Tell me about your project..."
-                      )}
-                      {...register("message", { required: true, minLength: 10 })}
-                    />
-                    {errors.message && (
                       <p className="text-red-400 text-xs mt-1">
-                        Message is required (min 10 characters)
+                        {t("contact.form.email.error", "We need a valid email to reply.")}
                       </p>
                     )}
                   </div>

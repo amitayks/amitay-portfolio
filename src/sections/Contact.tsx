@@ -17,12 +17,12 @@ export function Contact() {
       <div className="relative z-10 text-center">
         <SectionHeading className="text-5xl md:text-6xl lg:text-7xl">
           <LanguageTransition inline>
-            {t("contact.heading", "Let's build something.")}
+            {t("contact.heading", "Start with the hard part.")}
           </LanguageTransition>
         </SectionHeading>
         <p className="text-white/60 font-body font-light text-sm md:text-base mt-4 mb-12">
           <LanguageTransition inline>
-            {t("contact.subtext", "Have a project in mind? Tell me about it and I'll get back to you within 24 hours.")}
+            {t("contact.subtext", "Three honest questions. We'll get back to you within 24 hours.")}
           </LanguageTransition>
         </p>
 
