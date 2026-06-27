@@ -1,8 +1,9 @@
-## Purpose
+## RENAMED Requirements
 
-The "How I work" section's scroll-driven vertical sine serpentine with glowing bulb nodes that pop into existence beside the line as the user scrolls. Step copy covers the client engagement journey, is translatable, and renders identically on mobile and desktop.
+- FROM: `### Requirement: Slalom SVG path renders as a zigzag across the viewport`
+- TO: `### Requirement: Timeline SVG path renders as a vertical serpentine`
 
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Timeline SVG path renders as a vertical serpentine
 The section SHALL render a single continuous SVG path shaped as a vertical sine serpentine that flows top→bottom while swaying left and right around a center axis. The path SHALL be corner-free (no straight segments meeting at sharp angles) so the scroll-driven draw reads as smooth. The path SHALL be generated from a sine function (`x = cx − amplitude · cos(2π·(y − y0)/wavelength)`) rather than hand-authored segment commands.
@@ -15,17 +16,6 @@ The section SHALL render a single continuous SVG path shaped as a vertical sine 
 - **WHEN** the viewport width changes
 - **THEN** the serpentine scales proportionally via the SVG viewBox while keeping the same wave structure on all screen sizes
 
-### Requirement: Path draws itself on scroll
-The SVG path line SHALL animate its `stroke-dashoffset` based on the user's scroll position within the section. The line SHALL progressively reveal from start to end as the user scrolls through the section.
-
-#### Scenario: Path drawing tied to scroll
-- **WHEN** the user scrolls through the HowIWork section
-- **THEN** the SVG stroke draws proportionally — at 0% scroll the path is invisible, at 100% scroll the full path is drawn
-
-#### Scenario: Path uses gradient
-- **WHEN** the path is drawn
-- **THEN** the visible stroke transitions from a cool tone (start) to a warm tone (end) along the path length
-
 ### Requirement: Nodes are positioned along the path at waypoints
 Each journey step SHALL be anchored to a left/right extreme of the wave (derived from the same sine function that generates the path) and rendered as a bulb-and-label group placed just **outside** the curve in the open space — not centered on the line. Within the group the bulb SHALL sit nearest the line and the label beyond it; the group SHALL flow to the left of left-extreme nodes and to the right of right-extreme nodes.
 
@@ -36,6 +26,13 @@ Each journey step SHALL be anchored to a left/right extreme of the wave (derived
 #### Scenario: Bulbs render behind the line
 - **WHEN** a bulb and its glow are near the line
 - **THEN** the line stroke renders in front of the bulb (the bulb appears to sit behind the line)
+
+### Requirement: Journey steps cover the full client engagement
+The timeline SHALL include 5 nodes that summarize the client journey from first contact to a live product.
+
+#### Scenario: All journey phases are represented
+- **WHEN** the section renders
+- **THEN** nodes cover, in order: First Contact, Scope & Proposal, Build, Iterate, Your Product Live
 
 ### Requirement: Nodes glow on scroll activation
 Each node bulb SHALL be hidden (not yet "in existence") until the scroll-driven line draw reaches it. **WHEN** the draw reaches a node, its bulb SHALL pop into existence with a springy scale-up while sliding outward from behind the line, then settle to a lit state. Two lit states SHALL exist: active (bright glow, the current frontier) and passed (soft steady glow). Labels SHALL fade in alongside their bulb.
@@ -51,20 +48,6 @@ Each node bulb SHALL be hidden (not yet "in existence") until the scroll-driven 
 #### Scenario: Final node has special treatment
 - **WHEN** the last node ("Your Product, Live") activates
 - **THEN** it renders larger than other nodes with an intensified (golden) glow effect
-
-### Requirement: Journey steps cover the full client engagement
-The timeline SHALL include 5 nodes that summarize the client journey from first contact to a live product.
-
-#### Scenario: All journey phases are represented
-- **WHEN** the section renders
-- **THEN** nodes cover, in order: First Contact, Scope & Proposal, Build, Iterate, Your Product Live
-
-### Requirement: All text content is translatable
-All node labels and descriptions SHALL use the `useSiteText` hook with Supabase keys and English fallbacks. Hebrew translations SHALL exist in Supabase.
-
-#### Scenario: Language switch updates all labels
-- **WHEN** the user switches language from EN to HE
-- **THEN** all node labels and descriptions update to Hebrew
 
 ### Requirement: Same layout on mobile and desktop
 The serpentine layout SHALL be identical on mobile and desktop. Only stroke width, node size, label font size, and overall scale SHALL adjust. The vertical wave structure SHALL NOT collapse to a straight vertical line on mobile.

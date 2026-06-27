@@ -5,7 +5,21 @@ import { SectionBadge } from "@/components/SectionBadge";
 import { SectionHeading } from "@/components/SectionHeading";
 import { LanguageTransition } from "@/components/LanguageTransition";
 
-/* ── Node definitions ───────────────────────────────────────────────── */
+/* ── Serpentine geometry ─────────────────────────────────────────────
+   A single continuous vertical sine wave (no corners) that flows
+   top→bottom while swaying left/right around a center axis.
+   x(y) = cx − amplitude · cos(2π·(y − y0)/wavelength)
+   The −cos phase puts node 1 at the LEFT extreme at y = y0, then
+   extremes alternate right/left every half-period.
+*/
+const CX = 300; // center axis (viewBox is 600 wide)
+const AMPLITUDE = 210; // x ∈ [90, 510]
+const WAVELENGTH = 640; // λ; half-period H = 320
+const Y0 = 120; // first node / top padding
+const HALF_PERIODS = 4; // 5 nodes ⇒ 4 gaps
+const SAMPLES_PER_HALF = 24; // polyline density per half-period
+
+const VIEWBOX = "0 0 600 1520"; // tall + narrow
 
 interface NodeDef {
   key: string;
@@ -14,47 +28,61 @@ interface NodeDef {
   y: number;
 }
 
-// Coordinates match the SVG viewBox (0 0 1000 780)
-// Positioned ON the horizontal path segments
-const NODES: NodeDef[] = [
-  // Row 1 — left→right (y=120)
-  { key: "journey.node1.label", fallback: "First Contact",     x: 80,  y: 120 },
-  { key: "journey.node2.label", fallback: "Scoping Call",      x: 360, y: 120 },
-  { key: "journey.node3.label", fallback: "Proposal & Cost",   x: 640, y: 120 },
-  { key: "journey.node4.label", fallback: "Architecture Plan", x: 920, y: 120 },
-  // Row 2 — right→left (y=340)
-  { key: "journey.node5.label", fallback: "Kickoff",           x: 920, y: 340 },
-  { key: "journey.node6.label", fallback: "First Build",       x: 640, y: 340 },
-  { key: "journey.node7.label", fallback: "Weekly Check-ins",  x: 360, y: 340 },
-  { key: "journey.node8.label", fallback: "Iterations",        x: 80,  y: 340 },
-  // Row 3 — left→right (y=560)
-  { key: "journey.node9.label",  fallback: "Final Review",     x: 80,  y: 560 },
-  { key: "journey.node10.label", fallback: "Deployment",       x: 360, y: 560 },
-  { key: "journey.node11.label", fallback: "Handoff",          x: 700, y: 560 },
-  // Row 4 — right→left (y=720)
-  { key: "journey.node12.label", fallback: "Post-Launch",         x: 700, y: 720 },
-  { key: "journey.node13.label", fallback: "Your Product, Live",  x: 300, y: 720 },
+/* Builds the sine path as a dense polyline; smooth at this density and
+   exact for getPointAtLength node snapping (same fn drives buildNodes). */
+function buildSinePath(
+  cx: number,
+  amplitude: number,
+  wavelength: number,
+  halfPeriods: number,
+  y0: number,
+  samplesPerHalf: number,
+): string {
+  const yEnd = y0 + halfPeriods * (wavelength / 2);
+  const total = halfPeriods * samplesPerHalf;
+  const cmds: string[] = [];
+  for (let i = 0; i <= total; i++) {
+    const y = y0 + (i / total) * (yEnd - y0);
+    const x = cx - amplitude * Math.cos((2 * Math.PI * (y - y0)) / wavelength);
+    cmds.push(`${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+  return cmds.join(" ");
+}
+
+// 5-step journey — merged from the prior 13. Labels are translatable.
+const NODE_LABELS: Pick<NodeDef, "key" | "fallback">[] = [
+  { key: "journey.node1.label", fallback: "First Contact" },
+  { key: "journey.node2.label", fallback: "Scope & Proposal" },
+  { key: "journey.node3.label", fallback: "Build" },
+  { key: "journey.node4.label", fallback: "Iterate" },
+  { key: "journey.node5.label", fallback: "Your Product, Live" },
 ];
 
-/* ── SVG slalom path ─────────────────────────────────────────────────
-   4 rows connected by smooth arcs.
-   Row 1 L→R, arc down, Row 2 R→L, arc down, Row 3 L→R, arc down, Row 4 R→L
-*/
-const SLALOM_PATH = [
-  "M 80 120",
-  "L 920 120",
-  "Q 975 120 975 230",
-  "Q 975 340 920 340",
-  "L 80 340",
-  "Q 25 340 25 450",
-  "Q 25 560 80 560",
-  "L 700 560",
-  "Q 755 560 755 640",
-  "Q 755 720 700 720",
-  "L 300 720",
-].join(" ");
+/* Places each node at an alternating wave extreme using the SAME sine
+   math as the path, so coordinates always sit exactly on the curve. */
+function buildNodes(
+  cx: number,
+  amplitude: number,
+  wavelength: number,
+  y0: number,
+): NodeDef[] {
+  const H = wavelength / 2;
+  return NODE_LABELS.map((label, i) => {
+    const y = y0 + i * H;
+    const x = cx - amplitude * Math.cos((2 * Math.PI * (y - y0)) / wavelength);
+    return { ...label, x, y };
+  });
+}
 
-const VIEWBOX = "0 0 1000 780";
+const NODES: NodeDef[] = buildNodes(CX, AMPLITUDE, WAVELENGTH, Y0);
+const SERPENTINE_PATH = buildSinePath(
+  CX,
+  AMPLITUDE,
+  WAVELENGTH,
+  HALF_PERIODS,
+  Y0,
+  SAMPLES_PER_HALF,
+);
 
 /* ── Lightbulb SVG ──────────────────────────────────────────────────── */
 
@@ -207,12 +235,12 @@ export function HowIWork() {
         </SectionHeading>
       </div>
 
-      {/* Slalom container */}
-      <div className="relative max-w-5xl mx-auto">
+      {/* Serpentine container — narrow ribbon, gutters hold the side labels */}
+      <div className="relative mx-auto max-w-xs sm:max-w-sm md:max-w-md">
         {/* SVG — single path, identical on all screen sizes */}
         <svg
           viewBox={VIEWBOX}
-          className="w-full h-auto"
+          className="relative z-10 w-full h-auto"
           preserveAspectRatio="xMidYMid meet"
           fill="none"
         >
@@ -225,7 +253,7 @@ export function HowIWork() {
 
           {/* Background track — always fully visible (comics outline) */}
           <path
-            d={SLALOM_PATH}
+            d={SERPENTINE_PATH}
             stroke="rgba(255,255,255,0.1)"
             strokeWidth={3}
             strokeLinecap="round"
@@ -235,7 +263,7 @@ export function HowIWork() {
           {/* Foreground — draws with scroll, colored gradient */}
           <motion.path
             ref={pathRef}
-            d={SLALOM_PATH}
+            d={SERPENTINE_PATH}
             stroke="url(#slalom-grad)"
             strokeWidth={3}
             strokeLinecap="round"
@@ -245,14 +273,20 @@ export function HowIWork() {
           />
         </svg>
 
-        {/* Nodes overlay — bulb above line, label below line */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Nodes overlay — bulb + label grouped just outside the curve.
+            Sits behind the line (svg has z-10) so bulbs pop out from
+            behind it, sliding outward as the scroll-line reaches them. */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
           {NODES.map((node, i) => {
             const state = nodeStates[i];
+            const isLit = state !== "unlit";
             const isFinal = i === NODES.length - 1;
             const label = t(node.key, node.fallback);
-            const leftPct = (node.x / 1000) * 100;
-            const topPct = (node.y / 780) * 100;
+            const leftPct = (node.x / 600) * 100;
+            const topPct = (node.y / 1520) * 100;
+            // Outer side of each bump: left-extreme groups flow left, right-extreme right
+            const onLeft = node.x < CX;
+            const dir = onLeft ? -1 : 1; // outward direction
 
             return (
               <div
@@ -260,29 +294,41 @@ export function HowIWork() {
                 className="absolute"
                 style={{ left: `${leftPct}%`, top: `${topPct}%` }}
               >
-                {/* Bulb — floating above the line */}
+                {/* Group anchored to the curve point, laid out toward the outer side.
+                    flex-row-reverse keeps the bulb nearest the line for left bumps. */}
                 <div
-                  className="absolute left-1/2"
-                  style={{ transform: "translate(-50%, -105%)" }}
+                  className={`absolute top-1/2 flex items-center gap-2 ${onLeft ? "flex-row-reverse" : "flex-row"}`}
+                  style={{
+                    transform: onLeft
+                      ? "translate(calc(-100% - 10px), -50%)"
+                      : "translate(10px, -50%)",
+                  }}
                 >
-                  <BulbIcon state={state} isFinal={isFinal} />
-                </div>
+                  {/* Bulb — pops into existence from behind the line, sliding outward */}
+                  <motion.div
+                    initial={false}
+                    animate={
+                      isLit
+                        ? { scale: 1, opacity: 1, x: 0 }
+                        : { scale: 0, opacity: 0, x: -dir * 12 }
+                    }
+                    transition={{ type: "spring", stiffness: 480, damping: 16, mass: 0.6 }}
+                  >
+                    <BulbIcon state={state} isFinal={isFinal} />
+                  </motion.div>
 
-                {/* Label — below the line */}
-                <div
-                  className="absolute left-1/2"
-                  style={{ transform: "translate(-50%, 6px)" }}
-                >
+                  {/* Label — beside the bulb, on the outer side */}
                   <LanguageTransition inline>
                     <span
                       className={`
                         font-body font-light text-[8px] md:text-xs whitespace-nowrap
                         transition-all duration-500
-                        ${state === "unlit"
-                          ? "opacity-20 text-white/30"
-                          : state === "active"
+                        ${onLeft ? "text-right" : "text-left"}
+                        ${isLit
+                          ? state === "active"
                             ? "opacity-100 text-white"
                             : "opacity-60 text-white/60"
+                          : "opacity-0 text-white/30"
                         }
                       `}
                     >
