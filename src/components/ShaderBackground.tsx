@@ -3,6 +3,7 @@ import { NeuroNoise, GodRays, Water } from "@paper-design/shaders-react";
 import { cn } from "@/lib/utils";
 import { usePageVisibility } from "@/hooks/usePageVisibility";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
+import { WarpStarfield } from "@/components/WarpStarfield";
 
 interface ShaderBackgroundProps {
   variant: "hero" | "about" | "stats" | "contact";
@@ -11,7 +12,7 @@ interface ShaderBackgroundProps {
 
 // --- CSS gradient fallbacks (shown when shader isn't mounted or crashes) ---
 const FALLBACK_GRADIENTS: Record<ShaderBackgroundProps["variant"], string> = {
-  hero: "radial-gradient(ellipse at 80% 20%, #1c1510 0%, #12171a 30%, #060504 70%, #000 100%)",
+  hero: "radial-gradient(ellipse at 50% 42%, #0a1430 0%, #060a1c 35%, #02030a 70%, #000 100%)",
   about: "radial-gradient(ellipse at 50% 50%, #0a1520 0%, #000 100%)",
   stats: "radial-gradient(ellipse at 50% 50%, #0a1628 0%, #000 100%)",
   contact: "radial-gradient(ellipse at 50% 60%, #0a1218 0%, #040608 40%, #000 100%)",
@@ -87,72 +88,8 @@ function LazyShader({
   );
 }
 
-// --- Color animation for hero rays ---
-
-const HERO_RAY_COLORS_HSL: [number, number, number][] = [
-  [207, 35, 18],  // mountain haze blue
-  [194, 28, 14],  // valley teal
-  [72, 22, 12],   // dark olive grass
-  [209, 30, 16],  // slate blue distance
-  [75, 28, 10],   // deep green foreground
-];
-
-function hslToHex(h: number, s: number, l: number): string {
-  const sn = s / 100;
-  const ln = l / 100;
-  const a = sn * Math.min(ln, 1 - ln);
-  const f = (n: number) => {
-    const k = (n + h / 30) % 12;
-    const color = ln - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color).toString(16).padStart(2, "0");
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
-}
-
-function useAnimatedRayColors(baseColors: [number, number, number][], speed = 0.3) {
-  const [colors, setColors] = useState(() =>
-    baseColors.map(([h, s, l]) => hslToHex(h, s, l))
-  );
-
-  useEffect(() => {
-    let frame: number;
-    let start: number | null = null;
-    let frameCount = 0;
-
-    const tick = (now: number) => {
-      if (!start) start = now;
-      frameCount++;
-
-      // Skip update when tab is hidden or not every 4th frame (throttle to ~15fps)
-      if (!document.hidden && frameCount % 4 === 0) {
-        const elapsed = (now - start) / 1000;
-
-        setColors(
-          baseColors.map(([h, s, l], i) => {
-            const drift = Math.sin(elapsed * speed + i * 1.3) * 18;
-            const satDrift = Math.sin(elapsed * speed * 0.7 + i * 0.9) * 8;
-            return hslToHex(
-              (h + drift + 360) % 360,
-              Math.max(10, Math.min(70, s + satDrift)),
-              l
-            );
-          })
-        );
-      }
-
-      frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [baseColors, speed]);
-
-  return colors;
-}
-
-// --- Configured speeds per variant ---
-const SHADER_SPEEDS: Record<ShaderBackgroundProps["variant"], number> = {
-  hero: 0.15,
+// --- Configured speeds per WebGL shader variant (hero uses the canvas WarpStarfield) ---
+const SHADER_SPEEDS: Record<Exclude<ShaderBackgroundProps["variant"], "hero">, number> = {
   about: 0.3,
   stats: 0.15,
   contact: 0.15,
@@ -161,38 +98,18 @@ const SHADER_SPEEDS: Record<ShaderBackgroundProps["variant"], number> = {
 // --- Main component ---
 
 export function ShaderBackground({ variant, className }: ShaderBackgroundProps) {
-  const heroColors = useAnimatedRayColors(HERO_RAY_COLORS_HSL, 0.8);
   const pageVisible = usePageVisibility();
   const { maxPixelCount } = useDeviceTier();
 
   const getSpeed = (isVisible: boolean) =>
-    isVisible && pageVisible ? SHADER_SPEEDS[variant] : 0;
+    isVisible && pageVisible && variant !== "hero" ? SHADER_SPEEDS[variant] : 0;
 
   return (
     <div className={cn("absolute inset-0 z-0 overflow-hidden", className)}>
       <LazyShader fallback={FALLBACK_GRADIENTS[variant]}>
         {(isVisible) => (
           <>
-            {variant === "hero" && (
-              <GodRays
-                colors={heroColors}
-                colorBack="#060504"
-                colorBloom="#3a2810"
-                bloom={0.35}
-                intensity={0.55}
-                density={0.45}
-                spotty={0.2}
-                midSize={0.2}
-                midIntensity={0.15}
-                speed={getSpeed(isVisible)}
-                maxPixelCount={maxPixelCount}
-                offsetX={0.5}
-                offsetY={-0.4}
-                rotation={25}
-                scale={1.4}
-                style={{ width: "100%", height: "100%" }}
-              />
-            )}
+            {variant === "hero" && <WarpStarfield isVisible={isVisible} />}
 
             {variant === "about" && (
               <NeuroNoise

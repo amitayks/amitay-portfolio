@@ -1,8 +1,4 @@
-## Purpose
-
-Lifecycle management for the hero warp starfield and WebGL shader canvases: pause/teardown on viewport exit, pause on tab hide via the Page Visibility API, and visibility-state propagation to downstream effects.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Shader viewport pause
 When a shader section scrolls out of the viewport, it SHALL do no rendering work. For WebGL shader sections this is done by setting `speed={0}`; the hero warp starfield is unmounted by `LazyShader` (its `requestAnimationFrame` loop is torn down) once the hero leaves the 200px rootMargin. When the section scrolls back into viewport range, a WebGL shader SHALL resume its original speed value, while the hero warp starfield SHALL re-mount and replay its warp entry (it is not resumed from a frozen state).
@@ -26,9 +22,8 @@ All shaders and animation loops SHALL pause when the browser tab is not visible.
 - **WHEN** the user returns to the portfolio tab
 - **THEN** shaders resume their configured speed and the hero warp starfield resumes star travel
 
-### Requirement: Visibility state propagation
-The `LazyShader` component SHALL expose its `isVisible` state to child shader components. Shader variants SHALL receive visibility state to control their `speed` prop.
+## REMOVED Requirements
 
-#### Scenario: LazyShader provides visibility to children
-- **WHEN** a shader is rendered inside `LazyShader`
-- **THEN** the shader component receives the current visibility state and adjusts its `speed` prop accordingly
+### Requirement: Color animation throttling
+**Reason**: The `useAnimatedRayColors` hook existed only to drive the hero `GodRays` ray colors. The hero now uses the canvas-2D warp starfield (see the `hero-warp-starfield` capability), whose color and motion are intrinsic to its own rAF render loop, so the separate throttled color-animation hook is removed.
+**Migration**: Remove `useAnimatedRayColors` and `HERO_RAY_COLORS_HSL` from `ShaderBackground.tsx`. Hero color/motion is now produced by the warp starfield's own render loop; no separate per-frame color recomputation hook is required. The remaining WebGL shaders (`about` NeuroNoise, `contact` Water) use static color props and never depended on this hook.
