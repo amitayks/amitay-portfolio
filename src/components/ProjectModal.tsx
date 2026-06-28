@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Github, ExternalLink, User } from "lucide-react";
+import { X, Github, ExternalLink, User, type LucideIcon } from "lucide-react";
 import { marked } from "marked";
 import { usePortfolioItem } from "@/hooks/usePortfolioItem";
-import { usePortfolioImage } from "@/hooks/usePortfolioImage";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteText } from "@/hooks/useSiteText";
 import { useTranslated, pickLang } from "@/hooks/useTranslated";
@@ -19,74 +18,45 @@ interface ProjectModalProps {
 function ProjectLinkCard({
   link,
   label,
-  previewImageName,
   type,
 }: {
   link: string;
   label: string;
-  previewImageName?: string;
   type: "github" | "live";
 }) {
-  const { data: imageUrl } = usePortfolioImage(previewImageName ?? null);
-  const [imgFailed, setImgFailed] = useState(false);
   const Icon = type === "github" ? Github : ExternalLink;
-  const showFallback = !previewImageName || !imageUrl || imgFailed;
 
   return (
     <motion.a
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block rounded-xl overflow-hidden relative aspect-[9/16] cursor-pointer"
-      whileHover={{ y: -6, scale: 1.02 }}
+      aria-label={label}
+      className="rounded-xl flex-1 min-h-0 px-5 py-3 flex items-center justify-center gap-2.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/5 text-white/70 hover:text-white transition-colors cursor-pointer"
+      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="absolute inset-0">
-        {showFallback ? (
-          <div className="w-full h-full liquid-glass flex items-center justify-center">
-            <Icon className="w-16 h-16 text-white/20" />
-          </div>
-        ) : (
-          <img
-            src={imageUrl}
-            alt={`${label} preview`}
-            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-            onError={() => setImgFailed(true)}
-          />
-        )}
-      </div>
-      <div
-        className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
-        style={{
-          maskImage: "linear-gradient(to top, black 0%, black 40%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to top, black 0%, black 40%, transparent 100%)",
-        }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.4) 50%, transparent 100%)",
-          }}
-        />
-        <div className="absolute inset-0 flex flex-col justify-end pb-5 px-5">
-          <div className="flex items-center gap-2.5">
-            <Icon className="w-5 h-5 flex-shrink-0 text-white drop-shadow-lg" />
-            <span className="text-base font-semibold text-white drop-shadow-lg truncate">
-              {label}
-            </span>
-          </div>
-        </div>
-      </div>
+      <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+      <span className="text-base font-medium">{label}</span>
     </motion.a>
+  );
+}
+
+// Square developer image (placeholder when no avatar). Renders as a square box
+// with the image/icon absolutely filling it, so `aspect-square` holds reliably
+// whether sized by width or height.
+function DevAvatar({ url, className }: { url?: string | null; className?: string }) {
+  return (
+    <div className={`relative rounded-xl overflow-hidden ${className ?? ""}`}>
+      {url ? (
+        <img src={url} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 bg-white/10 flex items-center justify-center">
+          <User className="w-1/3 h-1/3 text-white/40" />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -126,56 +96,201 @@ function ProjectMetaRow({ project }: { project: PortfolioItem }) {
   );
 }
 
-function DeveloperAttribution({ project }: { project: PortfolioItem }) {
-  if (project.devAttribution === "hidden") return null;
-  const profiles = project.developerProfiles ?? [];
-  if (profiles.length === 0) return null;
+interface DevInfo {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  bio: string | null;
+}
+
+function devList(project: PortfolioItem): DevInfo[] {
+  const profiles =
+    project.devAttribution === "hidden" ? [] : project.developerProfiles ?? [];
+  const isAnon = project.devAttribution === "anonymized";
+  return profiles.map((p, idx) => ({
+    id: p.id,
+    name: isAnon ? `Developer ${String.fromCharCode(65 + idx)}` : p.display_name || "—",
+    avatarUrl: isAnon ? null : p.avatar_url,
+    bio: isAnon ? null : p.bio,
+  }));
+}
+
+function hasCreditsContent(project: PortfolioItem): boolean {
+  return devList(project).length > 0 || !!project.github || !!project.liveSite;
+}
+
+// Developer slot — adapts to dev count:
+//   1   → image | name / description
+//   2   → image + name pair (two columns)
+//   3–6 → image-only thumbnails (3 cols × 2 rows)
+function DevSlot({ project }: { project: PortfolioItem }) {
+  const devs = devList(project);
+  if (devs.length === 0) return null;
+  const header = devs.length > 1 ? "Built by" : "Developer";
 
   return (
-    <div className="space-y-2">
+    <div className="liquid-glass rounded-2xl flex-[2] min-h-0 p-4 flex flex-col gap-3">
       <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-        {profiles.length > 1 ? "Built by" : "Developer"}
+        {header}
       </h3>
-      <div className="flex flex-wrap gap-3">
-        {profiles.map((p, idx) => {
-          const isAnon = project.devAttribution === "anonymized";
-          const name = isAnon
-            ? `Developer ${String.fromCharCode(65 + idx)}`
-            : p.display_name || "—";
-          const avatar = !isAnon && p.avatar_url;
-          return (
-            <div
-              key={p.id}
-              className="flex items-center gap-2 liquid-glass rounded-full pl-1 pr-3 py-1"
-            >
-              {avatar ? (
-                <img
-                  src={avatar}
-                  alt=""
-                  className="w-6 h-6 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
-                  <User className="w-3.5 h-3.5 text-white/50" />
-                </div>
-              )}
-              <span className="text-xs text-white/80">{name}</span>
-              {idx === 0 && profiles.length > 1 && (
-                <span className="text-[10px] uppercase tracking-wider text-white/40">
-                  Lead
-                </span>
-              )}
+
+      {devs.length === 1 ? (
+        <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-3 text-center">
+          <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+            <DevAvatar
+              url={devs[0].avatarUrl}
+              className="h-full max-h-[200px] aspect-square"
+            />
+          </div>
+          <div className="min-w-0 max-w-full shrink-0">
+            <div className="text-xl font-semibold text-white truncate">{devs[0].name}</div>
+            {devs[0].bio && (
+              <p className="mt-1 text-xs text-white/50 leading-snug line-clamp-3">
+                {devs[0].bio}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : devs.length === 2 ? (
+        <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 content-center">
+          {devs.map((d) => (
+            <div key={d.id} className="min-w-0 flex flex-col items-center gap-2 text-center">
+              <DevAvatar url={d.avatarUrl} className="w-2/3 max-w-[120px] aspect-square" />
+              <span className="text-sm font-medium text-white/90 truncate max-w-full">
+                {d.name}
+              </span>
             </div>
-          );
-        })}
+          ))}
+        </div>
+      ) : (
+        <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-2 gap-2">
+          {devs.slice(0, 6).map((d) => (
+            <DevAvatar key={d.id} url={d.avatarUrl} className="w-full h-full" />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Links container — header + GitHub/Live buttons. Renders only when a link exists.
+function ProjectLinksCard({ project }: { project: PortfolioItem }) {
+  const { lang } = useLanguage();
+  if (!project.github && !project.liveSite) return null;
+  const githubLabel = pickLang(project.github?.label, lang) ?? "GitHub";
+  const liveSiteLabel = pickLang(project.liveSite?.label, lang) ?? "Live Site";
+
+  return (
+    <div className="liquid-glass rounded-2xl flex-1 min-h-0 p-4 flex flex-col gap-3">
+      <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">Links</h3>
+      <div className="flex-1 min-h-0 flex flex-col gap-2">
+        {project.github && (
+          <ProjectLinkCard link={project.github.link} label={githubLabel} type="github" />
+        )}
+        {project.liveSite && (
+          <ProjectLinkCard link={project.liveSite.link} label={liveSiteLabel} type="live" />
+        )}
       </div>
+    </div>
+  );
+}
+
+// Side column beside the main image. Absolutely positioned to exactly the main
+// image's height (inset-y-0) so it can never push the row taller than the image;
+// its containers divide that fixed height and overflow is clipped.
+function ProjectSideColumn({ project }: { project: PortfolioItem }) {
+  return (
+    <div className="absolute inset-y-0 right-0 w-[38%] flex flex-col gap-3 overflow-hidden">
+      <DevSlot project={project} />
+      <ProjectLinksCard project={project} />
+    </div>
+  );
+}
+
+// A uniform credits tab (mobile): icon + label, either a link (github/live) or a
+// button (the developer tab — future: opens a dev-info window).
+function CreditTab({
+  icon: Icon,
+  label,
+  href,
+  onClick,
+}: {
+  icon: LucideIcon;
+  label: string;
+  href?: string;
+  onClick?: () => void;
+}) {
+  const className =
+    "rounded-xl px-5 py-4 flex items-center justify-center gap-2.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/5 text-white/70 hover:text-white transition-colors cursor-pointer";
+  const inner = (
+    <>
+      <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+      <span className="text-base font-medium truncate">{label}</span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={label}
+        className={className}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.3 }}
+      >
+        {inner}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={className}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.3 }}
+    >
+      {inner}
+    </motion.button>
+  );
+}
+
+// Mobile credits: three uniform tabs (developer name, GitHub, Live). No photo —
+// the developer tab will later open a dev-info window.
+function ProjectCreditsTabs({ project }: { project: PortfolioItem }) {
+  const { lang } = useLanguage();
+  const devs = devList(project);
+  const githubLabel = pickLang(project.github?.label, lang) ?? "GitHub";
+  const liveSiteLabel = pickLang(project.liveSite?.label, lang) ?? "Live Site";
+  const devLabel =
+    devs.length === 0
+      ? null
+      : devs.length === 1
+        ? devs[0].name
+        : `${devs[0].name} +${devs.length - 1}`;
+
+  return (
+    <div className="flex flex-col gap-3">
+      {devLabel && <CreditTab icon={User} label={devLabel} onClick={() => {}} />}
+      {project.github && (
+        <CreditTab icon={Github} label={githubLabel} href={project.github.link} />
+      )}
+      {project.liveSite && (
+        <CreditTab icon={ExternalLink} label={liveSiteLabel} href={project.liveSite.link} />
+      )}
     </div>
   );
 }
 
 export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
-  const { dir, lang } = useLanguage();
+  const { dir } = useLanguage();
   const { t } = useSiteText();
 
   const title = useTranslated(project?.title) ?? "";
@@ -216,10 +331,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [sku, onClose]);
-
-  const hasLinks = project?.github || project?.liveSite;
-  const githubLabel = pickLang(project?.github?.label, lang) ?? "GitHub";
-  const liveSiteLabel = pickLang(project?.liveSite?.label, lang) ?? "Live Site";
 
   return (
     <AnimatePresence>
@@ -265,19 +376,22 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
           >
             {isLoading ? (
               <div className="max-w-5xl mx-auto p-8 md:p-12 space-y-6">
-                <div className="flex gap-3">
-                  <div className="w-[60%] flex-shrink-0">
+                {/* Desktop: image + side column */}
+                <div className="relative hidden md:block">
+                  <div className="w-[60%]">
                     <LiquidSkeleton variant="image" className="aspect-square rounded-2xl w-full" />
                   </div>
-                  <div className="flex-1 grid grid-cols-2 grid-rows-3 gap-2">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <LiquidSkeleton
-                        key={i}
-                        variant="image"
-                        className="aspect-square rounded-[8px] w-full"
-                      />
-                    ))}
+                  <div className="absolute inset-y-0 right-0 w-[38%] flex flex-col gap-3">
+                    <LiquidSkeleton variant="image" className="flex-[2] rounded-2xl w-full" />
+                    <LiquidSkeleton variant="image" className="flex-1 rounded-2xl w-full" />
                   </div>
+                </div>
+                {/* Mobile: full-width image + three tabs */}
+                <div className="md:hidden space-y-3">
+                  <LiquidSkeleton variant="image" className="aspect-square rounded-2xl w-full" />
+                  <LiquidSkeleton variant="image" className="h-14 rounded-xl w-full" />
+                  <LiquidSkeleton variant="image" className="h-14 rounded-xl w-full" />
+                  <LiquidSkeleton variant="image" className="h-14 rounded-xl w-full" />
                 </div>
                 <LiquidSkeleton variant="text" className="w-1/2 h-8" />
                 <LiquidSkeleton variant="text" />
@@ -285,10 +399,24 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
               </div>
             ) : project ? (
               <div className="max-w-5xl mx-auto p-8 md:p-12 space-y-6">
-                <ProjectImageGallery
-                  mainImage={project.image}
-                  imagePack={project.imagePack ?? []}
-                />
+                {hasCreditsContent(project) ? (
+                  <>
+                    {/* Desktop: image + side column with the developer photo card */}
+                    <div className="relative hidden md:block">
+                      <div className="w-[60%]">
+                        <ProjectImageGallery mainImage={project.image} />
+                      </div>
+                      <ProjectSideColumn project={project} />
+                    </div>
+                    {/* Mobile: full-width image, then three uniform tabs (name only) */}
+                    <div className="md:hidden space-y-3">
+                      <ProjectImageGallery mainImage={project.image} />
+                      <ProjectCreditsTabs project={project} />
+                    </div>
+                  </>
+                ) : (
+                  <ProjectImageGallery mainImage={project.image} />
+                )}
 
                 <h2 dir={dir} className="font-heading italic text-3xl text-white">
                   {title}
@@ -299,8 +427,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                 <p dir={dir} className="text-white/60 font-body font-light text-base">
                   {description}
                 </p>
-
-                <DeveloperAttribution project={project} />
 
                 {problem && (
                   <div dir={dir} className="space-y-2">
@@ -374,26 +500,6 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   />
                 )}
 
-                {hasLinks && (
-                  <div className="grid grid-cols-2 gap-4">
-                    {project.github && (
-                      <ProjectLinkCard
-                        link={project.github.link}
-                        label={githubLabel}
-                        previewImageName={project.github.previewImage?.dark}
-                        type="github"
-                      />
-                    )}
-                    {project.liveSite && (
-                      <ProjectLinkCard
-                        link={project.liveSite.link}
-                        label={liveSiteLabel}
-                        previewImageName={project.liveSite.previewImage?.dark}
-                        type="live"
-                      />
-                    )}
-                  </div>
-                )}
               </div>
             ) : null}
           </motion.div>
