@@ -1,5 +1,6 @@
 export type UserRole = "admin" | "manager" | "dev" | "client";
 export type ProfileStatus = "active" | "suspended";
+export type AvailabilityStatus = "available" | "open_to_work" | "busy";
 
 export interface ProfileLinks {
   github?: string;
@@ -16,6 +17,9 @@ export interface Profile {
   display_name: string | null;
   avatar_url: string | null;
   bio: string | null;
+  headline: string | null;
+  skills: string[];
+  availability: AvailabilityStatus | null;
   resume_url: string | null;
   links: ProfileLinks;
   status: ProfileStatus;
@@ -31,6 +35,10 @@ export interface PublicProfile {
   avatar_url: string | null;
   github_handle: string | null;
   bio: string | null;
+  headline: string | null;
+  skills: string[];
+  availability: AvailabilityStatus | null;
+  resume_url: string | null;
   links: ProfileLinks;
 }
 
@@ -39,6 +47,9 @@ export interface ProfileEditable {
   display_name?: string | null;
   avatar_url?: string | null;
   bio?: string | null;
+  headline?: string | null;
+  skills?: string[];
+  availability?: AvailabilityStatus | null;
   resume_url?: string | null;
   links?: ProfileLinks;
   terms_accepted_at?: string;

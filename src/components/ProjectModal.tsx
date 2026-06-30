@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Github, ExternalLink, User, type LucideIcon } from "lucide-react";
 import { marked } from "marked";
@@ -8,6 +8,7 @@ import { useSiteText } from "@/hooks/useSiteText";
 import { useTranslated, pickLang } from "@/hooks/useTranslated";
 import { ProjectImageGallery } from "@/components/ProjectImageGallery";
 import { LiquidSkeleton } from "@/components/LiquidSkeleton";
+import { DevProfilePopup, type DevProfile } from "@/components/DevProfilePopup";
 import type { PortfolioItem } from "@/types/portfolio";
 
 interface ProjectModalProps {
@@ -96,14 +97,7 @@ function ProjectMetaRow({ project }: { project: PortfolioItem }) {
   );
 }
 
-interface DevInfo {
-  id: string;
-  name: string;
-  avatarUrl: string | null;
-  bio: string | null;
-}
-
-function devList(project: PortfolioItem): DevInfo[] {
+function devList(project: PortfolioItem): DevProfile[] {
   const profiles =
     project.devAttribution === "hidden" ? [] : project.developerProfiles ?? [];
   const isAnon = project.devAttribution === "anonymized";
@@ -112,7 +106,39 @@ function devList(project: PortfolioItem): DevInfo[] {
     name: isAnon ? `Developer ${String.fromCharCode(65 + idx)}` : p.display_name || "—",
     avatarUrl: isAnon ? null : p.avatar_url,
     bio: isAnon ? null : p.bio,
+    headline: isAnon ? null : p.headline,
+    skills: isAnon ? [] : p.skills ?? [],
+    availability: isAnon ? null : p.availability,
+    githubHandle: isAnon ? null : p.github_handle,
+    links: isAnon ? {} : p.links ?? {},
+    resumeUrl: isAnon ? null : p.resume_url,
   }));
+}
+
+// A developer cell becomes an interactive trigger only when `onSelect` is
+// provided (i.e. attribution is `named`); otherwise it renders inert.
+function DevCell({
+  dev,
+  onSelect,
+  className,
+  children,
+}: {
+  dev: DevProfile;
+  onSelect?: (dev: DevProfile) => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (!onSelect) return <div className={className}>{children}</div>;
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(dev)}
+      aria-label={`View ${dev.name}'s profile`}
+      className={`${className ?? ""} cursor-pointer transition-opacity hover:opacity-80`}
+    >
+      {children}
+    </button>
+  );
 }
 
 function hasCreditsContent(project: PortfolioItem): boolean {
@@ -123,7 +149,13 @@ function hasCreditsContent(project: PortfolioItem): boolean {
 //   1   → image | name / description
 //   2   → image + name pair (two columns)
 //   3–6 → image-only thumbnails (3 cols × 2 rows)
-function DevSlot({ project }: { project: PortfolioItem }) {
+function DevSlot({
+  project,
+  onSelectDev,
+}: {
+  project: PortfolioItem;
+  onSelectDev?: (dev: DevProfile) => void;
+}) {
   const devs = devList(project);
   if (devs.length === 0) return null;
   const header = devs.length > 1 ? "Built by" : "Developer";
@@ -135,7 +167,11 @@ function DevSlot({ project }: { project: PortfolioItem }) {
       </h3>
 
       {devs.length === 1 ? (
-        <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-3 text-center">
+        <DevCell
+          dev={devs[0]}
+          onSelect={onSelectDev}
+          className="flex-1 min-h-0 w-full flex flex-col items-center justify-center gap-3 text-center"
+        >
           <div className="flex-1 min-h-0 w-full flex items-center justify-center">
             <DevAvatar
               url={devs[0].avatarUrl}
@@ -150,22 +186,29 @@ function DevSlot({ project }: { project: PortfolioItem }) {
               </p>
             )}
           </div>
-        </div>
+        </DevCell>
       ) : devs.length === 2 ? (
         <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 content-center">
           {devs.map((d) => (
-            <div key={d.id} className="min-w-0 flex flex-col items-center gap-2 text-center">
+            <DevCell
+              key={d.id}
+              dev={d}
+              onSelect={onSelectDev}
+              className="min-w-0 flex flex-col items-center gap-2 text-center"
+            >
               <DevAvatar url={d.avatarUrl} className="w-2/3 max-w-[120px] aspect-square" />
               <span className="text-sm font-medium text-white/90 truncate max-w-full">
                 {d.name}
               </span>
-            </div>
+            </DevCell>
           ))}
         </div>
       ) : (
         <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-2 gap-2">
           {devs.slice(0, 6).map((d) => (
-            <DevAvatar key={d.id} url={d.avatarUrl} className="w-full h-full" />
+            <DevCell key={d.id} dev={d} onSelect={onSelectDev} className="w-full h-full">
+              <DevAvatar url={d.avatarUrl} className="w-full h-full" />
+            </DevCell>
           ))}
         </div>
       )}
@@ -198,10 +241,16 @@ function ProjectLinksCard({ project }: { project: PortfolioItem }) {
 // Side column beside the main image. Absolutely positioned to exactly the main
 // image's height (inset-y-0) so it can never push the row taller than the image;
 // its containers divide that fixed height and overflow is clipped.
-function ProjectSideColumn({ project }: { project: PortfolioItem }) {
+function ProjectSideColumn({
+  project,
+  onSelectDev,
+}: {
+  project: PortfolioItem;
+  onSelectDev?: (dev: DevProfile) => void;
+}) {
   return (
     <div className="absolute inset-y-0 right-0 w-[38%] flex flex-col gap-3 overflow-hidden">
-      <DevSlot project={project} />
+      <DevSlot project={project} onSelectDev={onSelectDev} />
       <ProjectLinksCard project={project} />
     </div>
   );
@@ -262,8 +311,14 @@ function CreditTab({
 }
 
 // Mobile credits: three uniform tabs (developer name, GitHub, Live). No photo —
-// the developer tab will later open a dev-info window.
-function ProjectCreditsTabs({ project }: { project: PortfolioItem }) {
+// the developer tab opens the developer profile popup (named attribution only).
+function ProjectCreditsTabs({
+  project,
+  onSelectDev,
+}: {
+  project: PortfolioItem;
+  onSelectDev?: (dev: DevProfile) => void;
+}) {
   const { lang } = useLanguage();
   const devs = devList(project);
   const githubLabel = pickLang(project.github?.label, lang) ?? "GitHub";
@@ -277,7 +332,13 @@ function ProjectCreditsTabs({ project }: { project: PortfolioItem }) {
 
   return (
     <div className="flex flex-col gap-3">
-      {devLabel && <CreditTab icon={User} label={devLabel} onClick={() => {}} />}
+      {devLabel && (
+        <CreditTab
+          icon={User}
+          label={devLabel}
+          onClick={onSelectDev ? () => onSelectDev(devs[0]) : undefined}
+        />
+      )}
       {project.github && (
         <CreditTab icon={Github} label={githubLabel} href={project.github.link} />
       )}
@@ -292,6 +353,12 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
   const { dir } = useLanguage();
   const { t } = useSiteText();
+  const [selectedDev, setSelectedDev] = useState<DevProfile | null>(null);
+
+  // The popup is reachable only for `named` attribution; otherwise triggers
+  // stay inert (anonymized/hidden have no real identity to reveal).
+  const openDev =
+    project?.devAttribution === "named" ? setSelectedDev : undefined;
 
   const title = useTranslated(project?.title) ?? "";
   const description = useTranslated(project?.description) ?? "";
@@ -300,6 +367,11 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const whatIBuilt = useTranslated(project?.whatIBuilt);
   const howItWorks = useTranslated(project?.howItWorks);
   const result = useTranslated(project?.result);
+
+  // Reset any open developer popup when the modal switches projects/closes.
+  useEffect(() => {
+    setSelectedDev(null);
+  }, [sku]);
 
   useEffect(() => {
     if (sku) {
@@ -406,12 +478,12 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                       <div className="w-[60%]">
                         <ProjectImageGallery mainImage={project.image} />
                       </div>
-                      <ProjectSideColumn project={project} />
+                      <ProjectSideColumn project={project} onSelectDev={openDev} />
                     </div>
                     {/* Mobile: full-width image, then three uniform tabs (name only) */}
                     <div className="md:hidden space-y-3">
                       <ProjectImageGallery mainImage={project.image} />
-                      <ProjectCreditsTabs project={project} />
+                      <ProjectCreditsTabs project={project} onSelectDev={openDev} />
                     </div>
                   </>
                 ) : (
@@ -503,6 +575,15 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
               </div>
             ) : null}
           </motion.div>
+
+          <AnimatePresence>
+            {selectedDev && (
+              <DevProfilePopup
+                dev={selectedDev}
+                onClose={() => setSelectedDev(null)}
+              />
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

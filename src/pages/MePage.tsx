@@ -2,12 +2,23 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateProfile } from "@/services/apiProfile";
+import type { AvailabilityStatus } from "@/types/profile";
+
+const AVAILABILITY_OPTIONS: { value: AvailabilityStatus | ""; label: string }[] = [
+  { value: "", label: "Not specified" },
+  { value: "available", label: "Available" },
+  { value: "open_to_work", label: "Open to work" },
+  { value: "busy", label: "Busy" },
+];
 
 export function MePage() {
   const { profile, user, refreshProfile, signOut } = useAuth();
   const [fullName, setFullName] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [headline, setHeadline] = useState("");
   const [bio, setBio] = useState("");
+  const [skillsInput, setSkillsInput] = useState("");
+  const [availability, setAvailability] = useState<AvailabilityStatus | "">("");
   const [github, setGithub] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [website, setWebsite] = useState("");
@@ -20,7 +31,10 @@ export function MePage() {
     if (!profile) return;
     setFullName(profile.full_name ?? "");
     setDisplayName(profile.display_name ?? "");
+    setHeadline(profile.headline ?? "");
     setBio(profile.bio ?? "");
+    setSkillsInput((profile.skills ?? []).join(", "));
+    setAvailability(profile.availability ?? "");
     setGithub(profile.links?.github ?? "");
     setLinkedin(profile.links?.linkedin ?? "");
     setWebsite(profile.links?.website ?? "");
@@ -48,10 +62,17 @@ export function MePage() {
           twitter: twitter.trim(),
         }).filter(([, v]) => v)
       );
+      const skills = skillsInput
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
       await updateProfile(profile.id, {
         full_name: fullName.trim() || null,
         display_name: displayName.trim() || null,
+        headline: headline.trim() || null,
         bio: bio.trim() || null,
+        skills,
+        availability: availability || null,
         links,
       });
       await refreshProfile();
@@ -103,11 +124,27 @@ export function MePage() {
         <form className="mt-10 space-y-5" onSubmit={onSubmit}>
           <Field label="Legal full name" value={fullName} onChange={setFullName} />
           <Field label="Display name" value={displayName} onChange={setDisplayName} />
+          <Field
+            label="Headline"
+            value={headline}
+            onChange={setHeadline}
+          />
           <TextArea
             label="Bio"
             value={bio}
             onChange={setBio}
             maxLength={500}
+          />
+          <Field
+            label="Skills (comma separated)"
+            value={skillsInput}
+            onChange={setSkillsInput}
+          />
+          <Select
+            label="Availability"
+            value={availability}
+            onChange={(v) => setAvailability(v as AvailabilityStatus | "")}
+            options={AVAILABILITY_OPTIONS}
           />
           <Field label="GitHub URL" value={github} onChange={setGithub} type="url" />
           <Field label="LinkedIn URL" value={linkedin} onChange={setLinkedin} type="url" />
@@ -155,6 +192,32 @@ function Field(props: {
         onChange={(e) => props.onChange(e.target.value)}
         className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40"
       />
+    </label>
+  );
+}
+
+function Select(props: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="block">
+      <span className="block text-xs uppercase tracking-wide text-white/50 mb-1.5">
+        {props.label}
+      </span>
+      <select
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+        className="w-full rounded-md bg-white/5 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40"
+      >
+        {props.options.map((o) => (
+          <option key={o.value} value={o.value} className="bg-neutral-900 text-white">
+            {o.label}
+          </option>
+        ))}
+      </select>
     </label>
   );
 }
