@@ -1,0 +1,12 @@
+-- Latent fix: the security_invoker view public.profiles_public filters
+-- `WHERE status = 'active'`. Under security_invoker the predicate is evaluated
+-- with the caller's privileges, so the caller needs SELECT on `status`. `anon`
+-- has only column-level grants on the safe public columns and was never granted
+-- `status`, so every anonymous read of profiles_public failed with
+-- "permission denied for table profiles" — the view has been unreadable by
+-- anonymous visitors since 20260522153035_keisar_club_security_hardening; it
+-- only surfaced now that the public site reads developer credits.
+--
+-- Safe: the RLS policy profiles_public_active_read restricts anon to rows where
+-- status = 'active', so the only status value anon can ever observe is 'active'.
+grant select (status) on public.profiles to anon;
