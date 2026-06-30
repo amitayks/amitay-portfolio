@@ -42,11 +42,11 @@ export function BlurText({ text, className, delay = 0 }: BlurTextProps) {
   }
 
   return (
-    <div ref={containerRef} className={cn("flex flex-wrap", className)}>
+    <div ref={containerRef} className={cn("flex flex-wrap gap-x-[0.25em]", className)}>
       {words.map((word, i) => (
         <motion.span
           key={`${word}-${i}`}
-          className="inline-block mr-[0.25em]"
+          className="inline-block"
           initial={{ filter: "blur(10px)", opacity: 0, y: 50 }}
           animate={
             isVisible
