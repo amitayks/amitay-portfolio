@@ -17,7 +17,9 @@ import { useDeviceTier } from "@/hooks/useDeviceTier";
 const MAX_WARP = 0.045;
 const MID_WARP = 0.012;
 const CRUISE = 0.0022;
+const START_WARP = 0.005; // gentle drift the warp eases in from on the intro reveal
 const SPEED_EASE = 0.025; // per-60fps-frame smoothing toward the target speed
+const RAMP_MS = 700; // ease-in duration from START_WARP up to MAX_WARP (intro launch)
 
 // --- Projection / field model (z in (0, 1], 1 = far, ~0 = at camera) ---
 const Z_NEAR = 0.04; // recycle once a star passes this depth
@@ -43,8 +45,18 @@ interface Star {
   py: number; // previous projected y (CSS px)
 }
 
+// Smooth S-curve (easeInOutCubic) for the launch ramp.
+function easeInOut(t: number): number {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 function targetSpeedFor(phase: IntroPhase): number {
   switch (phase) {
+    case "breath":
+      // Hold the gentle drift while the warp warms up behind the still-opaque
+      // overlay, so the ease-in to full warp is fully visible once "flight"
+      // reveals it.
+      return START_WARP;
     case "overlay-fadeout":
       return MID_WARP;
     case "final-flip":
@@ -52,7 +64,7 @@ function targetSpeedFor(phase: IntroPhase): number {
     case "done":
       return CRUISE;
     default:
-      // landing (and any earlier phase) → full warp entry
+      // flight / landing (and any earlier phase) → full warp
       return MAX_WARP;
   }
 }
@@ -162,12 +174,14 @@ export function WarpStarfield({ isVisible }: { isVisible: boolean }) {
     ro.observe(canvas);
 
     // --- Animated warp. ---
-    // Seed at max warp on every mount so the warp entry replays each time the hero
-    // scrolls back into view (LazyShader remounts us), as well as on initial load.
-    // The per-phase target then drives the deceleration: held at warp through
-    // `landing`, easing to cruise by `done`. On a re-entry (intro already `done`)
-    // the target is cruise, so the seeded max warp decays straight down to it.
-    let speed = MAX_WARP;
+    // Initial intro: seed a gentle drift and ease up to full warp (the ramp in
+    // `frame`) so the field "starts with ease, then full speed" as the flight
+    // reveals it; the per-phase target then drives the unchanged deceleration
+    // (held at warp through `landing`, easing to cruise by `done`).
+    // On re-entry (intro already `done`, e.g. the hero scrolled back into view)
+    // seed at max warp so the original warp-in replays and decays to cruise.
+    let speed = phaseRef.current === "done" ? MAX_WARP : START_WARP;
+    let rampMs = 0; // elapsed launch-ramp time
     let raf = 0;
     let prevTs: number | null = null;
 
@@ -185,9 +199,18 @@ export function WarpStarfield({ isVisible }: { isVisible: boolean }) {
       prevTs = ts;
       const dt = dtMs / 16.667; // frames elapsed, normalized to 60fps
 
-      // Ease speed toward the phase target.
       const target = targetSpeedFor(phaseRef.current);
-      speed += (target - speed) * Math.min(SPEED_EASE * dt, 1);
+      if (target >= MAX_WARP && speed < MAX_WARP) {
+        // Launch ramp: ease gently from START_WARP up to full warp over RAMP_MS —
+        // "start with ease, then full speed" as the flight reveals the field.
+        rampMs += dtMs;
+        speed =
+          START_WARP +
+          (MAX_WARP - START_WARP) * easeInOut(Math.min(rampMs / RAMP_MS, 1));
+      } else {
+        // Hold full warp, then the regular eased slowdown toward the phase target.
+        speed += (target - speed) * Math.min(SPEED_EASE * dt, 1);
+      }
 
       // Fade-clear: short trails sharpen the warp without smearing the cruise.
       ctx.fillStyle = "rgba(2, 3, 10, 0.25)";

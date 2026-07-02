@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
+    <!-- Warm the Supabase TLS connection before the first auth/image request -->
+    <link rel="preconnect" href="https://qjyybkgqqadjedgelakf.supabase.co" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://keisar.club/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,10 +42,86 @@
       }
     }
     </script>
-    <style>body{background:#000}</style>
+    <style>
+      body { background: #000; }
+
+      /* Animated border angle for the intro skeleton's glass border */
+      @property --border-angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+      }
+      @keyframes intro-skel-border-rotate {
+        to { --border-angle: 360deg; }
+      }
+      /* Fast opacity ease-in at page load — the card is painted immediately and
+         only fades in over its first moments, so its total on-screen time is
+         unchanged (React still removes the skeleton once the bundles mount). */
+      @keyframes intro-skel-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      /* Static intro card painted before the JS/CSS bundles load — mirrors
+         FlipCard's resting front face (liquid-glass-strong, 2:3). React removes
+         #intro-skeleton on mount and takes over without a re-fade. */
+      #intro-skeleton {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+      }
+      #intro-skeleton .card {
+        position: relative;
+        width: 240px;
+        height: 360px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        box-shadow:
+          4px 4px 4px rgba(0, 0, 0, 0.05),
+          inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        overflow: hidden;
+        animation: intro-skel-fade-in 0.2s ease-in both;
+      }
+      #intro-skeleton .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1.4px;
+        background: conic-gradient(
+          from var(--border-angle),
+          transparent 0%,
+          rgba(255, 255, 255, 0.22) 3%,
+          rgba(255, 255, 255, 0.12) 7%,
+          transparent 14%,
+          transparent 38%,
+          rgba(255, 255, 255, 0.08) 42%,
+          rgba(255, 255, 255, 0.04) 48%,
+          transparent 56%,
+          transparent 100%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        animation: intro-skel-border-rotate 25s linear infinite;
+      }
+      @media (max-width: 639px) {
+        #intro-skeleton .card { width: 180px; height: 270px; }
+      }
+      /* Reduced-motion visitors skip the intro entirely — no centered skeleton */
+      @media (prefers-reduced-motion: reduce) {
+        #intro-skeleton { display: none; }
+      }
+    </style>
     <script defer src="https://umami-two-weld.vercel.app/script.js" data-website-id="b20182df-c62a-41b3-904a-4faf011602ee"></script>
   </head>
   <body>
+    <div id="intro-skeleton" aria-hidden="true"><div class="card"></div></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

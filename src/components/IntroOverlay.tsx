@@ -25,15 +25,25 @@ export function IntroOverlay() {
     if (introPhase === "overlay-fadeout") {
       const t = setTimeout(() => {
         setMounted(false);
-        advancePhase(); // → final-flip
-      }, OVERLAY_FADE_MS + 1000);
+        advancePhase(); // → done
+      }, OVERLAY_FADE_MS + 600);
       return () => clearTimeout(t);
     }
   }, [introPhase, advancePhase]);
 
   if (!mounted || !shouldShow) return null;
 
-  const isFadingOut = introPhase === "overlay-fadeout";
+  // Reveal the warp starfield the instant the card starts its flight (slip + flip),
+  // not after it lands. The warp is already running at full speed behind the overlay
+  // (HomePage mounts it at "breath"; WarpStarfield holds MAX_WARP through "landing"),
+  // so fading the overlay here exposes the extra max-warp travel across flight +
+  // landing without moving the deceleration timeline. Phase progression and the
+  // overlay's unmount/advance stay keyed to "overlay-fadeout" (above), so the hero
+  // text still appears at the same moment as before.
+  const isRevealed =
+    introPhase === "flight" ||
+    introPhase === "landing" ||
+    introPhase === "overlay-fadeout";
 
   return (
     <AnimatePresence>
@@ -42,8 +52,8 @@ export function IntroOverlay() {
           className="fixed inset-0 z-[60]"
           style={{ background: "#000000" }}
           initial={{ opacity: 1 }}
-          animate={{ opacity: isFadingOut ? 0 : 1 }}
-          transition={{ duration: isFadingOut ? OVERLAY_FADE_MS / 1000 : 0 }}
+          animate={{ opacity: isRevealed ? 0 : 1 }}
+          transition={{ duration: isRevealed ? OVERLAY_FADE_MS / 1000 : 0 }}
         />
       )}
     </AnimatePresence>

@@ -1,9 +1,7 @@
 ## Purpose
 
 The first-load intro sequence: a full-screen overlay that plays a logo assembly, coin-flips into the navbar, lands on the profile photo, and flips back to the logo before fading out to hand off to the live site.
-
 ## Requirements
-
 ### Requirement: Full-screen fixed overlay
 The IntroOverlay SHALL render as a `position: fixed` element covering the entire viewport (`inset: 0`) with a z-index higher than all other content (at minimum `z-60`, above the navbar's `z-50`). It SHALL be visible from the moment the app mounts and SHALL remain visible until the intro sequence is complete. The overlay SHALL prevent any page content from being visible behind it.
 
@@ -30,40 +28,30 @@ The overlay SHALL have a subtle animated shader background using `MeshGradient` 
 - **THEN** the color family SHALL be consistent (cool darks — deep blue/purple, not warm tones)
 
 ### Requirement: Card fade-in at screen center
-When the overlay first appears, the FlipCard SHALL be positioned at the center of the viewport (both horizontally and vertically). The card SHALL fade in with an opacity transition from 0 to 1 over approximately 400–500ms, accompanied by a subtle scale animation from ~0.95 to 1.0. The card SHALL be in its large intro dimensions (2:3 aspect ratio, ~240×360px desktop).
+When the intro starts, the FlipCard SHALL be presented at the center of the viewport (both horizontally and vertically) in its large intro dimensions (2:3 aspect ratio, ~240×360px desktop, ~180×270px mobile). When the inline intro skeleton (see the `instant-intro-skeleton` capability) has already painted the card, the React FlipCard SHALL adopt that already-visible state and SHALL NOT replay an opacity 0→1 fade — the card is simply present and the assembly begins. When no skeleton hand-off occurs (e.g. reduced-motion is off but the skeleton was unavailable), the card MAY fade in over ~300–500ms, but the AnimatedLogo SHALL already be mounted so there is no empty-card beat.
 
-#### Scenario: Card appears centered
+#### Scenario: Card already present via skeleton hand-off
+- **WHEN** the intro starts and the inline skeleton has painted the card
+- **THEN** the React FlipCard SHALL appear at the same centered position and size
+- **AND** it SHALL NOT fade from transparent to opaque (no re-materialize)
+
+#### Scenario: Card is centered in its large intro dimensions
 - **WHEN** the intro starts
 - **THEN** the FlipCard SHALL be horizontally and vertically centered in the viewport
-- **AND** it SHALL fade in from fully transparent to fully opaque
-
-#### Scenario: Card fade-in has subtle scale
-- **WHEN** the card is fading in
-- **THEN** it SHALL simultaneously scale from ~0.95 to 1.0
-- **AND** the combined effect SHALL feel like the card is gently materializing, not popping in
-
-#### Scenario: Card fade-in timing
-- **WHEN** the app mounts
-- **THEN** the card fade-in SHALL begin immediately (no initial delay)
-- **AND** the fade-in SHALL complete within approximately 400–500ms
+- **AND** it SHALL be in its large intro dimensions (2:3 aspect ratio)
 
 ### Requirement: Logo assembly plays inside centered card
-Immediately after the card fade-in completes, the AnimatedLogo assembly animation SHALL begin inside the card's front face. This is the existing scatter-to-assemble animation where 6 SVG path fragments fly in from different directions and coalesce into the logo shape, followed by the MeshGradient shader fading in through the logo mask. The AnimatedLogo SHALL be at its large intro size (proportional to the card dimensions). The card SHALL remain stationary at screen center during the entire assembly.
+The AnimatedLogo SHALL be mounted from the start of the intro (it SHALL NOT be withheld until a separate empty card-fade-in completes), and the scatter-to-assemble animation SHALL begin as soon as the card is on screen. This is the existing animation where the 6 SVG path fragments fly in from their respective start positions and coalesce into the logo shape. The AnimatedLogo SHALL be at its large intro size (proportional to the card dimensions), and the card SHALL remain stationary at screen center during the entire assembly.
 
-#### Scenario: Logo assembly starts after card fade-in
-- **WHEN** the card fade-in completes (~500ms after mount)
-- **THEN** the AnimatedLogo scatter-to-assemble animation SHALL begin
-- **AND** the card SHALL remain centered and stationary
+#### Scenario: Assembly begins immediately, with no empty-card beat
+- **WHEN** the intro card appears (whether via skeleton hand-off or React fade-in)
+- **THEN** the AnimatedLogo SHALL already be mounted and the scatter-to-assemble animation SHALL begin without a separate empty card-fade-in delay first
+- **AND** the card SHALL remain centered and stationary during assembly
 
-#### Scenario: Logo assembly uses existing animation
+#### Scenario: Assembly uses the existing fragment animation
 - **WHEN** the logo assembly is playing
-- **THEN** it SHALL use the exact same fragment animation as the existing `AnimatedLogo` component (6 fragments, staggered at 150ms, flying from their respective start positions)
-- **AND** after all fragments assemble, the MeshGradient shader SHALL fade in through the logo mask shape
-
-#### Scenario: Logo assembly duration
-- **WHEN** the logo assembly animation plays
-- **THEN** the total duration SHALL be approximately 1700ms (6 × 150ms stagger + 800ms shader fade)
-- **AND** the animation SHALL complete fully before the flight phase begins
+- **THEN** it SHALL use the same 6-fragment staggered scatter-to-assemble animation as the existing `AnimatedLogo` component (each fragment flying in from its start position)
+- **AND** the assembly SHALL complete before the flight phase begins
 
 ### Requirement: Breath pause after logo assembly
 After the AnimatedLogo assembly completes, there SHALL be a deliberate pause of approximately 200–400ms where the card holds perfectly still at screen center, showing the fully assembled logo with its shader. This pause gives the viewer a moment to register the logo before the dramatic flight begins.
@@ -74,76 +62,53 @@ After the AnimatedLogo assembly completes, there SHALL be a deliberate pause of 
 - **AND** no movement or transformation SHALL occur during this pause
 
 ### Requirement: Coin-flip flight from center to navbar
-After the breath pause, the FlipCard SHALL animate from its centered position to the navbar icon placeholder position. This flight animation SHALL include ALL of the following simultaneous transformations:
+After the breath pause, the FlipCard SHALL animate from its centered position to the navbar icon placeholder position. This flight SHALL include ALL of the following simultaneous transformations:
 
-1. **Position**: Translate from screen center to the navbar icon's `getBoundingClientRect()` coordinates. The path SHALL arc slightly upward (by approximately 80–120px above the straight line between start and end) before curving down to the target, simulating a coin tossed into the air.
+1. **Position**: Translate from screen center to the navbar icon's `getBoundingClientRect()` coordinates, arcing slightly upward before curving down to the target (coin-toss feel).
 
-2. **X-axis rotation**: The card SHALL rotate 4–6 full turns on the X-axis (`rotateX: 0 → 1440–2160deg`). The rotation SHALL accelerate during the first third, reach peak speed in the middle, and decelerate in the final third — like a real coin toss. The final rotation SHALL end at `rotateX ≡ 180deg` (back face showing = profile photo visible).
+2. **Y-axis rotation**: The card SHALL perform exactly **two full flips** on the Y-axis (`rotateY: 0 → 720deg`), landing **face-forward on the logo** (720° ≡ front face). The card SHALL NOT land on the back face, and there is no separate final flip. The back (liquid-glass) face flashes twice mid-flight during the two turns.
 
-3. **Scale/size**: The card SHALL shrink from its intro dimensions (~240×360px) to the navbar icon dimensions (48×48px). Width and height animate independently to shift the aspect ratio from 2:3 to 1:1.
+3. **Scale/size**: The card SHALL shrink from its intro dimensions (~240×360px) to the navbar icon dimensions (48×48px), width and height animating independently (2:3 → 1:1).
 
-4. **Border radius**: From `16px` (rounded rectangle) to `9999px` (full circle), animated continuously.
+4. **Border radius**: From `16px` to `9999px`, animated continuously.
 
-The total flight duration SHALL be approximately 1200–1800ms. The animation SHALL feel smooth, dramatic, and cinematic — never jerky or stuttering.
+The intro flight duration SHALL be approximately 1000–1200ms (shorter than the expand/dismiss interaction, which keeps its own longer duration). The animation SHALL feel smooth and cinematic.
 
 #### Scenario: Flight path arcs upward
 - **WHEN** the flight animation is in progress
-- **THEN** the card's Y-position SHALL follow an arc that goes slightly above the straight-line path before descending to the navbar position
-- **AND** the arc peak SHALL be approximately 80–120px above the straight line
+- **THEN** the card's Y-position SHALL follow an arc slightly above the straight-line path before descending to the navbar position
 
-#### Scenario: Card tumbles 4–6 full rotations on X-axis
+#### Scenario: Card performs two full Y-axis flips
 - **WHEN** the flight animation is in progress
-- **THEN** the card SHALL complete 4–6 full rotations around its horizontal X-axis
-- **AND** rotation speed SHALL vary: slower at start, fastest in the middle, slower at the end (ease-in-out with bias toward deceleration)
+- **THEN** the card SHALL complete exactly two full rotations on its Y-axis (720°)
+- **AND** the rotation SHALL ease smoothly with a bias toward deceleration
 
-#### Scenario: Profile photo flashes during tumble
-- **WHEN** the card is tumbling during flight
-- **THEN** the back face (profile photo) SHALL be visible for brief moments during each rotation
-- **AND** the viewer SHALL perceive flashes of the profile photo without being able to fully register it until landing
-
-#### Scenario: Card lands showing profile photo
+#### Scenario: Card lands face-forward on the logo
 - **WHEN** the flight animation reaches the navbar position
-- **THEN** the card SHALL end with `rotateX ≡ 180deg` (the back face / profile photo visible)
+- **THEN** the card SHALL end at `rotateY ≡ 720deg` (front face / logo visible)
 - **AND** the card SHALL be 48×48px with border-radius 9999px (circular)
 
-#### Scenario: Flight animation is smooth at 60fps
-- **WHEN** the flight animation plays on a modern device (desktop or mobile released within 3 years)
-- **THEN** the animation SHALL maintain a consistent frame rate without visible jank or stuttering
-- **AND** all property transitions (position, rotation, scale, border-radius) SHALL be synchronized
-
 ### Requirement: Landing hold on profile photo
-After the flight animation lands at the navbar position showing the profile photo, the card SHALL hold this state (back face visible, 48×48px, circular, at navbar position) for approximately 300–500ms. This is the "moment of recognition" where the viewer sees Amitay's face.
+After the flight lands at the navbar position showing the logo (front face), the card SHALL hold briefly — approximately 150–250ms — before the intro completes. There is no final flip and no back face shown at landing; the card is already logo-forward.
 
-#### Scenario: Profile photo visible at navbar position
-- **WHEN** the flight animation completes
-- **THEN** the card SHALL display the profile photo (back face) at the navbar icon position
-- **AND** the card SHALL remain still for approximately 300–500ms
-
-### Requirement: Final deliberate flip to logo
-After the landing hold, the card SHALL perform one final, slow, deliberate X-axis flip from the profile photo back to the logo face. This flip SHALL take approximately 400–600ms with a smooth ease-in-out timing. This single flip is the punctuation mark — intentional and unhurried, in contrast to the rapid tumble of the flight.
-
-#### Scenario: Single flip from profile to logo
-- **WHEN** the landing hold completes
-- **THEN** the card SHALL rotate 180 degrees on the X-axis (from back face to front face)
-- **AND** the rotation SHALL take approximately 400–600ms
-- **AND** the easing SHALL be smooth ease-in-out (not linear, not abrupt)
-
-#### Scenario: Logo face is final resting state
-- **WHEN** the final flip completes
-- **THEN** the card SHALL show the logo face (AnimatedLogo with shader)
-- **AND** this SHALL be the card's resting state for the navbar icon going forward
+#### Scenario: Logo held at navbar position
+- **WHEN** the flight animation completes during the intro
+- **THEN** the card SHALL display the logo (front) face at the navbar icon position
+- **AND** the card SHALL hold still for approximately 150–250ms before `done`
+- **AND** no back face (photo or glass) SHALL be shown at landing
 
 ### Requirement: Overlay fade-out after intro completes
-After the final flip completes and the card is settled at the navbar position showing the logo, the overlay SHALL fade out over approximately 300–500ms (opacity 1 → 0). After the fade completes, the overlay element SHALL be removed from the DOM (unmounted) to avoid blocking pointer events or consuming GPU resources with the shader.
+The black overlay SHALL fade out (opacity 1 → 0) at the **start of the flight** phase — the moment the card begins moving — revealing the warp starfield beneath it while the card flies to the navbar on top. The overlay SHALL remain transparent through `landing` and `overlay-fadeout`, then be removed from the DOM (unmounted) so it cannot block pointer events. The hero text still enters later, at `overlay-fadeout` (unchanged).
 
-#### Scenario: Overlay fades out smoothly
-- **WHEN** the final flip to logo completes
-- **THEN** the overlay background (shader + any remaining visual elements) SHALL fade from opacity 1 to 0 over approximately 300–500ms
+#### Scenario: Warp revealed at flight start
+- **WHEN** the intro enters the `flight` phase
+- **THEN** the overlay SHALL fade from opacity 1 to 0 over ~300–500ms, revealing the warp starfield
+- **AND** the flying card SHALL remain visible above the revealed starfield
 
-#### Scenario: Overlay is removed from DOM
-- **WHEN** the overlay fade-out completes
-- **THEN** the overlay element SHALL be unmounted / removed from the DOM entirely
-- **AND** no residual overlay elements SHALL remain that could intercept pointer events or consume resources
+#### Scenario: Overlay removed from DOM
+- **WHEN** the intro reaches the end of `overlay-fadeout`
+- **THEN** the (already-transparent) overlay element SHALL be unmounted from the DOM
+- **AND** no residual overlay SHALL intercept pointer events
 
 ### Requirement: Scroll locked during intro
 While the intro overlay is active (from mount until the overlay is fully removed), the page SHALL NOT be scrollable. `document.body` SHALL have `overflow: hidden` applied. When the overlay is removed, normal scroll behavior SHALL be restored.
@@ -159,25 +124,21 @@ While the intro overlay is active (from mount until the overlay is fully removed
 - **AND** `document.body.style.overflow` SHALL be reset to its original value
 
 ### Requirement: Complete intro timeline
-The full intro sequence SHALL follow this timeline (times are approximate, to be tuned visually):
+The full intro sequence SHALL follow this timeline (approximate, tuned visually). On a normal load the inline skeleton hand-off starts the intro at `logo-assembly` (the empty card-fade-in beat is skipped):
 
-| Phase | Start (ms) | Duration (ms) | What Happens |
-|-------|-----------|---------------|--------------|
-| Card fade-in | 0 | 400–500 | Card materializes at screen center |
-| Logo assembly | ~500 | ~1700 | SVG fragments assemble, shader fades in |
-| Breath pause | ~2200 | 200–400 | Card holds still, logo visible |
-| Flight | ~2500 | 1200–1800 | Coin-flip tumble to navbar position |
-| Landing hold | ~4000 | 300–500 | Profile photo visible at navbar |
-| Final flip | ~4400 | 400–600 | Single flip back to logo |
-| Overlay fade-out | ~4900 | 300–500 | Background dissolves, page revealed |
-| **Total** | — | **~5300** | **Intro complete, site interactive** |
+| Phase | Duration (ms) | What Happens |
+|-------|---------------|--------------|
+| Logo assembly | ~900 | SVG fragments assemble into the logo (front face) |
+| Breath | ~250 | Card holds still, logo visible |
+| Flight | ~1100 | Two Y-axis flips, shrinking to the navbar; overlay fades → warp revealed |
+| Landing | ~200 | Logo held at navbar position |
+| Overlay-fadeout | ~1000 | Warp eases to cruise; hero header + navbar warp in |
+| **Total** | **~3450** | Intro complete, site interactive |
+
+There is no `final-flip` phase.
 
 #### Scenario: Phases execute in sequence
 - **WHEN** the intro plays
-- **THEN** each phase SHALL start only after the previous phase completes
-- **AND** there SHALL be no gaps or visual discontinuities between phases
+- **THEN** each phase SHALL start only after the previous completes
+- **AND** the sequence SHALL NOT include a final-flip phase
 
-#### Scenario: Total duration is approximately 5 seconds
-- **WHEN** the full intro plays from start to finish
-- **THEN** the total elapsed time SHALL be approximately 4.5–5.5 seconds
-- **AND** the pacing SHALL feel deliberate and cinematic, not rushed or dragging

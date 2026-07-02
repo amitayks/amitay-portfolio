@@ -1,9 +1,7 @@
 ## Purpose
 
 A dual-face 3D card used in the navbar and intro: front shows the AnimatedLogo shader, back shows the profile photo, with perspective-based flip animation on a liquid-glass surface.
-
 ## Requirements
-
 ### Requirement: Dual-face 3D card structure
 The FlipCard component SHALL render a 3D card with exactly two faces: a **front face** (logo + shader) and a **back face** (profile photo). The card SHALL use CSS 3D transforms with `transform-style: preserve-3d` on the inner container and `backface-visibility: hidden` on each face. The back face SHALL have `rotateX(180deg)` pre-applied so it is visible when the card is flipped 180 degrees on the X-axis. The component SHALL accept a `rotateX` value (in degrees) as a controlled prop to determine which face is visible.
 
@@ -23,52 +21,44 @@ The FlipCard component SHALL render a 3D card with exactly two faces: a **front 
 - **AND** the card SHALL appear as a thin edge/line from the viewer's perspective
 
 ### Requirement: Front face renders AnimatedLogo with shader
-The front face SHALL contain the existing `AnimatedLogo` component with its `MeshGradient` shader background. The AnimatedLogo SHALL accept a `size` prop that adapts to the card's current scale. When the card is in its large intro state, the AnimatedLogo SHALL render at a size proportional to the card dimensions (e.g., `size` of ~80 for a 240px-wide card). When the card is in its small navbar state, the AnimatedLogo SHALL render at `size={16}` (matching the current navbar logo). The front face SHALL have no background of its own — the shader paints through the logo mask shape, and the liquid-glass card surface shows through everywhere else.
+The front face SHALL contain the `AnimatedLogo` component (inline white SVG logo fragments — no raster image or shader). The logo SHALL be sized as a **constant 1/3 of the card's current width** via CSS — a `calc(100% / 3)` wrapper with a `1 / 2` aspect ratio, with `AnimatedLogo` filling it (`fill`) — rather than a discrete pixel `size` prop. Because the size is a fraction of the animated card, the logo SHALL scale **continuously** with the card: ~80px in the ~240px intro card and 16px in the 48px navbar icon (both exactly 1/3 of the card width), with no snap or resize step during the flight. The front face SHALL have no background of its own; the liquid-glass card surface shows behind the logo.
+
+#### Scenario: Logo scales continuously during the flight
+- **WHEN** the card animates from its intro size (~240px) to the navbar size (48px) during the flight
+- **THEN** the logo SHALL scale smoothly in lockstep (~80px → 16px), staying 1/3 of the card width throughout
+- **AND** there SHALL be no discrete size snap at landing
 
 #### Scenario: Front face at intro scale
 - **WHEN** the FlipCard is in the intro/centered state with card width ~240px
-- **THEN** the AnimatedLogo SHALL render with a `size` prop scaled proportionally to fill the card face (approximately `size={80}`)
-- **AND** the MeshGradient shader SHALL be visible through the logo mask
+- **THEN** the logo SHALL render at ~80px (1/3 of the card width), filling its wrapper
 
 #### Scenario: Front face at navbar scale
 - **WHEN** the FlipCard is in the navbar/settled state at 48×48px
-- **THEN** the AnimatedLogo SHALL render with `size={16}` matching the current navbar logo appearance exactly
-- **AND** the shader SHALL continue animating at this small size
+- **THEN** the logo SHALL render at 16px (1/3 of the card width), matching the navbar logo appearance
 
 ### Requirement: Back face renders profile photo
-The back face SHALL display a profile photo fetched from Supabase's `site-image` storage bucket via `useSiteImage()`. The photo is a 1:1 aspect ratio image. When displayed on the 2:3 card face, the image SHALL use `object-fit: cover` to fill the card, cropping the top and bottom to fit the taller aspect ratio. The image SHALL be centered both vertically and horizontally within the face (`object-position: center`).
+The back face SHALL display a profile photo fetched from Supabase's `site-image` storage bucket via `useSiteImage()`, but the photo SHALL NOT be fetched or rendered during the intro. While the intro is running (`introPhase !== "done"`) the back face SHALL display only the liquid-glass surface — no photo — so that no heavy image is on the first-load critical path. After the intro completes, the photo SHALL be available for the navbar interactions: it is a 1:1 aspect ratio image, and when shown on the 1:1 navbar icon it SHALL fill the circular icon without cropping (`object-fit: cover`, `object-position: center`, clipped via `border-radius: 9999px` and `overflow: hidden`); when shown on the expanded 2:3 card it SHALL fill the face using `object-fit: cover`, cropped symmetrically.
 
-#### Scenario: Profile photo fills 2:3 card
-- **WHEN** the FlipCard is in its large intro state (2:3 aspect ratio)
-- **AND** the card is flipped to show the back face
-- **THEN** the 1:1 profile photo SHALL fill the entire card face using `object-fit: cover`
-- **AND** the photo SHALL be cropped symmetrically (top and bottom trimmed) to fit the 2:3 ratio
+#### Scenario: Back face is glass (no photo) during the intro
+- **WHEN** the FlipCard's back face rotates into view during the intro flight (before `introPhase === "done"`)
+- **THEN** the back face SHALL show only the liquid-glass surface
+- **AND** no profile photo SHALL be fetched or displayed
 
-#### Scenario: Profile photo in 1:1 navbar icon
-- **WHEN** the FlipCard is in its navbar state (48×48px, 1:1 aspect ratio)
+#### Scenario: Profile photo in 1:1 navbar icon (post-intro)
+- **WHEN** the intro has completed and the FlipCard is in its navbar state (48×48px, 1:1 aspect ratio)
 - **AND** the card is flipped to show the back face (e.g., on hover)
 - **THEN** the 1:1 profile photo SHALL fill the circular icon without cropping
 - **AND** the photo SHALL be clipped to the circular shape via `border-radius: 9999px` and `overflow: hidden`
 
-#### Scenario: Profile photo not yet loaded
-- **WHEN** the profile image URL has not yet resolved or the image has not finished downloading
-- **AND** the back face would be visible
+#### Scenario: Profile photo on expanded card (post-intro)
+- **WHEN** the intro has completed and the card is expanded to its large 2:3 state showing the back face
+- **THEN** the 1:1 profile photo SHALL fill the card face using `object-fit: cover`
+- **AND** the photo SHALL be cropped symmetrically (top and bottom trimmed) to fit the taller ratio
+
+#### Scenario: Photo not yet loaded post-intro
+- **WHEN** the back face would be visible after the intro but the lazily-fetched photo has not finished downloading
 - **THEN** a liquid-glass fallback surface SHALL be displayed instead (matching the card's glass styling)
 - **AND** when the image finishes loading, it SHALL fade in with a brief opacity transition (~300ms)
-
-### Requirement: Profile image preloading
-The FlipCard SHALL begin fetching the profile image URL via `useSiteImage()` immediately on mount, regardless of whether the back face is currently visible. Once the URL is resolved, the component SHALL render a hidden `<img>` element (or use `new Image()`) to trigger the browser's image download. The goal is to have the image fully cached by the time the card first flips (~2.4 seconds after mount).
-
-#### Scenario: Image preloads during logo assembly
-- **WHEN** the FlipCard mounts and the intro is in the `card-fadein` or `logo-assembly` phase
-- **THEN** the profile image URL fetch SHALL already be in progress
-- **AND** the browser SHALL be downloading the image in the background
-
-#### Scenario: Image is ready before first flip
-- **WHEN** the flight animation begins (~2.4s after mount)
-- **AND** the network connection is reasonably fast
-- **THEN** the profile image SHALL already be cached in the browser
-- **AND** the back face SHALL display the photo immediately when it rotates into view (no pop-in)
 
 ### Requirement: Liquid-glass card surface
 The FlipCard container SHALL apply the `liquid-glass-strong` visual treatment — translucent background, backdrop blur, animated conic-gradient border via `::before`. Both card faces SHALL be children of this styled container. The liquid-glass border animation SHALL continue during all card states (intro, flight, navbar, expanded).
@@ -117,3 +107,17 @@ During the flight animation, width, height, and border-radius SHALL all animate 
 - **WHEN** the intro is complete and the card is at navbar position
 - **THEN** the card SHALL be exactly 48×48px with border-radius 9999px (full circle)
 - **AND** it SHALL visually match the appearance of the previous navbar logo button (same glass effect, same logo size)
+
+### Requirement: Deferred profile image loading
+The FlipCard SHALL NOT fetch the profile image URL or download the image while the intro is running. The fetch (`useSiteImage()` and the subsequent image download) SHALL be deferred until after the intro has completed (`introPhase === "done"`), or until the back face is first needed by a navbar interaction, whichever the implementation finds cleaner. The goal is that a fresh/uncached first load incurs zero bytes and zero Supabase round-trips for the profile photo until the intro is over.
+
+#### Scenario: No image fetch during the intro
+- **WHEN** the FlipCard mounts and the intro is playing (`introPhase !== "done"`)
+- **THEN** no request for the profile image URL or the image file SHALL be issued
+- **AND** the first-load network and main thread SHALL be free of the profile photo
+
+#### Scenario: Image fetched after the intro completes
+- **WHEN** `introPhase` becomes `"done"`
+- **THEN** the profile image fetch SHALL begin
+- **AND** once loaded, the photo SHALL be shown on the navbar back face for hover/expand interactions
+

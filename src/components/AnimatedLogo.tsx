@@ -39,12 +39,15 @@ const LOGO_FRAGMENTS: [string, number, number, number][] = [
 interface AnimatedLogoProps {
   className?: string;
   size?: number;
+  /** Fill the parent instead of a fixed pixel size (parent controls the size). */
+  fill?: boolean;
   animate?: boolean;
 }
 
 export function AnimatedLogo({
   className,
   size = 48,
+  fill = false,
   animate = true,
 }: AnimatedLogoProps) {
   const reducedMotion = useReducedMotion();
@@ -53,8 +56,8 @@ export function AnimatedLogo({
     <div
       className={cn("relative", className)}
       style={{
-        width: size,
-        height: size * 2,
+        width: fill ? "100%" : size,
+        height: fill ? "100%" : size * 2,
         overflow: "visible",
         transform: "scaleX(-1)",
       }}

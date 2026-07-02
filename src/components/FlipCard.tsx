@@ -16,33 +16,33 @@ const CARD_ASPECT = 1.5; // 2:3 → height = width * 1.5
 // Navbar icon
 const NAVBAR_SIZE = 48;
 
-// Flight animation (shared by intro flight + expand/dismiss)
-const FLIGHT_DURATION = 1.5;
+// Flight animation
+const FLIGHT_DURATION = 1.5; // expand / dismiss interaction
+const INTRO_FLIGHT_DURATION = 1.1; // intro flight — snappier
+const INTRO_FLIGHT_TURNS = 2; // two full flips on the way to the navbar (lands logo-forward)
 const FLIGHT_ROTATIONS = 1;
 const FLIGHT_ARC_PEAK = 20;
 
-// Landing
-const LANDING_HOLD_MS = 400;
-const FINAL_FLIP_DURATION = 0.5;
+// Landing — brief settle at the navbar (no photo to pause on anymore)
+const LANDING_HOLD_MS = 200;
 
 // Hover
 const HOVER_FLIP_DURATION = 0.6;
 
 export function FlipCard() {
-  const { introPhase, isIntroComplete, navbarIconRef, advancePhase } =
+  const { introPhase, isIntroComplete, handedOff, navbarIconRef, advancePhase } =
     useIntro();
   const reducedMotion = useReducedMotion();
 
-  // --- Profile image preloading ---
-  const { data: profileUrl } = useSiteImage(PROFILE_IMAGE_KEY);
+  // --- Profile image (deferred off the intro / first-load path) ---
+  // Not fetched until the intro completes, so a fresh/uncached load incurs zero
+  // bytes and zero Supabase round-trips for the 437.8 KB photo. It is only used
+  // by the post-intro navbar hover/expand flip; the back face is plain glass
+  // during the intro.
+  const { data: profileUrl } = useSiteImage(
+    isIntroComplete ? PROFILE_IMAGE_KEY : null
+  );
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!profileUrl) return;
-    const img = new Image();
-    img.src = profileUrl;
-    img.onload = () => setImageLoaded(true);
-  }, [profileUrl]);
 
   // --- Viewport / responsive ---
   const [isMobile, setIsMobile] = useState(
@@ -56,7 +56,6 @@ export function FlipCard() {
 
   const introCardWidth = isMobile ? CARD_WIDTH_MOBILE : CARD_WIDTH_DESKTOP;
   const introCardHeight = introCardWidth * CARD_ASPECT;
-  const introLogoSize = Math.round(introCardWidth / 3);
 
   // --- Navbar position tracking ---
   const [navbarRect, setNavbarRect] = useState<DOMRect | null>(null);
@@ -104,10 +103,10 @@ export function FlipCard() {
     return () => clearTimeout(t);
   }, [introPhase, advancePhase]);
 
-  // Breath pause — moment to appreciate the logo before the flight
+  // Breath pause — brief moment to register the logo before the flight
   useEffect(() => {
     if (introPhase !== "breath") return;
-    const t = setTimeout(advancePhase, 400);
+    const t = setTimeout(advancePhase, 250);
     return () => clearTimeout(t);
   }, [introPhase, advancePhase]);
 
@@ -148,11 +147,12 @@ export function FlipCard() {
   const introSynced = useRef(false);
   const prevExpanded = useRef(false);
 
-  // Sync rotationBase to intro's final value when intro completes
+  // Sync rotationBase to the intro's final rotation (two full flips = 720°, a
+  // logo-forward face) so the post-intro hover starts from the logo with no jump.
   useEffect(() => {
     if (isIntroComplete && !introSynced.current) {
       introSynced.current = true;
-      setRotationBase((FLIGHT_ROTATIONS + 1) * 360);
+      setRotationBase(INTRO_FLIGHT_TURNS * 360);
     }
   }, [isIntroComplete]);
 
@@ -176,17 +176,17 @@ export function FlipCard() {
     introPhase === "breath";
   const isFlying = introPhase === "flight";
 
-  // Rotation target (Y-axis — right-to-left flip like a coin)
+  // Rotation target (Y-axis). During the flight the card does two full flips on
+  // its way to the navbar, landing face-forward on the logo (720° = front face;
+  // no separate final flip). Post-intro uses the accumulated base + hover offset.
   let targetRotateY = 0;
-  if (introPhase === "flight") {
-    targetRotateY = FLIGHT_ROTATIONS * 360 + 180;
-  } else if (introPhase === "landing" || introPhase === "overlay-fadeout") {
-    // Hold on profile face while overlay fades
-    targetRotateY = FLIGHT_ROTATIONS * 360 + 180;
-  } else if (introPhase === "final-flip") {
-    targetRotateY = (FLIGHT_ROTATIONS + 1) * 360;
+  if (
+    introPhase === "flight" ||
+    introPhase === "landing" ||
+    introPhase === "overlay-fadeout"
+  ) {
+    targetRotateY = INTRO_FLIGHT_TURNS * 360;
   } else if (isIntroComplete) {
-    // Post-intro: use accumulated rotation base + hover offset
     const hoverOffset = isHovered && !isTouchDevice && !isExpanded ? 180 : 0;
     targetRotateY = rotationBase + hoverOffset;
   }
@@ -233,13 +233,11 @@ export function FlipCard() {
     transition = { duration: 0.45, ease: [0.16, 1, 0.3, 1] };
   } else if (isFlying) {
     transition = {
-      duration: FLIGHT_DURATION,
+      duration: INTRO_FLIGHT_DURATION,
       ease: [0.4, 0, 0.2, 1],
-      rotateY: { duration: FLIGHT_DURATION, ease: [0.2, 0.8, 0.3, 1] },
-      y: { duration: FLIGHT_DURATION, times: [0, 0.3, 1], ease: [0.4, 0, 0.2, 1] },
+      rotateY: { duration: INTRO_FLIGHT_DURATION, ease: [0.2, 0.8, 0.3, 1] },
+      y: { duration: INTRO_FLIGHT_DURATION, times: [0, 0.3, 1], ease: [0.4, 0, 0.2, 1] },
     };
-  } else if (introPhase === "final-flip") {
-    transition = { duration: FINAL_FLIP_DURATION, ease: [0.4, 0, 0.6, 1] };
   } else if (isExpanded || prevExpanded.current) {
     // Expand or dismiss — same motion as intro flight
     transition = {
@@ -303,16 +301,6 @@ export function FlipCard() {
     setIsHovered(false);
   };
 
-  // Determine the logo size based on current state
-  // Switch to small once the card is at navbar size (landing onward)
-  const atNavbarSize =
-    introPhase === "landing" ||
-    introPhase === "final-flip" ||
-    introPhase === "overlay-fadeout" ||
-    isIntroComplete;
-  const currentLogoSize =
-    atNavbarSize && !isExpanded ? 16 : introLogoSize;
-
   return (
     <>
       {/* Backdrop for expanded state */}
@@ -353,8 +341,11 @@ export function FlipCard() {
                   height: introCardHeight,
                   borderRadius: 16,
                   rotateY: 0,
-                  opacity: 0,
-                  scale: 0.95,
+                  // On skeleton hand-off the card is already on screen — start
+                  // fully present so it does not re-materialize. Without a
+                  // skeleton, keep the original fade-in.
+                  opacity: handedOff ? 1 : 0,
+                  scale: handedOff ? 1 : 0.95,
                 }
           }
           animate={{
@@ -369,11 +360,7 @@ export function FlipCard() {
           }}
           transition={transition}
           onAnimationComplete={() => {
-            if (
-              introPhase === "card-fadein" ||
-              introPhase === "flight" ||
-              introPhase === "final-flip"
-            ) {
+            if (introPhase === "card-fadein" || introPhase === "flight") {
               safeAdvance();
             }
           }}
@@ -401,10 +388,18 @@ export function FlipCard() {
             {/* Don't mount AnimatedLogo during card-fadein — the glass card fades in empty,
                 then AnimatedLogo mounts fresh at logo-assembly start with animate=true */}
             {introPhase !== "card-fadein" && (
-              <AnimatedLogo
-                size={currentLogoSize}
-                animate={introPhase === "logo-assembly"}
-              />
+              // Logo is a constant 1/3 of the card width so it scales smoothly
+              // with the card as it flies in and shrinks to the navbar (no snap).
+              <div
+                className="relative"
+                style={{
+                  width: "calc(100% / 3)",
+                  aspectRatio: "1 / 2",
+                  overflow: "visible",
+                }}
+              >
+                <AnimatedLogo fill animate={introPhase === "logo-assembly"} />
+              </div>
             )}
           </div>
 
@@ -418,14 +413,17 @@ export function FlipCard() {
               transform: "rotateY(180deg)",
             }}
           >
-            {profileUrl && imageLoaded ? (
+            {profileUrl ? (
               <img
                 src={profileUrl}
                 alt="Amitay Keisar"
                 className="w-full h-full"
+                onLoad={() => setImageLoaded(true)}
                 style={{
                   objectFit: isExpanded ? "contain" : "cover",
                   objectPosition: "center",
+                  opacity: imageLoaded ? 1 : 0,
+                  transition: "opacity 300ms ease",
                 }}
               />
             ) : (

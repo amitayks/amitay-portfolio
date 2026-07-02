@@ -4,6 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useIntro } from "@/contexts/IntroContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { LanguageTransition } from "@/components/LanguageTransition";
+import { WarpIn } from "@/components/WarpIn";
 
 const NAV_ITEMS = [
   { id: "home", key: "nav.home", fallback: "Home" },
@@ -81,43 +82,43 @@ export function Navbar() {
           className="rounded-full w-12 h-12 flex-shrink-0"
         />
 
-        {/* Nav links pill */}
-        <div
-          ref={navRef}
-          className="liquid-glass-strong rounded-[20px] px-2 py-2.5 flex items-center justify-evenly flex-1 relative transition-opacity duration-400"
-          style={{ opacity: showNavContent ? 1 : 0 }}
-        >
-          {/* Animated indicator */}
+        {/* Nav links pill — warps in from the vanishing point toward the viewer */}
+        <WarpIn show={showNavContent} fromScale={0.5} className="flex-1">
           <div
-            className="absolute top-1.5 bottom-1.5 rounded-full bg-white/10 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-            style={{ left: indicator.left, width: indicator.width }}
-          />
+            ref={navRef}
+            className="liquid-glass-strong rounded-[20px] px-2 py-2.5 flex items-center justify-evenly w-full relative"
+          >
+            {/* Animated indicator */}
+            <div
+              className="absolute top-1.5 bottom-1.5 rounded-full bg-white/10 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+              style={{ left: indicator.left, width: indicator.width }}
+            />
 
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.id}
-              data-section={item.id}
-              onClick={() => scrollTo(item.id)}
-              className={`relative z-10 px-2.5 md:px-6 py-1.5 rounded-full text-xs md:text-sm font-bold font-heading italic transition-colors ${
-                activeSection === item.id
-                  ? "text-white"
-                  : "text-foreground/70 hover:text-foreground/90"
-              }`}
-            >
-              <LanguageTransition inline>
-                {t(item.key, item.fallback)}
-              </LanguageTransition>
-            </button>
-          ))}
-        </div>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                data-section={item.id}
+                onClick={() => scrollTo(item.id)}
+                className={`relative z-10 px-2.5 md:px-6 py-1.5 rounded-full text-xs md:text-sm font-bold font-heading italic transition-colors ${
+                  activeSection === item.id
+                    ? "text-white"
+                    : "text-foreground/70 hover:text-foreground/90"
+                }`}
+              >
+                <LanguageTransition inline>
+                  {t(item.key, item.fallback)}
+                </LanguageTransition>
+              </button>
+            ))}
+          </div>
+        </WarpIn>
 
         {/* Right side */}
-        <div
-          className="flex items-center gap-2 flex-shrink-0 transition-opacity duration-400"
-          style={{ opacity: showNavContent ? 1 : 0 }}
-        >
-          <LanguageToggle />
-        </div>
+        <WarpIn show={showNavContent} fromScale={0.5} delay={0.12} className="flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+          </div>
+        </WarpIn>
       </div>
     </nav>
   );

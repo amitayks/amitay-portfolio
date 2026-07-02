@@ -1,9 +1,7 @@
 ## Purpose
 
 A canvas-2D, 3D-projected warp starfield for the homepage hero background — a light-speed entry that decelerates to a calm cruise in sync with the intro, replays each time the hero re-enters the viewport, uses a cool deep-space palette, scales density to the device tier, and honors reduced motion.
-
 ## Requirements
-
 ### Requirement: Warp starfield rendering
 The hero background SHALL render a starfield on an HTML `<canvas>` using the 2D context and a 3D perspective projection. Each star SHALL have a depth that decreases over time, so the star moves outward from a vanishing point and is drawn as a line streak whose length is proportional to the current travel speed. A star that passes the camera (depth reaches the near plane) SHALL be recycled to a random position at the far depth.
 
@@ -22,23 +20,31 @@ The hero background SHALL render a starfield on an HTML `<canvas>` using the 2D 
 - **THEN** the star is reassigned a new random x/y and the maximum depth, keeping the field populated indefinitely
 
 ### Requirement: Intro-synchronized speed ramp
-The field SHALL begin at maximum warp **every time it mounts into the hero viewport** — on the initial page load and again each time the hero scrolls back into view (`LazyShader` remounts it). The deceleration target SHALL be derived from the current intro phase: held at maximum warp through `landing`, easing down through `overlay-fadeout` / `final-flip`, and reaching a slow cruise by `done`. On the initial load this synchronizes the deceleration with the headline reveal; on a later re-entry (intro already `done`) the seeded maximum warp eases straight down to the cruise target, replaying the warp. Deceleration SHALL be eased (smooth interpolation toward the target), never a discrete jump.
+On the initial intro the field SHALL **ease in** from a gentle drift up to maximum warp, then decelerate; on re-entry it SHALL seed at maximum warp (as before). Specifically:
 
-#### Scenario: Field enters at maximum warp on initial load
-- **WHEN** the starfield first mounts during the intro (`landing`)
-- **THEN** travel speed is at its maximum value and stars render as long radial streaks, holding through `landing` before easing down
+- The field SHALL mount at the `breath` phase and hold a slow **START** drift while it warms up behind the (still-opaque) overlay, so the ease-in is fully visible once the flight reveals it.
+- At the `flight` phase (when the overlay reveals the starfield) the speed SHALL ease from START up to maximum warp over a fixed launch ramp (~700ms, easeInOutCubic), then hold maximum warp through the rest of the flight and `landing`.
+- From `overlay-fadeout` onward the speed SHALL ease down toward a slow cruise by `done` — the existing eased deceleration, unchanged.
+- On a **re-entry** (the hero scrolls back into view after the intro is `done`) the field SHALL seed at maximum warp and ease straight down to cruise, replaying the original warp-in (no ease-in ramp).
+
+Both the launch ramp and the deceleration SHALL be eased (smooth interpolation toward the target), never a discrete jump.
+
+#### Scenario: Field eases in to full warp on initial load
+- **WHEN** the flight reveals the starfield during the initial intro
+- **THEN** travel speed SHALL start at a gentle drift and ease up to maximum warp over the launch ramp
+- **AND** it SHALL then hold maximum warp through `landing` before the slowdown begins
 
 #### Scenario: Field decelerates to cruise as the headline lands
 - **WHEN** the intro advances through `overlay-fadeout` into `done`
-- **THEN** travel speed eases down to the cruise value, synchronized with the headline blur-in, leaving stars as a slow drift
+- **THEN** travel speed eases down to the cruise value, leaving stars as a slow drift
 
 #### Scenario: Re-entering the hero replays the warp
 - **WHEN** the hero scrolls back into the viewport after the intro has completed (`done`)
-- **THEN** the starfield remounts at maximum warp and eases back down to cruise, replaying the warp entry
+- **THEN** the starfield remounts at maximum warp and eases down to cruise (no ease-in ramp)
 
-#### Scenario: Deceleration is continuous
+#### Scenario: Speed changes are continuous
 - **WHEN** the rendered speed differs from the current target
-- **THEN** the rendered speed interpolates smoothly toward the target rather than snapping to it
+- **THEN** the rendered speed interpolates smoothly toward it rather than snapping
 
 ### Requirement: Deep-space palette
 The starfield SHALL use a cool deep-space color scheme: a near-black background, blue-white stars, and a faint cyan/violet bloom centered on the vanishing point. The hero CSS-gradient fallback (shown before the canvas mounts or if it fails) SHALL be a matching deep-space gradient rather than the previous warm tones.
@@ -102,3 +108,4 @@ The starfield SHALL do no rendering work while off-screen or while the tab is hi
 #### Scenario: Travel resumes in place when the tab returns
 - **WHEN** the tab becomes visible again with the hero still in view
 - **THEN** the starfield resumes advancing from where it froze, without a visible jump (the elapsed hidden time is dropped)
+

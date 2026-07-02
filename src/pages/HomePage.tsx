@@ -21,7 +21,11 @@ export function HomePage() {
   const [selectedSku, setSelectedSku] = useState<string | null>(null);
   const { introPhase } = useIntro();
 
+  // Mount from "breath" so the warp is seeded and running at full speed before
+  // the overlay reveals it at the start of the flight (see IntroOverlay).
   const mountShader =
+    introPhase === "breath" ||
+    introPhase === "flight" ||
     introPhase === "landing" ||
     introPhase === "final-flip" ||
     introPhase === "overlay-fadeout" ||
