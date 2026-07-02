@@ -25,8 +25,11 @@ export function Navbar() {
   const navRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
+  // Warp the nav content in just after the spinning logo lands — a quick,
+  // snappy entrance that flies in while the warp stars are still streaming.
   const showNavContent =
     isIntroComplete ||
+    introPhase === "landing" ||
     introPhase === "overlay-fadeout" ||
     introPhase === "final-flip";
 
@@ -83,7 +86,7 @@ export function Navbar() {
         />
 
         {/* Nav links pill — warps in from the vanishing point toward the viewer */}
-        <WarpIn show={showNavContent} fromScale={0.5} className="flex-1">
+        <WarpIn show={showNavContent} fromScale={0.5} duration={0.6} className="flex-1">
           <div
             ref={navRef}
             className="liquid-glass-strong rounded-[20px] px-2 py-2.5 flex items-center justify-evenly w-full relative"
@@ -114,7 +117,7 @@ export function Navbar() {
         </WarpIn>
 
         {/* Right side */}
-        <WarpIn show={showNavContent} fromScale={0.5} delay={0.12} className="flex-shrink-0">
+        <WarpIn show={showNavContent} fromScale={0.5} duration={0.6} delay={0.1} className="flex-shrink-0">
           <div className="flex items-center gap-2">
             <LanguageToggle />
           </div>

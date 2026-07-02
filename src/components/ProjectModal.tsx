@@ -349,11 +349,112 @@ function ProjectCreditsTabs({
   );
 }
 
+// Tech-stack chips. Rendered either inside a newspaper column (to fill its
+// bottom gap) or full-width as a fallback when there are no narrative sections.
+function TechStack({
+  technologies,
+  label,
+  dir,
+  className,
+}: {
+  technologies: string[];
+  label: string;
+  dir?: string;
+  className?: string;
+}) {
+  if (!technologies?.length) return null;
+  return (
+    <div dir={dir} className={`space-y-2 ${className ?? ""}`}>
+      <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+        {label}
+      </h3>
+      <div className="flex flex-wrap gap-2">
+        {technologies.map((tech) => (
+          <span
+            key={tech}
+            className="liquid-glass rounded-full px-3 py-1 text-xs text-white/80 font-body"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Column count for the newspaper layout, tracked against the same breakpoints
+// the modal used before (md → 2, lg → 3, otherwise 1).
+function useResponsiveColumnCount(): number {
+  const [count, setCount] = useState(3);
+  useEffect(() => {
+    const md = window.matchMedia("(min-width: 768px)");
+    const lg = window.matchMedia("(min-width: 1024px)");
+    const update = () => setCount(lg.matches ? 3 : md.matches ? 2 : 1);
+    update();
+    md.addEventListener("change", update);
+    lg.addEventListener("change", update);
+    return () => {
+      md.removeEventListener("change", update);
+      lg.removeEventListener("change", update);
+    };
+  }, []);
+  return count;
+}
+
+// Split ordered sections into `count` contiguous columns, minimising the tallest
+// column so the columns stay balanced while preserving top-to-bottom reading
+// order. Brute-force over cut points — the section count is always tiny.
+function partitionColumns<T extends { title: string; body: string }>(
+  sections: T[],
+  count: number,
+): T[][] {
+  if (count <= 1 || sections.length <= 1) return [sections];
+  const n = sections.length;
+  const weights = sections.map((s) => s.title.length + s.body.length + 60);
+
+  const best = { cuts: [] as number[], max: Number.POSITIVE_INFINITY };
+  const search = (start: number, colsLeft: number, cuts: number[]) => {
+    if (colsLeft === 1) {
+      const bounds = [...cuts, n];
+      let prev = 0;
+      let max = 0;
+      for (const b of bounds) {
+        let sum = 0;
+        for (let i = prev; i < b; i++) sum += weights[i];
+        max = Math.max(max, sum);
+        prev = b;
+      }
+      if (max < best.max) {
+        best.max = max;
+        best.cuts = [...cuts];
+      }
+      return;
+    }
+    for (let cut = start + 1; cut <= n - (colsLeft - 1); cut++) {
+      search(cut, colsLeft - 1, [...cuts, cut]);
+    }
+  };
+  search(0, count, []);
+
+  const boundaries = [...best.cuts, n];
+  const columns: T[][] = [];
+  let prev = 0;
+  for (const b of boundaries) {
+    columns.push(sections.slice(prev, b));
+    prev = b;
+  }
+  return columns;
+}
+
 export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const { data: project, isLoading } = usePortfolioItem(sku);
   const { dir } = useLanguage();
   const { t } = useSiteText();
   const [selectedDev, setSelectedDev] = useState<DevProfile | null>(null);
+  const columnCount = useResponsiveColumnCount();
+  // Which newspaper column the tech-stack chips drop into — re-rolled on every
+  // open so the tags fill a different column's gap each time.
+  const [tagColumnSeed, setTagColumnSeed] = useState(() => Math.random());
 
   // The popup is reachable only for `named` attribution; otherwise triggers
   // stay inert (anonymized/hidden have no real identity to reveal).
@@ -368,9 +469,64 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
   const howItWorks = useTranslated(project?.howItWorks);
   const result = useTranslated(project?.result);
 
-  // Reset any open developer popup when the modal switches projects/closes.
+  // Narrative sections flow into a newspaper-style multi-column layout on wider
+  // screens (collapsing to a single column on mobile). Collected in reading
+  // order; only the ones with content are rendered.
+  const proseSections: { key: string; title: string; body: string }[] = [];
+  if (problem)
+    proseSections.push({
+      key: "problem",
+      title: t("modal.section.problem", "The Problem"),
+      body: problem,
+    });
+  if (whatIBuilt)
+    proseSections.push({
+      key: "whatIBuilt",
+      title: t("modal.section.whatIBuilt", "What I Built"),
+      body: whatIBuilt,
+    });
+  if (howItWorks)
+    proseSections.push({
+      key: "howItWorks",
+      title: t("modal.section.howItWorks", "How It Works"),
+      body: howItWorks,
+    });
+  if (result)
+    proseSections.push({
+      key: "result",
+      title: t("modal.section.result", "Result"),
+      body: result,
+    });
+
+  // Balanced newspaper columns + the (random, per-open) column the tags land in.
+  const effectiveColumnCount = Math.max(
+    1,
+    Math.min(columnCount, proseSections.length),
+  );
+  const columns =
+    proseSections.length > 0
+      ? partitionColumns(proseSections, effectiveColumnCount)
+      : [];
+  // Tags drop into one of the two shortest columns (chosen at random per open)
+  // and snap to that column's bottom, filling the gap left beneath short text.
+  const columnWeights = columns.map((col) =>
+    col.reduce((sum, s) => sum + s.title.length + s.body.length + 60, 0),
+  );
+  const shortestColumns = columnWeights
+    .map((weight, index) => ({ weight, index }))
+    .sort((a, b) => a.weight - b.weight)
+    .slice(0, 2)
+    .map((c) => c.index);
+  const tagColumnIndex =
+    shortestColumns.length > 0
+      ? shortestColumns[Math.floor(tagColumnSeed * shortestColumns.length)]
+      : 0;
+
+  // Reset any open developer popup and re-roll the tag column when the modal
+  // switches projects/opens/closes.
   useEffect(() => {
     setSelectedDev(null);
+    setTagColumnSeed(Math.random());
   }, [sku]);
 
   useEffect(() => {
@@ -500,75 +656,59 @@ export function ProjectModal({ sku, onClose }: ProjectModalProps) {
                   {description}
                 </p>
 
-                {problem && (
-                  <div dir={dir} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-                      {t("modal.section.problem", "The Problem")}
-                    </h3>
-                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {problem}
-                    </p>
-                  </div>
-                )}
-
-                {whatIBuilt && (
-                  <div dir={dir} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-                      {t("modal.section.whatIBuilt", "What I Built")}
-                    </h3>
-                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {whatIBuilt}
-                    </p>
-                  </div>
-                )}
-
-                {howItWorks && (
-                  <div dir={dir} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-                      {t("modal.section.howItWorks", "How It Works")}
-                    </h3>
-                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {howItWorks}
-                    </p>
-                  </div>
-                )}
-
-                {project.technologies?.length > 0 && (
-                  <div dir={dir} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-                      {t("modal.section.techStack", "Tech Stack")}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech: string) => (
-                        <span
-                          key={tech}
-                          className="liquid-glass rounded-full px-3 py-1 text-xs text-white/80 font-body"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {result && (
-                  <div dir={dir} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
-                      {t("modal.section.result", "Result")}
-                    </h3>
-                    <p className="text-white/70 font-body font-light text-sm leading-relaxed">
-                      {result}
-                    </p>
-                  </div>
-                )}
-
-                {!problem && longDescription && (
+                {columns.length > 0 && (
                   <div
                     dir={dir}
-                    className="text-white/70 font-body font-light text-sm prose prose-invert prose-sm max-w-none"
+                    className="grid gap-8 items-stretch"
+                    style={{
+                      gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
+                    }}
+                  >
+                    {columns.map((colSections, colIndex) => (
+                      <div
+                        // Columns are stable slices of a fixed section order.
+                        // biome-ignore lint/suspicious/noArrayIndexKey: positional column
+                        key={colIndex}
+                        className="flex flex-col gap-6"
+                      >
+                        {colSections.map((section) => (
+                          <section key={section.key} className="space-y-2">
+                            <h3 className="text-xs uppercase tracking-widest text-white/40 font-body">
+                              {section.title}
+                            </h3>
+                            <p className="text-white/70 font-body font-light text-sm leading-relaxed">
+                              {section.body}
+                            </p>
+                          </section>
+                        ))}
+                        {colIndex === tagColumnIndex && (
+                          <TechStack
+                            technologies={project.technologies ?? []}
+                            label={t("modal.section.techStack", "Tech Stack")}
+                            dir={dir}
+                            className="mt-auto"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {proseSections.length === 0 && longDescription && (
+                  <div
+                    dir={dir}
+                    className="text-white/70 font-body font-light text-sm prose prose-invert prose-sm max-w-none md:columns-2 lg:columns-3 gap-8 [&>*]:break-inside-avoid"
                     dangerouslySetInnerHTML={{
                       __html: marked(longDescription) as string,
                     }}
+                  />
+                )}
+
+                {proseSections.length === 0 && (
+                  <TechStack
+                    technologies={project.technologies ?? []}
+                    label={t("modal.section.techStack", "Tech Stack")}
+                    dir={dir}
                   />
                 )}
 

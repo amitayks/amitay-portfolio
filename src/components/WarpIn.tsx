@@ -7,6 +7,8 @@ interface WarpInProps {
   show: boolean;
   /** Stagger offset in seconds. */
   delay?: number;
+  /** Entrance duration in seconds. */
+  duration?: number;
   /** Initial scale — smaller reads as further away in the starfield. */
   fromScale?: number;
   className?: string;
@@ -27,6 +29,7 @@ export function WarpIn({
   children,
   show,
   delay = 0,
+  duration = 1.0,
   fromScale = 0.25,
   className,
 }: WarpInProps) {
@@ -52,7 +55,7 @@ export function WarpIn({
       style={{ transformPerspective: 800, transformOrigin: "center center" }}
       initial={hidden}
       animate={show ? shown : hidden}
-      transition={{ duration: 1.0, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration, delay, ease: [0.16, 1, 0.3, 1] }}
       onAnimationComplete={() => {
         // Drop the transform once shown so backdrop-filter (frost) works again.
         if (show) setSettled(true);

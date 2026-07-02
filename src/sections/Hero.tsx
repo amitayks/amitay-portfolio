@@ -10,8 +10,10 @@ export function Hero() {
   const { t } = useSiteText();
   const { introPhase } = useIntro();
 
-  // Hero animations start when overlay begins fading out (and stay on through final-flip → done)
+  // Hero warps in just after the spinning logo lands — a quick, snappy entrance
+  // that flies in while the warp stars are still streaming (landing → done).
   const canAnimate =
+    introPhase === "landing" ||
     introPhase === "overlay-fadeout" ||
     introPhase === "final-flip" ||
     introPhase === "done";
@@ -24,6 +26,7 @@ export function Hero() {
         {/* Heading — warps in from the starfield's vanishing point toward the viewer */}
         <WarpIn
           show={canAnimate}
+          duration={0.6}
           fromScale={0.18}
           className="text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-foreground leading-[0.8] tracking-[-4px] max-w-4xl text-center"
         >
@@ -33,7 +36,7 @@ export function Hero() {
         </WarpIn>
 
         {/* Subtext */}
-        <WarpIn show={canAnimate} delay={0.45} fromScale={0.3} className="mt-14">
+        <WarpIn show={canAnimate} duration={0.6} delay={0.3} fromScale={0.3} className="mt-14">
           <p className="text-white/60 font-body font-light text-sm md:text-base max-w-xl">
             {t(
               "hero.subtext",
@@ -43,7 +46,7 @@ export function Hero() {
         </WarpIn>
 
         {/* CTA buttons */}
-        <WarpIn show={canAnimate} delay={0.75} fromScale={0.3} className="mt-8">
+        <WarpIn show={canAnimate} duration={0.6} delay={0.5} fromScale={0.3} className="mt-8">
           <div className="flex gap-3">
             <Button variant="glass" size="icon" asChild>
               <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">

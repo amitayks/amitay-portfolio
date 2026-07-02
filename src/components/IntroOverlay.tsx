@@ -38,8 +38,9 @@ export function IntroOverlay() {
   // (HomePage mounts it at "breath"; WarpStarfield holds MAX_WARP through "landing"),
   // so fading the overlay here exposes the extra max-warp travel across flight +
   // landing without moving the deceleration timeline. Phase progression and the
-  // overlay's unmount/advance stay keyed to "overlay-fadeout" (above), so the hero
-  // text still appears at the same moment as before.
+  // overlay's unmount/advance stay keyed to "overlay-fadeout" (above). The navbar
+  // and hero warp in from "landing" (see Navbar/Hero) — a quick entrance just
+  // after the spinning logo touches down, while the warp stars still stream.
   const isRevealed =
     introPhase === "flight" ||
     introPhase === "landing" ||
